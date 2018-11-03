@@ -12,10 +12,17 @@ class App extends Component {
     }, "4n")
 
     loop.start(0)
-    Tone.Transport.start('+0.1')
+    var onChange = function (e) {
+      if (e.target.checked){
+        Tone.Transport.start('+0.1')
+      } else {
+        Tone.Transport.stop()
+      }
+    };
     return (
       <div className="App">
         <h1>gyroSynth</h1>
+        <input type="checkbox" onChange={onChange}></input>
       </div>
     );
   }
