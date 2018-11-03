@@ -4,11 +4,15 @@ import Tone from 'tone';
 
 class App extends Component {
   render() {
-    //create a synth and connect it to the master output (your speakers)
-    var synth = new Tone.Synth().toMaster()
+    var synth = new Tone.MembraneSynth().toMaster()
 
-    //play a middle 'C' for the duration of an 8th note
-    synth.triggerAttackRelease('C4', '8n')
+    //create a loop
+    var loop = new Tone.Loop(function(time){
+    	synth.triggerAttackRelease("C1", "8n", time)
+    }, "4n")
+
+    loop.start(0)
+    Tone.Transport.start('+0.1')
     return (
       <div className="App">
         <h1>gyroSynth</h1>
