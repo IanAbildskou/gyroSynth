@@ -1,0 +1,8 @@
+{
+  "name": "gyroSynth",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "deploy": "surge /Users/Ivak/Documents/gyroSynth/ -d gyrosynth.surge.sh"
+  }
+}
