@@ -31,7 +31,7 @@ class App extends Component {
     }, true)
 
     window.addEventListener('devicemotion', event => {
-      const {accX, accY, accZ} = event.accelerationIncludingGravity
+      const {x: accX, y: accY, z: accZ} = event.accelerationIncludingGravity
       const interval = event.interval
       const pitch = this.state.pitch
       const history = this.state.history.concat([{
