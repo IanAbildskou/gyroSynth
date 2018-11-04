@@ -18,11 +18,12 @@ class App extends Component {
     }, true)
 
     window.addEventListener('devicemotion', event => {
-      const accX = Math.floor(event.accelerationIncludingGravity.x)
-      const enoughForce = accX < -20
+      const triggerThreshold = 15
+      const accX = -(Math.floor(event.accelerationIncludingGravity.x))
+      const enoughForce = accX > triggerThreshold
       const oldHistory = this.state.history
       const refinedHistory = oldHistory.length > 100 ? oldHistory.slice(oldHistory.length - 5) : oldHistory
-      const isPeak = enoughForce && refinedHistory.length && (accX > refinedHistory[refinedHistory.length -1].accX)
+      const isPeak = enoughForce && refinedHistory.length && (accX < refinedHistory[refinedHistory.length -1].accX)
       const hasNotFiredRecently = isPeak && !refinedHistory.slice(refinedHistory.length - 5).map(o => o.fire).includes(true)
       const fire = hasNotFiredRecently
       if (fire) {
@@ -30,7 +31,10 @@ class App extends Component {
         const beta = this.state.beta
         const correctedBeta = beta < -90 ? 180 : (beta < 0 ? 0 : beta)
         const pitch = pitchArray[Math.floor((correctedBeta/180) * (pitchArray.length - 1))]
-        synth.triggerAttackRelease(pitch, "8n")
+        const maxVelocity = 80
+        const absoluteVelocity =(accX - triggerThreshold) / maxVelocity
+        const adjustedVelocity = absoluteVelocity > 1 ? 1 : absoluteVelocity
+        synth.triggerAttackRelease(pitch, "8n", undefined, adjustedVelocity)
       }
       this.setState({history: refinedHistory.concat([{accX, fire}])})
     })
