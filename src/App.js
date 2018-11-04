@@ -21,8 +21,9 @@ class App extends Component {
       const accX = Math.floor(event.accelerationIncludingGravity.x)
       const enoughForce = accX < -20
       const oldHistory = this.state.history
-      const isPeak = enoughForce && oldHistory.length && (accX > oldHistory[oldHistory.length -1].accX)
-      const hasNotFiredRecently = isPeak && !oldHistory.slice(oldHistory.length - 5).map(o => o.fire).includes(true)
+      const refinedHistory = oldHistory.length > 100 ? oldHistory.slice(oldHistory.length - 5) : oldHistory
+      const isPeak = enoughForce && refinedHistory.length && (accX > refinedHistory[refinedHistory.length -1].accX)
+      const hasNotFiredRecently = isPeak && !refinedHistory.slice(refinedHistory.length - 5).map(o => o.fire).includes(true)
       const fire = hasNotFiredRecently
       if (fire) {
         const pitchArray = ['C3', 'C#3', 'D3', 'D#3', 'E3', 'F3', 'F#3', 'G3', 'G#3', 'A3', 'A#3', 'B3']
@@ -31,7 +32,7 @@ class App extends Component {
         const pitch = pitchArray[Math.floor((correctedBeta/180) * (pitchArray.length - 1))]
         synth.triggerAttackRelease(pitch, "8n")
       }
-      this.setState({history: oldHistory.concat([{accX, fire}])})
+      this.setState({history: refinedHistory.concat([{accX, fire}])})
     })
   }
 
