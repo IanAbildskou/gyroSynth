@@ -7,10 +7,11 @@ class App extends Component {
     super(props)
     this.state = {
       beta: undefined,
-      history: []
+      history: [],
+      release: false
     }
 
-    const synth = new Tone.MembraneSynth().toMaster()
+    this.synth = new Tone.MembraneSynth().toMaster()
 
     window.addEventListener("deviceorientation", event => {
       const beta = Math.floor(event.beta)
@@ -34,7 +35,7 @@ class App extends Component {
         const maxVelocity = 80
         const absoluteVelocity =(accX - triggerThreshold) / maxVelocity
         const adjustedVelocity = absoluteVelocity > 1 ? 1 : absoluteVelocity
-        synth.triggerAttackRelease(pitch, "8n", undefined, adjustedVelocity)
+        this.synth.triggerAttack(pitch, undefined, adjustedVelocity)
       }
       this.setState({history: refinedHistory.concat([{accX, fire}])})
     })
@@ -42,8 +43,17 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
+      <div>
         <h1>gyroSynth</h1>
+        <div
+          className={'sustain-button' + (this.state.release ? ' on': '')}
+          onTouchStart={() => {
+            this.setState({release: true})
+            this.synth.triggerRelease()
+          }}
+          onTouchEnd={() => {
+            this.setState({release: false})
+          }}></div>
       </div>
     );
   }

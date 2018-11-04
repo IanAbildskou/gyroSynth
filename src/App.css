@@ -1,10 +1,26 @@
-input[type=checkbox]
-{
-  /* Double-sized Checkboxes */
-  -ms-transform: scale(2); /* IE */
-  -moz-transform: scale(2); /* FF */
-  -webkit-transform: scale(2); /* Safari and Chrome */
-  -o-transform: scale(2); /* Opera */
-  padding: 10px;
-  margin: 20px;
+body {
+  -webkit-user-select: none;
+  -moz-user-select: -moz-none;
+  -ms-user-select: none;
+  user-select: none;
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  overflow: hidden;
+  height: 600px;
+}
+
+.sustain-button {
+  width: 100%;
+  height: 200px;
+  color: white;
+  text-align: center;
+  font-size: 2em;
+  font-weight: bold;
+  line-height: 200px;
+  background-color: blue;
+}
+
+.sustain-button.on {
+  background-color: green;
 }
