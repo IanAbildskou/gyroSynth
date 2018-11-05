@@ -7,6 +7,7 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      synthArray: [1],
       pitchDecay: 0.5,
       octaves: 10,
       attack: 0.001,
@@ -41,17 +42,23 @@ class App extends Component {
       }
     }
 
-    const synth = new Tone.MembraneSynth(synthOptions).toMaster()
-
+    const synthCollection = this.state.synthArray.map(() => new Tone.MembraneSynth(synthOptions).toMaster())
+    const reset = () => synthCollection.map(synth => synth.dispose())
     const setPitchDecay = prop => e => {
       const value = e.target.value / 100
-      synth.dispose()
+      reset()
       this.setState({[prop]: value})
+    }
+
+    const setChords = e => {
+      reset()
+      this.setState({synthArray: e.target.checked ? [1, 2, 3] : [1]})
     }
     return (
       <div>
         <h1>gyroSynth</h1>
-        <Synth synth={synth}></Synth>
+        <Synth synthCollection={synthCollection}></Synth>
+        <input type='checkbox' onChange={setChords}></input>chords
         {
           settingsArray.map(setting => {
             return (
