@@ -4,7 +4,7 @@ import saveAs from 'file-saver';
 class SaveStats extends Component {
   render() {
     const save = () => {
-      const filteredHistory = this.props.history.filter(o => o.fire)
+      const filteredHistory = this.props.history.filter(o => o.shiftOctaveRange)
       var history = JSON.stringify(filteredHistory);
       var array = typeof history !== 'object' ? JSON.parse(history) : history;
       var str = '';

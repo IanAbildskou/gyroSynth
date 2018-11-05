@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 
 class Synth extends Component {
   constructor(props) {
@@ -6,7 +6,8 @@ class Synth extends Component {
     this.state = {
       beta: undefined,
       history: [],
-      release: false
+      release: false,
+      octaveRange: 3
     }
   }
 
@@ -16,41 +17,61 @@ class Synth extends Component {
       this.setState({beta})
     }, true)
 
-    window.addEventListener('devicemotion', event => {
-      const triggerThreshold = 15
-      const accX = -(Math.floor(event.accelerationIncludingGravity.x))
-      const enoughForce = accX > triggerThreshold
+    const shouldEngage = ({accValue, x, history}) => {
+      const isPeak = history.length && (accValue < history[history.length -1][x ? 'accX' : 'accZ'])
+      return isPeak && !history.slice(history.length - (x ? 5 : 10)).map(o => x ? o.fire : o.shiftOctaveRange).includes(true)
+    }
+
+    const getOctaveRange = (accZ, history) => {
+      const minOctaveRange = 1
+      const maxOctaveRange = 6
+      const octaveShiftThreshold = 30
+      const enoughForceForOctaveShift = accZ > octaveShiftThreshold || accZ < -octaveShiftThreshold
+      const shiftOctave = enoughForceForOctaveShift && shouldEngage({accValue: accZ, x: false, history})
+      if (shiftOctave) {
+        const newOctaveRange = Math.sign(accZ) + this.state.octaveRange
+        return newOctaveRange < minOctaveRange
+          ? minOctaveRange
+          : newOctaveRange > maxOctaveRange
+            ? maxOctaveRange
+            : newOctaveRange
+      }
+    }
+
+    const deviceMotionEvent = event => {
       const oldHistory = this.state.history
-      const refinedHistory = oldHistory.length > 100 ? oldHistory.slice(oldHistory.length - 5) : oldHistory
-      const isPeak = enoughForce && refinedHistory.length && (accX < refinedHistory[refinedHistory.length -1].accX)
-      const hasNotFiredRecently = isPeak && !refinedHistory.slice(refinedHistory.length - 5).map(o => o.fire).includes(true)
-      const fire = hasNotFiredRecently
+      const history = oldHistory.length > 100 ? oldHistory.slice(oldHistory.length - 10) : oldHistory
+      const accZ = Math.floor(event.accelerationIncludingGravity.z)
+      const newOctaveRange = getOctaveRange(accZ, history)
+      const fireThreshold = 15
+      const accX = -(Math.floor(event.accelerationIncludingGravity.x))
+      const enoughForceForFire = !newOctaveRange && accX > fireThreshold
+      const fire = enoughForceForFire && shouldEngage({accValue: accX, x: true, history})
       if (fire) {
-        const pitchArray = ['C3', 'C#3', 'D3', 'D#3', 'E3', 'F3', 'F#3', 'G3', 'G#3', 'A3', 'A#3', 'B3']
+        const pitchArray = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
         const beta = this.state.beta
         const correctedBeta = beta < -90 ? 180 : (beta < 0 ? 0 : beta)
         const pitchMark = Math.floor((correctedBeta/180) * (pitchArray.length - 1))
         const maxVelocity = 80
-        const absoluteVelocity =(accX - triggerThreshold) / maxVelocity
+        const absoluteVelocity =(accX - fireThreshold) / maxVelocity
         const adjustedVelocity = absoluteVelocity > 1 ? 1 : absoluteVelocity
         this.props.synthCollection.map((synth, index) => {
           const pitchSpan = index === 1 ? (this.state.minor ? 3 : 4) : (index === 2 ? 7 : 0)
-          const pitch = pitchArray.concat(pitchArray)[pitchMark + pitchSpan]
+          const pitch = pitchArray.concat(pitchArray)[pitchMark + pitchSpan] + this.state.octaveRange
           synth.triggerAttack(pitch, undefined, adjustedVelocity)
           return null
         })
       }
-      this.setState({history: refinedHistory.concat([{accX, fire}])})
-    })
-    // const pitchArray = ['C3', 'C#3', 'D3', 'D#3', 'E3', 'F3', 'F#3', 'G3', 'G#3', 'A3', 'A#3', 'B3']
-    // const fire = () => this.props.synthCollection.map((synth, index) => {
-    //   const pitchSpan = index === 1 ? (this.state.minor ? 3 : 4) : (index === 2 ? 7 : 0)
-    //   const pitchMark = 0
-    //   const pitch = pitchArray.concat(pitchArray)[pitchMark + pitchSpan]
-    //   synth.triggerAttack(pitch, undefined, 1)
-    //   return null
-    // })
-    // setInterval(fire, 1000)
+      const historyObject = {accX, accZ, fire, shiftOctaveRange: !!newOctaveRange}
+      this.setState({
+        octaveRange: newOctaveRange || this.state.octaveRange,
+        history: history.concat([historyObject])
+      })
+    }
+
+    window.addEventListener('devicemotion', deviceMotionEvent)
+
+    // setInterval(() => deviceMotionEvent({accelerationIncludingGravity: {x: 0, z: Math.random() * 60}}), 200)
   }
 
   render() {
@@ -75,8 +96,8 @@ class Synth extends Component {
           }}>{this.state.minor ? 'Minor' : 'Major'}</div>
         }
       </div>
-    );
+    )
   }
 }
 
-export default Synth;
+export default Synth
