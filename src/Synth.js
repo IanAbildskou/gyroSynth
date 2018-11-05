@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Tone from 'tone';
 
 class Synth extends Component {
   constructor(props) {
@@ -9,9 +8,9 @@ class Synth extends Component {
       history: [],
       release: false
     }
+  }
 
-    this.synth = new Tone.MembraneSynth().toMaster()
-
+  componentDidMount() {
     window.addEventListener("deviceorientation", event => {
       const beta = Math.floor(event.beta)
       this.setState({beta})
@@ -34,10 +33,12 @@ class Synth extends Component {
         const maxVelocity = 80
         const absoluteVelocity =(accX - triggerThreshold) / maxVelocity
         const adjustedVelocity = absoluteVelocity > 1 ? 1 : absoluteVelocity
-        this.synth.triggerAttack(pitch, undefined, adjustedVelocity)
+        this.props.synth.triggerAttack(pitch, undefined, adjustedVelocity)
       }
       this.setState({history: refinedHistory.concat([{accX, fire}])})
     })
+    // const fire = () => this.props.synth.triggerAttack('C4', undefined, 1)
+    // setInterval(fire, 1000)
   }
 
   render() {
@@ -47,7 +48,7 @@ class Synth extends Component {
           className={'sustain-button' + (this.state.release ? ' on': '')}
           onTouchStart={() => {
             this.setState({release: true})
-            this.synth.triggerRelease()
+            this.props.synth.triggerRelease()
           }}
           onTouchEnd={() => {
             this.setState({release: false})
