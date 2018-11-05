@@ -34,7 +34,7 @@ class Synth extends Component {
         const absoluteVelocity =(accX - triggerThreshold) / maxVelocity
         const adjustedVelocity = absoluteVelocity > 1 ? 1 : absoluteVelocity
         this.props.synthCollection.map((synth, index) => {
-          const pitchSpan = index === 1 ? 4 : index === 2 ? 7 : 0
+          const pitchSpan = index === 1 ? (this.state.minor ? 3 : 4) : (index === 2 ? 7 : 0)
           const pitch = pitchArray.concat(pitchArray)[pitchMark + pitchSpan]
           synth.triggerAttack(pitch, undefined, adjustedVelocity)
           return null
@@ -44,7 +44,7 @@ class Synth extends Component {
     })
     // const pitchArray = ['C3', 'C#3', 'D3', 'D#3', 'E3', 'F3', 'F#3', 'G3', 'G#3', 'A3', 'A#3', 'B3']
     // const fire = () => this.props.synthCollection.map((synth, index) => {
-    //   const pitchSpan = index === 1 ? 4 : index === 2 ? 7 : 0
+    //   const pitchSpan = index === 1 ? (this.state.minor ? 3 : 4) : (index === 2 ? 7 : 0)
     //   const pitchMark = 0
     //   const pitch = pitchArray.concat(pitchArray)[pitchMark + pitchSpan]
     //   synth.triggerAttack(pitch, undefined, 1)
@@ -65,6 +65,15 @@ class Synth extends Component {
           onTouchEnd={() => {
             this.setState({release: false})
           }}>Kill sustain</div>
+        {(this.props.synthCollection.length > 1) && <div
+          className={'pedal-button' + (this.state.minor ? ' on': '')}
+          onTouchStart={() => {
+            this.setState({minor: true})
+          }}
+          onTouchEnd={() => {
+            this.setState({minor: false})
+          }}>{this.state.minor ? 'Minor' : 'Major'}</div>
+        }
       </div>
     );
   }
