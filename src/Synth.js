@@ -42,15 +42,15 @@ class Synth extends Component {
       }
       this.setState({history: refinedHistory.concat([{accX, fire}])})
     })
-    const pitchArray = ['C3', 'C#3', 'D3', 'D#3', 'E3', 'F3', 'F#3', 'G3', 'G#3', 'A3', 'A#3', 'B3']
-    const fire = () => this.props.synthCollection.map((synth, index) => {
-      const pitchSpan = index === 1 ? 4 : index === 2 ? 7 : 0
-      const pitchMark = 0
-      const pitch = pitchArray.concat(pitchArray)[pitchMark + pitchSpan]
-      synth.triggerAttack(pitch, undefined, 1)
-      return null
-    })
-    setInterval(fire, 1000)
+    // const pitchArray = ['C3', 'C#3', 'D3', 'D#3', 'E3', 'F3', 'F#3', 'G3', 'G#3', 'A3', 'A#3', 'B3']
+    // const fire = () => this.props.synthCollection.map((synth, index) => {
+    //   const pitchSpan = index === 1 ? 4 : index === 2 ? 7 : 0
+    //   const pitchMark = 0
+    //   const pitch = pitchArray.concat(pitchArray)[pitchMark + pitchSpan]
+    //   synth.triggerAttack(pitch, undefined, 1)
+    //   return null
+    // })
+    // setInterval(fire, 1000)
   }
 
   render() {
