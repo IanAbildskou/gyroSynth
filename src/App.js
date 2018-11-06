@@ -14,6 +14,7 @@ class App extends Component {
       decay: 0.4,
       sustain: 0.01,
       release: 0.4,
+      menuOpen: false
     }
   }
 
@@ -49,26 +50,34 @@ class App extends Component {
       reset()
       this.setState({[prop]: value})
     }
+    const isInChordMode = this.state.synthArray.length > 1
 
-    const setChords = e => {
+    const setChords = () => {
       reset()
-      this.setState({synthArray: e.target.checked ? [1, 2, 3] : [1]})
+      this.setState({synthArray: isInChordMode ? [1] : [1, 2, 3]})
     }
     return (
       <div>
-        <h1>gyroSynth</h1>
+        <div className={'menu' + (this.state.menuOpen ? ' open' : '')}>
+          {
+            settingsArray.map(setting => {
+              return (
+                <div key={setting.prop} className="slidecontainer">
+                  <div className='setting-name'>{setting.prop}</div>
+                  <input type="range" min={setting.min} max={setting.max} className="slider" id="myRange" onChange={setPitchDecay(setting.prop)}/>
+                </div>
+              )
+            })
+          }
+          <div className='header' onClick={() => this.setState({menuOpen: !this.state.menuOpen})}>
+            <svg className='arrow' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70.71 49.5">
+              <polygon points="35.35 21.21 14.14 0 0 14.14 35.35 49.5 70.71 14.14 56.57 0 35.35 21.21"/>
+            </svg>
+            <h1>gyroSynth</h1>
+          </div>
+        </div>
+        <div className='chord-toggle' onClick={setChords}>{isInChordMode ? 'Chords' : 'Single note'}</div>
         <Synth synthCollection={synthCollection}></Synth>
-        <input type='checkbox' onChange={setChords}></input>chords
-        {
-          settingsArray.map(setting => {
-            return (
-              <div key={setting.prop} className="slidecontainer">
-                {setting.prop}
-                <input type="range" min={setting.min} max={setting.max} className="slider" id="myRange" onChange={setPitchDecay(setting.prop)}/>
-              </div>
-            )
-          })
-        }
       </div>
     );
   }
