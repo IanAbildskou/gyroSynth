@@ -4,17 +4,23 @@ class Synth extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      beta: undefined,
+      pitchMark: 1,
       history: [],
       release: false,
-      octaveRange: 3
+      octaveRange: 3,
+      pitchArray: ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'],
+      colorArray: ['#d21d1d', '#fffa17', '#2bc823', '#0fddde', '#1d63ce', '#6a18d4', '#d418a1', '#ff7f0e', '#acff0e', '#ff8282', '#8b7bc8', '#cddc39']
     }
   }
 
   componentDidMount() {
     window.addEventListener("deviceorientation", event => {
       const beta = Math.floor(event.beta)
-      this.setState({beta})
+      const pitchArray = this.state.pitchArray
+      const correctedBeta = beta < -90 ? 180 : (beta < 0 ? 0 : beta)
+      const pitchMark = Math.floor((correctedBeta/180) * (pitchArray.length - 1))
+      document.getElementsByTagName('BODY')[0].style.backgroundColor = this.state.colorArray[pitchMark]
+      this.setState({pitchMark})
     }, true)
 
     const shouldEngage = ({accValue, x, history}) => {
@@ -48,16 +54,13 @@ class Synth extends Component {
       const enoughForceForFire = !newOctaveRange && accX > fireThreshold
       const fire = enoughForceForFire && shouldEngage({accValue: accX, x: true, history})
       if (fire) {
-        const pitchArray = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
-        const beta = this.state.beta
-        const correctedBeta = beta < -90 ? 180 : (beta < 0 ? 0 : beta)
-        const pitchMark = Math.floor((correctedBeta/180) * (pitchArray.length - 1))
         const maxVelocity = 80
         const absoluteVelocity =(accX - fireThreshold) / maxVelocity
         const adjustedVelocity = absoluteVelocity > 1 ? 1 : absoluteVelocity
         this.props.synthCollection.map((synth, index) => {
           const pitchSpan = index === 1 ? (this.state.minor ? 3 : 4) : (index === 2 ? 7 : 0)
-          const pitch = pitchArray.concat(pitchArray)[pitchMark + pitchSpan] + this.state.octaveRange
+          const pitchArray = this.state.pitchArray
+          const pitch = pitchArray.concat(pitchArray)[this.state.pitchMark + pitchSpan] + this.state.octaveRange
           synth.triggerAttack(pitch, undefined, adjustedVelocity)
           return null
         })
@@ -95,6 +98,7 @@ class Synth extends Component {
             this.setState({minor: false})
           }}>{this.state.minor ? 'Minor' : 'Major'}</div>
         }
+        <div className='pitch-indicator'>{this.state.pitchArray[this.state.pitchMark] + this.state.octaveRange}</div>
       </div>
     )
   }

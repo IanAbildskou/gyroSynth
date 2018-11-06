@@ -7,12 +7,8 @@ body {
   padding: 0;
   width: 100vw;
   overflow: hidden;
-  background-color: black;
+  background-color: '#d21d1d';
   color: white;
-}
-
-.header {
-
 }
 
 .arrow {
@@ -46,6 +42,19 @@ h1 {
   font-weight: bold;
   line-height: 80px;
   background-color: rgba(255, 255, 255, 0.2);
+  margin-top: 80px;
+}
+
+.pitch-indicator {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  height: 80px;
+  color: white;
+  text-align: center;
+  font-size: 2em;
+  font-weight: bold;
+  line-height: 80px;
 }
 
 .pedal-button.on {
@@ -58,12 +67,16 @@ h1 {
 }
 
 .menu {
-  margin-top: -360px;
+  position: absolute;
+  margin-top: -440px;
   transition: 200ms;
+  width: 100%;
 }
 
 .menu.open {
-  margin-top: 0px;
+  margin-top: -80px;
+  z-index: 10;
+  background-color: black;
 }
 
 svg {
