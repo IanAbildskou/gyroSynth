@@ -22,7 +22,7 @@ body {
 }
 
 .arrow {
-  margin: 0 10px;
+  margin: 0 3%;
   fill: white;
   width: 25px;
   display: inline-block;
@@ -45,6 +45,7 @@ body {
 .slider {
   width: 94%;
   margin: 0 3% 3%;
+  border-radius: 4px;
 }
 
 .pedal-button {
@@ -133,6 +134,7 @@ svg {
   appearance: none;
   width: 25px;
   height: 25px;
+  border-radius: 4px;
   background: yellow;
   cursor: pointer;
 }
@@ -140,6 +142,7 @@ svg {
 .slider::-moz-range-thumb {
   width: 25px;
   height: 25px;
+  border-radius: 4px;
   background: yellow;
   cursor: pointer;
 }
