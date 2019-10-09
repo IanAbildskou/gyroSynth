@@ -4,20 +4,23 @@ import saveAs from 'file-saver';
 class SaveStats extends Component {
   render() {
     const save = () => {
-      const filteredHistory = this.props.history.filter(o => o.shiftOctaveRange)
-      var history = JSON.stringify(filteredHistory);
-      var array = typeof history !== 'object' ? JSON.parse(history) : history;
-      var str = '';
-      for (var i = 0; i < array.length; i++) {
-        var line = '';
-        for (var index in array[i]) {
-          if (line !== '') line += ','
-          line += array[i][index];
-        }
-        str += line + '\r\n';
-      }
-
-      var blob = new Blob([str], {
+      const history = this.props.history
+      const keys = Object.keys(history[0])
+      var exportedData = ''
+      keys.map((key, index) => {
+        const isEnd = (index + 1) === keys.length
+        exportedData += (key + (isEnd ? '\r\n' : ','))
+        return null
+      })
+      history.map(o => {
+        keys.map((key, index) => {
+          const isEnd = (index + 1) === keys.length
+          exportedData += (o[key] + (isEnd ? '\r\n' : ','))
+          return null
+        })
+        return null
+      })
+      var blob = new Blob([exportedData], {
         type: "text/plain;charset=utf-8;",
       });
       saveAs(blob, "stats-history.txt");

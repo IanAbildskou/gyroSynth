@@ -8,8 +8,6 @@ class App extends Component {
     super(props)
     this.state = {
       synthArray: [1],
-      pitchDecay: 0.01,
-      octaves: 0.1,
       attack: 0.01,
       decay: 1,
       sustain: 0.01,
@@ -19,18 +17,14 @@ class App extends Component {
   }
 
   render() {
-    const {pitchDecay, octaves, attack, decay, sustain, release} = this.state
+    const {attack, decay, sustain, release} = this.state
     const settingsArray = [
-      {prop: 'pitchDecay', min: 1, max: 99},
-      {prop: 'octaves', min: 10, max: 500},
       {prop: 'attack', min: 1, max: 80},
       {prop: 'decay', min: 10, max: 1000},
       {prop: 'sustain', min: 1, max: 100},
       {prop: 'release', min: 10, max: 100},
     ]
     const synthOptions = {
-      pitchDecay,
-      octaves,
       oscillator: {
         type: 'sine'
       },
@@ -38,15 +32,14 @@ class App extends Component {
         attack,
         decay,
         sustain,
-        release,
-        attackCurve: 'exponential'
+        release
       }
     }
-
-    const synthCollection = this.state.synthArray.map(() => new Tone.MembraneSynth(synthOptions).toMaster())
+    console.log('hej');
+    const synthCollection = this.state.synthArray.map(() => new Tone.Synth(synthOptions).toMaster())
     synthCollection.map(synth => synth.volume.value = 20)
     const reset = () => synthCollection.map(synth => synth.dispose())
-    const setPitchDecay = prop => e => {
+    const changeProp = prop => e => {
       const value = e.target.value / 100
       reset()
       this.setState({[prop]: value})
@@ -65,7 +58,7 @@ class App extends Component {
               return (
                 <div key={setting.prop} className="slidecontainer">
                   <div className='setting-name'>{setting.prop}</div>
-                  <input defaultValue={this.state[setting.prop] * 100} type="range" min={setting.min} max={setting.max} className="slider" id="myRange" onChange={setPitchDecay(setting.prop)}/>
+                  <input defaultValue={this.state[setting.prop] * 100} type="range" min={setting.min} max={setting.max} className="slider" id="myRange" onChange={changeProp(setting.prop)}/>
                 </div>
               )
             })

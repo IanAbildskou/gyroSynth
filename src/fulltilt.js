@@ -13,7 +13,7 @@
  * License:   MIT
  *
  */
-
+/* eslint-disable */
 (function ( window ) {
 
 // Only initialize the FULLTILT API if it is not already attached to the DOM
@@ -1381,3 +1381,4 @@ FULLTILT.DeviceMotion.prototype = {
 window.FULLTILT = FULLTILT;
 
 })( window );
+/* eslint-enable */

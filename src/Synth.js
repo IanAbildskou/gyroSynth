@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import GyroNorm from 'gyronorm';
+import SaveStats from './SaveStats';
 
 class Synth extends Component {
   constructor(props) {
@@ -48,7 +49,7 @@ class Synth extends Component {
 
     const deviceMotionEvent = event => {
       const oldHistory = this.state.history
-      const history = oldHistory.length > 100 ? oldHistory.slice(oldHistory.length - 10) : oldHistory
+      const history = oldHistory.length > 10000 ? oldHistory.slice(oldHistory.length - 10) : oldHistory
       const accZ = Math.floor(event.dm.gz)
       const newOctaveRange = false // getOctaveRange(accZ, history) disabled octave shift for now. Too buggy
       const fireThreshold = 10
@@ -56,18 +57,18 @@ class Synth extends Component {
       const enoughForceForFire = !newOctaveRange && accX > fireThreshold
       const fire = enoughForceForFire && shouldEngage({accValue: accX, x: true, history})
       if (fire) {
-        const maxVelocity = 80
-        const absoluteVelocity =(accX - fireThreshold) / maxVelocity
-        const adjustedVelocity = absoluteVelocity > 1 ? 1 : absoluteVelocity
+        const maxVelocity = 50
+        const absoluteVelocity = (accX - fireThreshold) / maxVelocity
+        const adjustedVelocity = Math.min(absoluteVelocity, 1)
         this.props.synthCollection.map((synth, index) => {
           const pitchSpan = index === 1 ? (this.state.minor ? 3 : 4) : (index === 2 ? 7 : 0)
           const pitchArray = this.state.pitchArray
           const pitch = pitchArray.concat(pitchArray)[this.state.pitchMark + pitchSpan] + this.state.octaveRange
-          synth.triggerAttack(pitch, undefined, adjustedVelocity)
+          synth.triggerAttackRelease(pitch, 0.5, undefined, adjustedVelocity)
           return null
         })
       }
-      const historyObject = {accX, accZ, fire, shiftOctaveRange: !!newOctaveRange}
+      const historyObject = {x: event.dm.gx, z: event.dm.gz, accX, accZ, fire, shiftOctaveRange: !!newOctaveRange}
       this.setState({
         debugger: { accX: accX || 'No motion detected' },
         octaveRange: newOctaveRange || this.state.octaveRange,
@@ -82,7 +83,7 @@ class Synth extends Component {
       })
     });
 
-    // setInterval(() => deviceMotionEvent({accelerationIncludingGravity: {z: 0, x: -Math.random() * 60}}), 200)
+    // setInterval(() => deviceMotionEvent({dm: {gz: 0, gx: -Math.random() * 60}}), 200)
   }
 
   render() {
@@ -106,6 +107,7 @@ class Synth extends Component {
             this.setState({minor: false})
           }}>{this.state.minor ? 'Minor' : 'Major'}</div>
         }
+        <SaveStats history={this.state.history}/>
         <div className='debugger'>Acceleration X: {this.state.debugger.accX}</div>
         <div className='pitch-indicator'>{this.state.pitchArray[this.state.pitchMark] + this.state.octaveRange}</div>
       </div>
