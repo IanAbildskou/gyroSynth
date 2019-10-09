@@ -8,12 +8,12 @@ class App extends Component {
     super(props)
     this.state = {
       synthArray: [1],
-      pitchDecay: 0.5,
-      octaves: 10,
-      attack: 0.001,
-      decay: 0.4,
+      pitchDecay: 0.01,
+      octaves: 0.1,
+      attack: 0.01,
+      decay: 1,
       sustain: 0.01,
-      release: 0.4,
+      release: 0.1,
       menuOpen: false
     }
   }
@@ -64,7 +64,7 @@ class App extends Component {
               return (
                 <div key={setting.prop} className="slidecontainer">
                   <div className='setting-name'>{setting.prop}</div>
-                  <input type="range" min={setting.min} max={setting.max} className="slider" id="myRange" onChange={setPitchDecay(setting.prop)}/>
+                  <input defaultValue={this.state[setting.prop] * 100} type="range" min={setting.min} max={setting.max} className="slider" id="myRange" onChange={setPitchDecay(setting.prop)}/>
                 </div>
               )
             })
@@ -76,8 +76,8 @@ class App extends Component {
             <h1>gyroSynth</h1>
           </div>
         </div>
-        <div className='chord-toggle' onClick={setChords}>{isInChordMode ? 'Chords' : 'Single note'}</div>
-        <Synth synthCollection={synthCollection}></Synth>
+      <div className='chord-toggle' onClick={setChords}>{isInChordMode ? 'Chords' : 'Single note'}</div>
+      <Synth synthCollection={synthCollection}></Synth>
       </div>
     );
   }

@@ -7,8 +7,17 @@ body {
   padding: 0;
   width: 100vw;
   overflow: hidden;
-  background-color: '#d21d1d';
+  background-color: #d21d1d;
   color: white;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: monospace;
+  padding-top: 48px;
+}
+
+.debugger {
+  position: fixed;
+  bottom: 0;
 }
 
 .arrow {
@@ -16,10 +25,18 @@ body {
   fill: white;
   width: 25px;
   display: inline-block;
+  vertical-align: middle;
 }
 
-h1 {
+.header {
+
+}
+
+.header h1 {
   display: inline-block;
+  margin: 16px 0;
+  line-height: 16px;
+  vertical-align: middle;
 }
 
 .pedal-button {
@@ -42,19 +59,19 @@ h1 {
   font-weight: bold;
   line-height: 80px;
   background-color: rgba(255, 255, 255, 0.2);
-  margin-top: 80px;
 }
 
 .pitch-indicator {
   position: absolute;
   top: 0;
-  right: 10px;
-  height: 80px;
+  right: 0;
+  margin: 16px 8px;
+  height: 48px;
   color: white;
   text-align: center;
   font-size: 2em;
   font-weight: bold;
-  line-height: 80px;
+  line-height: 16px;
 }
 
 .pedal-button.on {
@@ -68,13 +85,15 @@ h1 {
 
 .menu {
   position: absolute;
-  margin-top: -440px;
+  transform-origin: bottom;
+  transform: translateY(-100%);
   transition: 200ms;
   width: 100%;
 }
 
 .menu.open {
-  margin-top: -80px;
+  transform-origin: top;
+  transform: translateY(calc(0px - 48px));
   z-index: 10;
   background-color: black;
 }
@@ -95,6 +114,7 @@ svg {
   outline: none;
   -webkit-transition: .2s;
   transition: opacity .2s;
+  margin: 2px 0;
 }
 
 .setting-name {

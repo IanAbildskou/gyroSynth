@@ -4,10 +4,11 @@ class Synth extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      debugger: { accX: 'No motion detected'},
       pitchMark: 1,
       history: [],
       release: false,
-      octaveRange: 3,
+      octaveRange: 4,
       pitchArray: ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'],
       colorArray: ['#d21d1d', '#fffa17', '#2bc823', '#0fddde', '#1d63ce', '#6a18d4', '#d418a1', '#ff7f0e', '#acff0e', '#ff8282', '#8b7bc8', '#cddc39']
     }
@@ -31,7 +32,7 @@ class Synth extends Component {
     const getOctaveRange = (accZ, history) => {
       const minOctaveRange = 1
       const maxOctaveRange = 6
-      const octaveShiftThreshold = 30
+      const octaveShiftThreshold = 15
       const enoughForceForOctaveShift = accZ > octaveShiftThreshold || accZ < -octaveShiftThreshold
       const shiftOctave = enoughForceForOctaveShift && shouldEngage({accValue: accZ, x: false, history})
       if (shiftOctave) {
@@ -48,8 +49,8 @@ class Synth extends Component {
       const oldHistory = this.state.history
       const history = oldHistory.length > 100 ? oldHistory.slice(oldHistory.length - 10) : oldHistory
       const accZ = Math.floor(event.accelerationIncludingGravity.z)
-      const newOctaveRange = getOctaveRange(accZ, history)
-      const fireThreshold = 15
+      const newOctaveRange = false // getOctaveRange(accZ, history) disabled octave shift for now. Too buggy
+      const fireThreshold = 10
       const accX = -(Math.floor(event.accelerationIncludingGravity.x))
       const enoughForceForFire = !newOctaveRange && accX > fireThreshold
       const fire = enoughForceForFire && shouldEngage({accValue: accX, x: true, history})
@@ -67,6 +68,7 @@ class Synth extends Component {
       }
       const historyObject = {accX, accZ, fire, shiftOctaveRange: !!newOctaveRange}
       this.setState({
+        debugger: { accX: JSON.stringify(accX) }, // accX || 'No motion detected' },
         octaveRange: newOctaveRange || this.state.octaveRange,
         history: history.concat([historyObject])
       })
@@ -74,7 +76,7 @@ class Synth extends Component {
 
     window.addEventListener('devicemotion', deviceMotionEvent)
 
-    // setInterval(() => deviceMotionEvent({accelerationIncludingGravity: {x: 0, z: Math.random() * 60}}), 200)
+    // setInterval(() => deviceMotionEvent({accelerationIncludingGravity: {z: 0, x: -Math.random() * 60}}), 200)
   }
 
   render() {
@@ -98,6 +100,7 @@ class Synth extends Component {
             this.setState({minor: false})
           }}>{this.state.minor ? 'Minor' : 'Major'}</div>
         }
+        <div className='debugger'>Acceleration X: {this.state.debugger.accX}</div>
         <div className='pitch-indicator'>{this.state.pitchArray[this.state.pitchMark] + this.state.octaveRange}</div>
       </div>
     )
