@@ -44,6 +44,7 @@ class App extends Component {
     }
 
     const synthCollection = this.state.synthArray.map(() => new Tone.MembraneSynth(synthOptions).toMaster())
+    synthCollection.map(synth => synth.volume.value = 20)
     const reset = () => synthCollection.map(synth => synth.dispose())
     const setPitchDecay = prop => e => {
       const value = e.target.value / 100

@@ -69,7 +69,7 @@ class Synth extends Component {
       }
       const historyObject = {accX, accZ, fire, shiftOctaveRange: !!newOctaveRange}
       this.setState({
-        debugger: { accX: JSON.stringify(accX) }, // accX || 'No motion detected' },
+        debugger: { accX: accX || 'No motion detected' },
         octaveRange: newOctaveRange || this.state.octaveRange,
         history: history.concat([historyObject])
       })
@@ -81,8 +81,6 @@ class Synth extends Component {
         deviceMotionEvent(data);
       })
     });
-
-    // window.addEventListener('devicemotion', deviceMotionEvent)
 
     // setInterval(() => deviceMotionEvent({accelerationIncludingGravity: {z: 0, x: -Math.random() * 60}}), 200)
   }
