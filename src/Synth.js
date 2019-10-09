@@ -10,13 +10,14 @@ class Synth extends Component {
       pitchMark: 1,
       history: [],
       release: false,
-      octaveRange: 4,
+      octaveRange: props.config.defaultOctaveRange,
       pitchArray: ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'],
       colorArray: ['#d21d1d', '#fffa17', '#2bc823', '#0fddde', '#1d63ce', '#6a18d4', '#d418a1', '#ff7f0e', '#acff0e', '#ff8282', '#8b7bc8', '#cddc39']
     }
   }
 
   componentDidMount() {
+    const { minOctave, maxOctave, octaveShiftThreshold, motionFrequency, firePeakSpacing, octaveShiftPeakSpacing, noteDuration, maxVelocity, fireThreshold, debuggerMode, maxHistoryLength, maxHistoryLengthForStats, historyCrunch } = this.props.config
     window.addEventListener("deviceorientation", event => {
       const beta = Math.floor(event.beta)
       const pitchArray = this.state.pitchArray
@@ -28,43 +29,39 @@ class Synth extends Component {
 
     const shouldEngage = ({accValue, x, history}) => {
       const isPeak = history.length && (accValue < history[history.length -1][x ? 'accX' : 'accZ'])
-      return isPeak && !history.slice(history.length - (x ? 5 : 10)).map(o => x ? o.fire : o.shiftOctaveRange).includes(true)
+      return isPeak && !history.slice(history.length - (x ? firePeakSpacing : octaveShiftPeakSpacing)).map(o => x ? o.fire : o.shiftOctaveRange).includes(true)
     }
 
     const getOctaveRange = (accZ, history) => {
-      const minOctaveRange = 1
-      const maxOctaveRange = 6
-      const octaveShiftThreshold = 15
       const enoughForceForOctaveShift = accZ > octaveShiftThreshold || accZ < -octaveShiftThreshold
       const shiftOctave = enoughForceForOctaveShift && shouldEngage({accValue: accZ, x: false, history})
       if (shiftOctave) {
         const newOctaveRange = Math.sign(accZ) + this.state.octaveRange
-        return newOctaveRange < minOctaveRange
-          ? minOctaveRange
-          : newOctaveRange > maxOctaveRange
-            ? maxOctaveRange
+        return newOctaveRange < minOctave
+          ? minOctave
+          : newOctaveRange > maxOctave
+            ? maxOctave
             : newOctaveRange
       }
     }
 
     const deviceMotionEvent = event => {
       const oldHistory = this.state.history
-      const history = oldHistory.length > 10000 ? oldHistory.slice(oldHistory.length - 10) : oldHistory
+      const topHistoryLength = debuggerMode ? maxHistoryLengthForStats : maxHistoryLength
+      const history = oldHistory.length > topHistoryLength ? oldHistory.slice(oldHistory.length - historyCrunch) : oldHistory
       const accZ = Math.floor(event.dm.gz)
       const newOctaveRange = false // getOctaveRange(accZ, history) disabled octave shift for now. Too buggy
-      const fireThreshold = 10
       const accX = -(Math.floor(event.dm.gx))
       const enoughForceForFire = !newOctaveRange && accX > fireThreshold
       const fire = enoughForceForFire && shouldEngage({accValue: accX, x: true, history})
       if (fire) {
-        const maxVelocity = 50
         const absoluteVelocity = (accX - fireThreshold) / maxVelocity
         const adjustedVelocity = Math.min(absoluteVelocity, 1)
         this.props.synthCollection.map((synth, index) => {
           const pitchSpan = index === 1 ? (this.state.minor ? 3 : 4) : (index === 2 ? 7 : 0)
           const pitchArray = this.state.pitchArray
           const pitch = pitchArray.concat(pitchArray)[this.state.pitchMark + pitchSpan] + this.state.octaveRange
-          synth.triggerAttackRelease(pitch, 0.5, undefined, adjustedVelocity)
+          synth.triggerAttackRelease(pitch, noteDuration, undefined, adjustedVelocity)
           return null
         })
       }
@@ -77,7 +74,7 @@ class Synth extends Component {
     }
 
     var gn = new GyroNorm();
-    gn.init({ frequency: 5 }).then(() => {
+    gn.init({ frequency: motionFrequency }).then(() => {
       gn.start(data => {
         deviceMotionEvent(data);
       })
@@ -89,7 +86,7 @@ class Synth extends Component {
   render() {
     return (
       <div className='synth'>
-        <div
+        { /* <div
           className={'pedal-button' + (this.state.release ? ' on': '')}
           onTouchStart={() => {
             this.setState({release: true})
@@ -97,7 +94,7 @@ class Synth extends Component {
           }}
           onTouchEnd={() => {
             this.setState({release: false})
-          }}>Kill sustain</div>
+          }}>Kill sustain</div> */ }
         {(this.props.synthCollection.length > 1) && <div
           className={'pedal-button' + (this.state.minor ? ' on': '')}
           onTouchStart={() => {
@@ -107,8 +104,8 @@ class Synth extends Component {
             this.setState({minor: false})
           }}>{this.state.minor ? 'Minor' : 'Major'}</div>
         }
-        <SaveStats history={this.state.history}/>
-        <div className='debugger'>Acceleration X: {this.state.debugger.accX}</div>
+        {this.props.config.debuggerMode && <SaveStats history={this.state.history}/>}
+        {this.props.config.debuggerMode && <div className='debugger'>Acceleration X: {this.state.debugger.accX}</div>}
         <div className='pitch-indicator'>{this.state.pitchArray[this.state.pitchMark] + this.state.octaveRange}</div>
       </div>
     )

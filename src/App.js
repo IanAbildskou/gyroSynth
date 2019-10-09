@@ -6,23 +6,25 @@ import Tone from 'tone';
 class App extends Component {
   constructor(props) {
     super(props)
+    const { defaultAttack, defaultSustain, defaultRelease, defaultDecay } = props.config
     this.state = {
       synthArray: [1],
-      attack: 0.01,
-      decay: 1,
-      sustain: 0.01,
-      release: 0.1,
+      attack: defaultAttack,
+      decay: defaultDecay,
+      sustain: defaultSustain,
+      release: defaultRelease,
       menuOpen: false
     }
   }
 
   render() {
+    const { defaultVolume, minAttack, maxAttack, minDecay, maxDecay, minSustain, maxSustain, minRelease, maxRelease } = this.props.config
     const {attack, decay, sustain, release} = this.state
     const settingsArray = [
-      {prop: 'attack', min: 1, max: 80},
-      {prop: 'decay', min: 10, max: 1000},
-      {prop: 'sustain', min: 1, max: 100},
-      {prop: 'release', min: 10, max: 100},
+      {prop: 'attack', min: minAttack, max: maxAttack},
+      {prop: 'decay', min: minDecay, max: maxDecay},
+      {prop: 'sustain', min: minSustain, max: maxSustain},
+      {prop: 'release', min: minRelease, max: maxRelease},
     ]
     const synthOptions = {
       oscillator: {
@@ -35,9 +37,8 @@ class App extends Component {
         release
       }
     }
-    console.log('hej');
     const synthCollection = this.state.synthArray.map(() => new Tone.Synth(synthOptions).toMaster())
-    synthCollection.map(synth => synth.volume.value = 20)
+    synthCollection.map(synth => synth.volume.value = defaultVolume)
     const reset = () => synthCollection.map(synth => synth.dispose())
     const changeProp = prop => e => {
       const value = e.target.value / 100
@@ -71,7 +72,7 @@ class App extends Component {
           </div>
         </div>
       <div className='chord-toggle' onClick={setChords}>{isInChordMode ? 'Chords' : 'Single note'}</div>
-      <Synth synthCollection={synthCollection}></Synth>
+      <Synth config={this.props.config} synthCollection={synthCollection}></Synth>
       </div>
     );
   }

@@ -4,7 +4,37 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import fulltilt from './fulltilt'; // eslint-disable-line
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const config = {
+  defaultOctaveRange: 4, // What octave range to start on
+  firePeakSpacing: 5, // How often can you trigger an attack
+  octaveShiftPeakSpacing: 10, // How often can you trigger an octave shift
+  minOctave: 1, // What's the maximum octave
+  maxOctave: 6, // What's the minimum octave
+  fireThreshold: 10, // What's the acceleration threshols for triggering an attack
+  octaveShiftThreshold: 15, // What's the acceleration threshols for triggering an octave shift
+  maxVelocity: 50, // What's the minimum acceleration to trigger maximum velocity
+  noteDuration: 0.5, // What's the duration of a note (ms or annotation)
+  motionFrequency: 5, // What's the resolution for motion detection (ms)
+  defaultAttack: 0.01,
+  minAttack: 1,
+  maxAttack: 80,
+  defaultDecay: 1,
+  minDecay: 10,
+  maxDecay: 1000,
+  defaultSustain: 0.01,
+  minSustain: 1,
+  maxSustain: 100,
+  defaultRelease: 0.1,
+  minRelease: 10,
+  maxRelease: 100,
+  defaultVolume: 20,
+  maxHistoryLength: 50, // How much history do we want to keep around
+  maxHistoryLengthForStats: 10000, // We want to have a lot of history to export when debugging
+  debuggerMode: false, // Show more tools for debugging and calibration
+  historyCrunch: 10 // How many entries do we want to scrape off per slice. This is an performance question
+}
+
+ReactDOM.render(<App config={config} />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
