@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import GyroNorm from 'gyronorm';
 
 class Synth extends Component {
   constructor(props) {
@@ -48,10 +49,10 @@ class Synth extends Component {
     const deviceMotionEvent = event => {
       const oldHistory = this.state.history
       const history = oldHistory.length > 100 ? oldHistory.slice(oldHistory.length - 10) : oldHistory
-      const accZ = Math.floor(event.accelerationIncludingGravity.z)
+      const accZ = Math.floor(event.dm.gz)
       const newOctaveRange = false // getOctaveRange(accZ, history) disabled octave shift for now. Too buggy
       const fireThreshold = 10
-      const accX = -(Math.floor(event.accelerationIncludingGravity.x))
+      const accX = -(Math.floor(event.dm.gx))
       const enoughForceForFire = !newOctaveRange && accX > fireThreshold
       const fire = enoughForceForFire && shouldEngage({accValue: accX, x: true, history})
       if (fire) {
@@ -74,7 +75,14 @@ class Synth extends Component {
       })
     }
 
-    window.addEventListener('devicemotion', deviceMotionEvent)
+    var gn = new GyroNorm();
+    gn.init({ frequency: 5 }).then(() => {
+      gn.start(data => {
+        deviceMotionEvent(data);
+      })
+    });
+
+    // window.addEventListener('devicemotion', deviceMotionEvent)
 
     // setInterval(() => deviceMotionEvent({accelerationIncludingGravity: {z: 0, x: -Math.random() * 60}}), 200)
   }
