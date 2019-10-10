@@ -7,7 +7,6 @@ import fulltilt from './fulltilt'; // eslint-disable-line
 const config = {
   defaultOctaveRange: 4, // What octave range to start on
   firePeakSpacing: 5, // How often can you trigger an attack
-  octaveShiftPeakSpacing: 10, // How often can you trigger an octave shift
   minOctave: 1, // What's the maximum octave
   maxOctave: 6, // What's the minimum octave
   fireThreshold: 10, // What's the acceleration threshols for triggering an attack
@@ -30,7 +29,7 @@ const config = {
   defaultVolume: 20,
   maxHistoryLength: 50, // How much history do we want to keep around
   maxHistoryLengthForStats: 10000, // We want to have a lot of history to export when debugging
-  debuggerMode: false, // Show more tools for debugging and calibration
+  debuggerMode: true, // Show more tools for debugging and calibration
   historyCrunch: 10, // How many entries do we want to scrape off per slice. This is an performance question
   alternativePitchShift: true,
   pitchShiftDegreeThreshold: 20
