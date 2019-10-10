@@ -51,23 +51,26 @@ class Synth extends Component {
     const oldHistory = this.state.history
     const topHistoryLength = debuggerMode ? maxHistoryLengthForStats : maxHistoryLength
     const history = oldHistory.length > topHistoryLength ? oldHistory.slice(oldHistory.length - historyCrunch) : oldHistory
-    const accX = -(Math.floor(event.dm.gx))
+    const accX = event.dm.gx
     const enoughForceForFire = accX > fireThreshold
     const fire = enoughForceForFire && this.shouldEngage({accX, history})
     const alpha = event.do.alpha
     const beta = event.do.beta
+    const gamma = event.do.gamma
     this.pitch(event)
     fire && this.fire(accX)
     const historyObject = {
       alpha,
       beta,
+      gamma,
       accX,
       fire
     }
     this.setState({
       debugger: {
-        beta: beta || 'No rotation detected',
         alpha: alpha || 'No rotation detected',
+        beta: beta || 'No rotation detected',
+        gamma: gamma || 'No rotation detected',
         accX: accX || 'No acceleration detected'
       },
       history: history.concat([historyObject])
@@ -75,19 +78,37 @@ class Synth extends Component {
   }
 
   pitch(event) {
-    const { } = this.props.config
-    const beta = event.do.beta
-    const pitchArray = this.state.pitchArray
-    const correctedBeta = beta < -90 ? 180 : (beta < 0 ? 0 : beta)
-    const pitchMark = Math.floor((correctedBeta/180) * (pitchArray.length - 1))
+    const { alternativePitchShift } = this.props.config
+    let pitchMark
+    const pitchArrayLength = this.state.pitchArray.length
+    if (alternativePitchShift) {
+      let alpha = 360 - event.do.alpha
+      const gamma = event.do.gamma
+      if (gamma < 0) {
+        alpha = (alpha > 180) ? (alpha - 180) : (alpha + 180)
+      }
+      pitchMark = Math.floor((alpha/360) * (pitchArrayLength - 1))
+    } else {
+      const beta = event.do.beta
+      const correctedBeta = beta < -90 ? 180 : (beta < 0 ? 0 : beta)
+      pitchMark = Math.floor((correctedBeta/180) * (pitchArrayLength - 1))
+    }
     this.setPitch(pitchMark)
   }
 
   componentDidMount() {
     const { motionFrequency } = this.props.config
-    var gn = new GyroNorm();
-    gn.init({ frequency: motionFrequency }).then(() => {
-      gn.start(event => {
+    var gyroNorm = new GyroNorm();
+    const gyroNormOptions = {
+      frequency: motionFrequency,					// ( How often the object sends the values - milliseconds )
+      gravityNormalized: true,		        // ( If the gravity related values to be normalized )
+      orientationBase: GyroNorm.GAME,	   	// ( Can be GyroNorm.GAME or GyroNorm.WORLD. gn.GAME returns orientation values with respect to the head direction of the device. gn.WORLD returns the orientation values with respect to the actual north direction of the world. )
+      decimalCount: 1,				            // ( How many digits after the decimal point will there be in the return values )
+      logger: null,				              	// ( Function to be called to log messages from gyronorm.js )
+      screenAdjusted: false		          	// ( If set to true it will return screen adjusted values. )
+    }
+    gyroNorm.init(gyroNormOptions).then(() => {
+      gyroNorm.start(event => {
         this.deviceMotionEvent(event);
       })
     });
@@ -114,6 +135,7 @@ class Synth extends Component {
               <div>Acceleration X: {this.state.debugger.accX}</div>
               <div>Orientation alpha: {this.state.debugger.alpha}</div>
               <div>Orientation beta: {this.state.debugger.beta}</div>
+              <div>Orientation gamma: {this.state.debugger.gamma}</div>
             </div>
           </span>
         }
