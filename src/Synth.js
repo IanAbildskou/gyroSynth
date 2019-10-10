@@ -17,7 +17,7 @@ class Synth extends Component {
   }
 
   componentDidMount() {
-    const { minOctave, maxOctave, octaveShiftThreshold, motionFrequency, firePeakSpacing, octaveShiftPeakSpacing, noteDuration, maxVelocity, fireThreshold, debuggerMode, maxHistoryLength, maxHistoryLengthForStats, historyCrunch } = this.props.config
+    const { motionFrequency, firePeakSpacing, octaveShiftPeakSpacing, noteDuration, maxVelocity, fireThreshold, debuggerMode, maxHistoryLength, maxHistoryLengthForStats, historyCrunch } = this.props.config
     window.addEventListener("deviceorientation", event => {
       const beta = Math.floor(event.beta)
       const pitchArray = this.state.pitchArray
@@ -32,18 +32,19 @@ class Synth extends Component {
       return isPeak && !history.slice(history.length - (x ? firePeakSpacing : octaveShiftPeakSpacing)).map(o => x ? o.fire : o.shiftOctaveRange).includes(true)
     }
 
-    const getOctaveRange = (accZ, history) => {
-      const enoughForceForOctaveShift = accZ > octaveShiftThreshold || accZ < -octaveShiftThreshold
-      const shiftOctave = enoughForceForOctaveShift && shouldEngage({accValue: accZ, x: false, history})
-      if (shiftOctave) {
-        const newOctaveRange = Math.sign(accZ) + this.state.octaveRange
-        return newOctaveRange < minOctave
-          ? minOctave
-          : newOctaveRange > maxOctave
-            ? maxOctave
-            : newOctaveRange
-      }
-    }
+    // const getOctaveRange = (accZ, history) => {
+    // const { minOctave, maxOctave, octaveShiftThreshold } = this.props.config
+    //   const enoughForceForOctaveShift = accZ > octaveShiftThreshold || accZ < -octaveShiftThreshold
+    //   const shiftOctave = enoughForceForOctaveShift && shouldEngage({accValue: accZ, x: false, history})
+    //   if (shiftOctave) {
+    //     const newOctaveRange = Math.sign(accZ) + this.state.octaveRange
+    //     return newOctaveRange < minOctave
+    //       ? minOctave
+    //       : newOctaveRange > maxOctave
+    //         ? maxOctave
+    //         : newOctaveRange
+    //   }
+    // }
 
     const deviceMotionEvent = event => {
       const oldHistory = this.state.history
