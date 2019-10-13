@@ -13,7 +13,8 @@ class Synth extends Component {
       },
       pitchMark: 1,
       history: [],
-      release: false,
+      uninterestinEvents: 0,
+      lifted: true,
       octaveRange: props.config.defaultOctaveRange,
       pitchArray: ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'],
       colorArray: ['#d21d1d', '#fffa17', '#2bc823', '#0fddde', '#1d63ce', '#6a18d4', '#d418a1', '#ff7f0e', '#acff0e', '#ff8282', '#8b7bc8', '#cddc39']
@@ -40,40 +41,47 @@ class Synth extends Component {
     })
   }
 
-  shouldEngage({accX, history}) {
-    const { firePeakSpacing } = this.props.config
-    const isPeak = history.length && (accX < history[history.length -1]['accX'])
-    return isPeak && !history.slice(history.length - (firePeakSpacing)).map(o => o.fire).includes(true)
+  shouldEngage({event, history}) {
+    const { motionFrequency, fireThreshold, fireRecovery } = this.props.config
+    const { uninterestinEvents, lifted } = this.state
+    const accX = event.dm.gx
+    const enoughForceForFire = accX > fireThreshold
+    if (enoughForceForFire) {
+      const enoughUninterestingEventsHavePassed = fireRecovery < (uninterestinEvents * motionFrequency)
+      if (lifted || enoughUninterestingEventsHavePassed) {
+        return !!history.length && (accX < history[history.length -1].accX) // is peak
+      }
+    }
   }
 
   deviceMotionEvent(event) {
-    const { fireThreshold, debuggerMode, maxHistoryLength, maxHistoryLengthForStats, historyCrunch } = this.props.config
+    const { liftedThreshold, debuggerMode, maxHistoryLength, maxHistoryLengthForStats, historyCrunch } = this.props.config
     const oldHistory = this.state.history
     const topHistoryLength = debuggerMode ? maxHistoryLengthForStats : maxHistoryLength
     const history = oldHistory.length > topHistoryLength ? oldHistory.slice(oldHistory.length - historyCrunch) : oldHistory
     const accX = event.dm.gx
-    const enoughForceForFire = accX > fireThreshold
-    const fire = enoughForceForFire && this.shouldEngage({accX, history})
-    const alpha = event.do.alpha
-    const beta = event.do.beta
-    const gamma = event.do.gamma
+    const lift = accX < liftedThreshold
+    const fire = this.shouldEngage({event, history})
+    const uninterestinEvents = fire ? 0 : (this.state.uninterestinEvents + 1)
+    const lifted = fire ? false : lift ? true : this.state.lifted
     this.pitch(event)
     fire && this.fire(accX)
     const historyObject = {
-      alpha,
-      beta,
-      gamma,
       accX,
-      fire
+      fire,
+      lifted,
+      uninterestinEvents
     }
     this.setState({
       debugger: {
-        alpha: alpha || 'No rotation detected',
-        beta: beta || 'No rotation detected',
-        gamma: gamma || 'No rotation detected',
+        alpha: event.do.alpha || 'No rotation detected',
+        beta: event.do.beta || 'No rotation detected',
+        gamma: event.do.gamma || 'No rotation detected',
         accX: accX || 'No acceleration detected'
       },
-      history: history.concat([historyObject])
+      lifted,
+      history: history.concat([historyObject]),
+      uninterestinEvents
     })
   }
 

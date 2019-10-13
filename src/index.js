@@ -6,10 +6,11 @@ import fulltilt from './fulltilt'; // eslint-disable-line
 
 const config = {
   defaultOctaveRange: 4, // What octave range to start on
-  firePeakSpacing: 10, // How often can you trigger an attack
   minOctave: 1, // What's the maximum octave
   maxOctave: 6, // What's the minimum octave
   fireThreshold: 15, // What's the acceleration threshols for triggering an attack
+  liftedThreshold: 5, // What's the acceleration threshols for triggering a lift
+  fireRecovery: 1000, // ms for another fire to occur without lift
   maxVelocity: 50, // What's the minimum acceleration to trigger maximum velocity
   noteDuration: 0.5, // What's the duration of a note (ms or annotation)
   motionFrequency: 5, // What's the resolution for motion detection (ms)
