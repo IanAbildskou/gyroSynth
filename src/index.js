@@ -32,7 +32,8 @@ const config = {
   debuggerMode: true, // Show more tools for debugging and calibration
   historyCrunch: 10, // How many entries do we want to scrape off per slice. This is a performance question
   alternativePitchShift: true,
-  pitchShiftDegreeThreshold: 20
+  pitchShiftDegreeThreshold: 20,
+  tactileFeedbackLength: 50 // ms for vibration on fire
 }
 
 ReactDOM.render(<App config={config} />, document.getElementById('root'));

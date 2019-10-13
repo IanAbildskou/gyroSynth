@@ -29,9 +29,10 @@ class Synth extends Component {
   }
 
   fire(accX) {
-    const { noteDuration, maxVelocity, fireThreshold } = this.props.config
+    const { noteDuration, maxVelocity, fireThreshold, tactileFeedbackLength } = this.props.config
     const absoluteVelocity = (accX - fireThreshold) / maxVelocity
     const adjustedVelocity = Math.min(absoluteVelocity, 1)
+    window.navigator.vibrate(tactileFeedbackLength)
     this.props.synthCollection.map((synth, index) => {
       const pitchSpan = index === 1 ? (this.state.minor ? 3 : 4) : (index === 2 ? 7 : 0)
       const pitchArray = this.state.pitchArray
