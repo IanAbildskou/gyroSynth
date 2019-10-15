@@ -5,8 +5,6 @@ import * as serviceWorker from './serviceWorker';
 import fulltilt from './fulltilt'; // eslint-disable-line
 
 const config = {
-  defaultOctaveRange: 4, // What octave range to start on
-  minOctave: 1, // What's the maximum octave
   maxOctave: 6, // What's the minimum octave
   fireThreshold: 15, // What's the acceleration threshols for triggering an attack
   liftedThreshold: 5, // What's the acceleration threshols for triggering a lift
@@ -31,8 +29,9 @@ const config = {
   maxHistoryLengthForStats: 10000, // We want to have a lot of history to export when debugging
   debuggerMode: true, // Show more tools for debugging and calibration
   historyCrunch: 10, // How many entries do we want to scrape off per slice. This is a performance question
-  alternativePitchShift: true,
-  pitchShiftDegreeThreshold: 20
+  pitchShiftDegreeThreshold: 20,
+  pitchArray: ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'],
+  colorArray: ['#d21d1d', '#fffa17', '#2bc823', '#0fddde', '#1d63ce', '#6a18d4', '#d418a1', '#ff7f0e', '#acff0e', '#ff8282', '#8b7bc8', '#cddc39']
 }
 
 ReactDOM.render(<App config={config} />, document.getElementById('root'));
