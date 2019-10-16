@@ -6,7 +6,7 @@ class Synth extends Component {
   constructor(props) {
     super(props)
     const { maxOctave, pitchArray, colorArray } = props.config
-    const structuredPitchArray = (new Array(maxOctave)).map((o, octaveIndex) => {
+    const structuredPitchArray = [...Array(maxOctave).keys()].map((o, octaveIndex) => {
       return pitchArray.map((pitch, pitchIndex) => {
         return { octave: octaveIndex + 1, color: colorArray[pitchIndex], pitch }
       })
@@ -26,19 +26,21 @@ class Synth extends Component {
   }
 
   setPitch(pitchMark, pitchAlphaAnchor) {
-    const color = this.state.structuredPitchArray[pitchMark].color
+    const pitch = this.state.structuredPitchArray[pitchMark]
+    const color = pitch && pitch.color
     document.getElementsByTagName('BODY')[0].style.backgroundColor = color
     this.setState({pitchMark, pitchAlphaAnchor})
   }
 
   fire(accX) {
     const { noteDuration, maxVelocity, fireThreshold } = this.props.config
+    const { pitchMark, structuredPitchArray, minor } = this.state
     const absoluteVelocity = (accX - fireThreshold) / maxVelocity
     const adjustedVelocity = Math.min(absoluteVelocity, 1)
     this.props.synthCollection.map((synth, index) => {
-      const pitchSpan = index === 1 ? (this.state.minor ? 3 : 4) : (index === 2 ? 7 : 0)
-      const pitchArray = this.state.pitchArray
-      const pitch = pitchArray.concat(pitchArray)[this.state.pitchMark + pitchSpan] + this.state.octaveRange
+      const pitchSpan = index === 1 ? (minor ? 3 : 4) : (index === 2 ? 7 : 0)
+      const pitchObject = structuredPitchArray[pitchMark + pitchSpan]
+      const pitch = pitchObject.pitch + pitchObject.octave
       synth.triggerAttackRelease(pitch, noteDuration, undefined, adjustedVelocity)
       return null
     })
@@ -91,18 +93,18 @@ class Synth extends Component {
   checkPitch(event) {
     const { pitchShiftDegreeThreshold } = this.props.config
     const { pitchMark, pitchAlphaAnchor, structuredPitchArray } = this.state
-    let alpha = 360 - event.do.alpha
+    let alpha = event.do.alpha
     const gamma = event.do.gamma
     if (gamma < 0) {
       alpha = (alpha > 180) ? (alpha - 180) : (alpha + 180)
     }
     const difference = alpha - pitchAlphaAnchor
-    const absoluteDifference = Math.abs(difference)
-    const shouldShift = absoluteDifference > pitchShiftDegreeThreshold
+    const absoluteDistance = Math.min(Math.abs(difference), Math.abs(difference + 360), Math.abs(difference - 360))
+    const shouldShift = absoluteDistance >= pitchShiftDegreeThreshold
     if (shouldShift) {
-      const isCrossingBoundary = absoluteDifference > 180
-      const pitchUp = isCrossingBoundary ? difference > 0 : difference < 0
-      const pitchChange = Math.ceil(difference / pitchShiftDegreeThreshold) * pitchUp ? 1 : -1
+      const isCrossingBoundary = Math.abs(difference) > 180
+      const pitchUp = isCrossingBoundary ? difference < 0 : difference > 0
+      const pitchChange = Math.floor(absoluteDistance / pitchShiftDegreeThreshold) * (pitchUp ? 1 : -1)
       const newMark = pitchMark + pitchChange
       const adjustedNewMark = Math.min(Math.max(newMark, 0), structuredPitchArray.length -1) // can only be between 0 and max pitch
       const newAnchor = pitchAlphaAnchor + (pitchChange * pitchShiftDegreeThreshold)
@@ -128,7 +130,7 @@ class Synth extends Component {
         this.deviceMotionEvent(event);
       })
     });
-    const initialPitchMark = structuredPitchArray[Math.floor(structuredPitchArray.length / 2)] // The initial pitch mark is just the absolute middle
+    const initialPitchMark = Math.floor(structuredPitchArray.length / 2) // The initial pitch mark is just the absolute middle
     this.setPitch(initialPitchMark, 0) // Initial anchor is at 0 degress
     // setInterval(() => this.deviceMotionEvent({dm: {gz: 0, gx: -Math.random() * 60}}), 200)
   }
@@ -136,7 +138,7 @@ class Synth extends Component {
   render() {
     const { pitchMark, structuredPitchArray, minor, debuggerInfo, history } = this.state
     const { synthCollection, config } = this.props
-    const currentPitch = structuredPitchArray[pitchMark]
+    const currentPitch = structuredPitchArray[pitchMark] || {}
     return (
       <div className='synth'>
         {(synthCollection.length > 1) && <div
@@ -159,7 +161,7 @@ class Synth extends Component {
             </div>
           </span>
         }
-        <div className='pitch-indicator'>{currentPitch.pitch + currentPitch.octave}</div>
+        <div className='pitch-indicator'>{pitchMark + currentPitch.pitch + currentPitch.octave}</div>
       </div>
     )
   }
