@@ -100,11 +100,11 @@ class Synth extends Component {
     }
     const difference = alpha - pitchAlphaAnchor
     const absoluteDistance = Math.min(Math.abs(difference), Math.abs(difference + 360), Math.abs(difference - 360))
-    const shouldShift = absoluteDistance >= pitchShiftDegreeThreshold
+    const shouldShift = absoluteDistance >= (pitchShiftDegreeThreshold / 2)
     if (shouldShift) {
       const isCrossingBoundary = Math.abs(difference) > 180
       const pitchUp = isCrossingBoundary ? difference < 0 : difference > 0
-      const pitchChange = Math.floor(absoluteDistance / pitchShiftDegreeThreshold) * (pitchUp ? 1 : -1)
+      const pitchChange = Math.floor(absoluteDistance / (pitchShiftDegreeThreshold / 2)) * (pitchUp ? 1 : -1)
       const newMark = pitchMark + pitchChange
       const adjustedNewMark = Math.min(Math.max(newMark, 0), structuredPitchArray.length -1) // can only be between 0 and max pitch
       const newAnchor = pitchAlphaAnchor + (pitchChange * pitchShiftDegreeThreshold)
