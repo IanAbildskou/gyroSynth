@@ -10,7 +10,7 @@ class Synth extends Component {
       return pitchArray.map((pitch, pitchIndex) => {
         return { octave: octaveIndex + 1, color: colorArray[pitchIndex], pitch }
       })
-    }).flat()
+    }).flat().reverse()
 
     this.state = {
       debuggerInfo: {
@@ -161,7 +161,7 @@ class Synth extends Component {
             </div>
           </span>
         }
-        <div className='pitch-indicator'>{pitchMark + currentPitch.pitch + currentPitch.octave}</div>
+        <div className='pitch-indicator'>{currentPitch.pitch + currentPitch.octave}</div>
       </div>
     )
   }
