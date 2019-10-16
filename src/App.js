@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import Synth from './Synth';
+import Menu from './Menu';
 import Tone from 'tone';
 
 class App extends Component {
@@ -13,19 +14,12 @@ class App extends Component {
       decay: defaultDecay,
       sustain: defaultSustain,
       release: defaultRelease,
-      menuOpen: false
     }
   }
 
   render() {
-    const { defaultVolume, minAttack, maxAttack, minDecay, maxDecay, minSustain, maxSustain, minRelease, maxRelease } = this.props.config
+    const { defaultVolume } = this.props.config
     const {attack, decay, sustain, release} = this.state
-    const settingsArray = [
-      {prop: 'attack', min: minAttack, max: maxAttack},
-      {prop: 'decay', min: minDecay, max: maxDecay},
-      {prop: 'sustain', min: minSustain, max: maxSustain},
-      {prop: 'release', min: minRelease, max: maxRelease},
-    ]
     const synthOptions = {
       oscillator: {
         type: 'sine'
@@ -53,26 +47,9 @@ class App extends Component {
     }
     return (
       <div>
-        <div className={'menu' + (this.state.menuOpen ? ' open' : '')}>
-          {
-            settingsArray.map(setting => {
-              return (
-                <div key={setting.prop} className="slidecontainer">
-                  <div className='setting-name'>{setting.prop}</div>
-                  <input defaultValue={this.state[setting.prop] * 100} type="range" min={setting.min} max={setting.max} className="slider" id="myRange" onChange={changeProp(setting.prop)}/>
-                </div>
-              )
-            })
-          }
-          <div className='header' onClick={() => this.setState({menuOpen: !this.state.menuOpen})}>
-            <svg className='arrow' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70.71 49.5">
-              <polygon points="35.35 21.21 14.14 0 0 14.14 35.35 49.5 70.71 14.14 56.57 0 35.35 21.21"/>
-            </svg>
-            <h1>gyroSynth</h1>
-          </div>
-        </div>
-      <div className='chord-toggle' onClick={setChords}>{isInChordMode ? 'Chords' : 'Single note'}</div>
-      <Synth config={this.props.config} synthCollection={synthCollection}></Synth>
+        <Menu changeProp={changeProp} config={this.props.config}/>
+        <div className='chord-toggle' onClick={setChords}>{isInChordMode ? 'Chords' : 'Single note'}</div>
+        <Synth config={this.props.config} synthCollection={synthCollection}/>
       </div>
     );
   }
