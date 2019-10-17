@@ -27,7 +27,7 @@ const config = {
   defaultVolume: 20,
   maxHistoryLength: 50, // How much history do we want to keep around
   maxHistoryLengthForStats: 10000, // We want to have a lot of history to export when debugging
-  debuggerMode: false, // Show more tools for debugging and calibration
+  debuggerMode: true, // Show more tools for debugging and calibration
   historyCrunch: 10, // How many entries do we want to scrape off per slice. This is a performance question
   pitchShiftDegreeThreshold: 20,
   pitchArray: ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'],

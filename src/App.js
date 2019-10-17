@@ -32,7 +32,10 @@ class App extends Component {
       }
     }
     const synthCollection = this.state.synthArray.map(() => new Tone.Synth(synthOptions).toMaster())
-    synthCollection.map(synth => synth.volume.value = defaultVolume)
+    synthCollection.map(synth => {
+      synth.volume.value = defaultVolume
+      return synth
+    })
     const reset = () => synthCollection.map(synth => synth.dispose())
     const changeProp = prop => e => {
       const value = e.target.value / 100
@@ -48,7 +51,7 @@ class App extends Component {
     return (
       <div>
         <Menu changeProp={changeProp} config={this.props.config}/>
-        <div className='chord-toggle' onClick={setChords}>{isInChordMode ? 'Chords' : 'Single note'}</div>
+        <div className='main-button chord-toggle' onClick={setChords}>{isInChordMode ? 'Chords' : 'Single note'}</div>
         <Synth config={this.props.config} synthCollection={synthCollection}/>
       </div>
     );

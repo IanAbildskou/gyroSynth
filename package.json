@@ -16,7 +16,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "npm run build && now build -A ../now.json"
+    "deploy-production": "npm run build && now build -A ../now.json",
+    "deploy-staging": "npm run build && now build -A ../now.json --name gyroSynthStaging"
   },
   "eslintConfig": {
     "extends": "react-app"
