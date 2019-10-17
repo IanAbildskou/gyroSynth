@@ -107,6 +107,16 @@ body {
   transform: translateY(calc(0px - 48px));
   z-index: 10;
   background-color: black;
+  height: 100%;
+}
+
+.close-menu {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-size: 3em;
+  padding: 16px;
+  box-sizing: border-box;
 }
 
 svg {
@@ -149,4 +159,9 @@ svg {
   border-radius: 4px;
   background: yellow;
   cursor: pointer;
+}
+
+.slider-container {
+  height: 100%;
+  overflow-y: scroll;
 }

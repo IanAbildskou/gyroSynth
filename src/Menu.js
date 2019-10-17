@@ -8,28 +8,37 @@ class Menu extends Component {
     }
   }
 
+  renderSection(setting, section) {
+    const settingProps = setting[1]
+    const settingKey = setting[0]
+    return (
+      <div key={settingKey} className="slidecontainer">
+        <div className='setting-name'>{settingProps.label}</div>
+        <input
+          defaultValue={settingProps.value * 100}
+          type="range"
+          min={settingProps.minValue * 100}
+          max={settingProps.maxValue * 100}
+          className="slider" id="myRange" onChange={this.props.changeProp(settingKey, section)}
+        />
+      </div>
+    )
+  }
+
   render() {
-    const { config, changeProp } = this.props
-    const { minAttack, maxAttack, minDecay, maxDecay, minSustain, maxSustain, minRelease, maxRelease } = config
-    const settingsArray = [
-      {prop: 'attack', min: minAttack, max: maxAttack},
-      {prop: 'decay', min: minDecay, max: maxDecay},
-      {prop: 'sustain', min: minSustain, max: maxSustain},
-      {prop: 'release', min: minRelease, max: maxRelease},
-    ]
+    const { simple, advanced } = this.props.config
+    const advancedSettings = Object.entries(advanced)
+    const simpleSettings = Object.entries(simple)
+    const toggleMenu = () => this.setState({menuOpen: !this.state.menuOpen})
     return (
       <div className={'menu' + (this.state.menuOpen ? ' open' : '')}>
-        {
-          settingsArray.map(setting => {
-            return (
-              <div key={setting.prop} className="slidecontainer">
-                <div className='setting-name'>{setting.prop}</div>
-                <input defaultValue={this.state[setting.prop] * 100} type="range" min={setting.min} max={setting.max} className="slider" id="myRange" onChange={changeProp(setting.prop)}/>
-              </div>
-            )
-          })
-        }
-        <div className='header' onClick={() => this.setState({menuOpen: !this.state.menuOpen})}>
+        <div className={'slider-container'}>
+          <div className={'close-menu'} onClick={toggleMenu}>Close</div>
+          {advancedSettings.map(setting => this.renderSection(setting, 'advanced'))}
+          {simpleSettings.map(setting => this.renderSection(setting, 'simple'))}
+          <div className={'close-menu'} onClick={toggleMenu}>Close</div>
+        </div>
+        <div className='header' onClick={toggleMenu}>
           <svg className='arrow' viewBox="0 0 70.71 49.5">
             <polygon points="35.35 21.21 14.14 0 0 14.14 35.35 49.5 70.71 14.14 56.57 0 35.35 21.21"/>
           </svg>
