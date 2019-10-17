@@ -12,7 +12,7 @@ class Menu extends Component {
     const settingProps = setting[1]
     const settingKey = setting[0]
     return (
-      <div key={settingKey} className="slidecontainer">
+      <div key={settingKey} className={"slidecontainer " + section}>
         <div className='setting-name'>{settingProps.label}</div>
         <div className='setting-description'>{settingProps.description}</div>
         <input
@@ -34,10 +34,15 @@ class Menu extends Component {
     return (
       <div className={'menu' + (this.state.menuOpen ? ' open' : '')}>
         <div className={'slider-container'}>
-          <div className={'close-menu'} onClick={toggleMenu}>Close</div>
-          {advancedSettings.map(setting => this.renderSection(setting, 'advanced'))}
-          {simpleSettings.map(setting => this.renderSection(setting, 'simple'))}
-          <div className={'close-menu'} onClick={toggleMenu}>Close</div>
+          <div className='simple-options'>
+            <div className={'close-menu'} onClick={toggleMenu}>Close</div>
+            {simpleSettings.map(setting => this.renderSection(setting, 'simple'))}
+          </div>
+          <div className='advanced-options'>
+            <div className='advanced-option-header'>Advanced options</div>
+            {advancedSettings.map(setting => this.renderSection(setting, 'advanced'))}
+            <div className={'close-menu'} onClick={toggleMenu}>Close</div>
+          </div>
         </div>
         <div className='header' onClick={toggleMenu}>
           <svg className='arrow' viewBox="0 0 70.71 49.5">
