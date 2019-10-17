@@ -3,7 +3,6 @@ import './App.css';
 import Synth from './Synth';
 import Menu from './Menu';
 import Tone from 'tone';
-// import Unmute from 'unmute';
 
 class App extends Component {
   constructor(props) {
@@ -35,9 +34,6 @@ class App extends Component {
     const synthCollection = this.state.synthArray.map(() => new Tone.Synth(synthOptions).toMaster())
     synthCollection.map(synth => {
       synth.volume.value = defaultVolume
-      // Unmute({
-      //   context: synth.context
-      // })
       return synth
     })
     const reset = () => synthCollection.map(synth => synth.dispose())
@@ -55,7 +51,7 @@ class App extends Component {
     return (
       <div>
         <Menu changeProp={changeProp} config={this.props.config}/>
-        <div className='chord-toggle' onClick={setChords}>{isInChordMode ? 'Chords' : 'Single note'}</div>
+        <div className='main-button chord-toggle' onClick={setChords}>{isInChordMode ? 'Chords' : 'Single note'}</div>
         <Synth config={this.props.config} synthCollection={synthCollection}/>
       </div>
     );

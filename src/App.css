@@ -42,8 +42,7 @@ body {
   vertical-align: middle;
 }
 
-.pedal-button,
-.chord-toggle,
+.main-button,
 .slider {
   width: 94%;
   margin: 0 3% 3%;
@@ -52,21 +51,24 @@ body {
 
 .pedal-button {
   height: 200px;
-  color: white;
-  text-align: center;
-  font-size: 2em;
-  font-weight: bold;
   line-height: 200px;
-  background-color: rgba(0, 0, 0, 0.2);
 }
 
 .chord-toggle {
   height: 80px;
+  line-height: 80px;
+}
+
+.attack-toggle {
+  height: 80px;
+  line-height: 80px;
+}
+
+.main-button {
   color: white;
   text-align: center;
   font-size: 2em;
   font-weight: bold;
-  line-height: 80px;
   background-color: rgba(0, 0, 0, 0.2);
 }
 

@@ -37,8 +37,11 @@ class Synth extends Component {
     const { pitchMark, structuredPitchArray, minor } = this.state
     const absoluteVelocity = (accX - fireThreshold) / maxVelocity
     const adjustedVelocity = Math.min(absoluteVelocity, 1)
-    window.navigator.vibrate(tactileFeedbackDuration)
+    window.navigator.vibrate && window.navigator.vibrate(tactileFeedbackDuration)
     this.props.synthCollection.map((synth, index) => {
+      if (synth.context.state !== 'running') { // This is most of all for safety. I think also it solved an ios issue where sound would not resume after minimizing
+        synth.context.resume();
+      }
       const pitchSpan = index === 1 ? (minor ? 3 : 4) : (index === 2 ? 7 : 0)
       const pitchObject = structuredPitchArray[pitchMark + pitchSpan]
       const pitch = pitchObject.pitch + pitchObject.octave
@@ -143,7 +146,7 @@ class Synth extends Component {
     return (
       <div className='synth'>
         {(synthCollection.length > 1) && <div
-          className={'pedal-button' + (minor ? ' on': '')}
+          className={'main-button pedal-button ' + (minor ? ' on': '')}
           onTouchStart={() => {
             this.setState({minor: true})
           }}
@@ -151,6 +154,7 @@ class Synth extends Component {
             this.setState({minor: false})
           }}>{minor ? 'Minor' : 'Major'}</div>
         }
+        <div className='main-button attack-toggle' onClick={() => this.fire(30)}>Attack</div>
         {
           config.debuggerMode && <span>
             <SaveStats history={history}/>
