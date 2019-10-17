@@ -133,7 +133,7 @@ class Synth extends Component {
     });
     const initialPitchMark = Math.floor(structuredPitchArray.length / 2) // The initial pitch mark is just the absolute middle
     this.setPitch(initialPitchMark, 0) // Initial anchor is at 0 degress
-    // setInterval(() => this.deviceMotionEvent({dm: {gz: 0, gx: -Math.random() * 60}}), 200)
+    // setInterval(() => this.fire(50), 200)
   }
 
   render() {

@@ -3,6 +3,7 @@ import './App.css';
 import Synth from './Synth';
 import Menu from './Menu';
 import Tone from 'tone';
+// import Unmute from 'unmute';
 
 class App extends Component {
   constructor(props) {
@@ -32,7 +33,13 @@ class App extends Component {
       }
     }
     const synthCollection = this.state.synthArray.map(() => new Tone.Synth(synthOptions).toMaster())
-    synthCollection.map(synth => synth.volume.value = defaultVolume)
+    synthCollection.map(synth => {
+      synth.volume.value = defaultVolume
+      // Unmute({
+      //   context: synth.context
+      // })
+      return synth
+    })
     const reset = () => synthCollection.map(synth => synth.dispose())
     const changeProp = prop => e => {
       const value = e.target.value / 100
