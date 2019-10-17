@@ -7,40 +7,36 @@ import Tone from 'tone';
 class App extends Component {
   constructor(props) {
     super(props)
-    const { defaultAttack, defaultSustain, defaultRelease, defaultDecay } = props.config
-    this.state = {
+    this.state = Object.assign({}, {
       synthArray: [1],
-      attack: defaultAttack,
-      decay: defaultDecay,
-      sustain: defaultSustain,
-      release: defaultRelease,
-    }
+    }, props.config)
   }
 
   render() {
-    const { defaultVolume } = this.props.config
-    const {attack, decay, sustain, release} = this.state
+    const { volume, attack, decay, sustain, release } = this.state.configurableVariables.simple
     const synthOptions = {
       oscillator: {
         type: 'sine'
       },
       envelope: {
-        attack,
-        decay,
-        sustain,
-        release
+        attack: attack.value,
+        decay: decay.volume,
+        sustain: sustain.volume,
+        release: release.volume
       }
     }
     const synthCollection = this.state.synthArray.map(() => new Tone.Synth(synthOptions).toMaster())
-    synthCollection.map(synth => {
-      synth.volume.value = defaultVolume
-      return synth
-    })
+    synthCollection.map(synth => synth.volume.value = volume.value)
     const reset = () => synthCollection.map(synth => synth.dispose())
-    const changeProp = prop => e => {
-      const value = e.target.value / 100
+    const changeProp = (key, section) => e => {
+      const value = e.target.value / 100 // stupid slider can't handle floats
       reset()
-      this.setState({[prop]: value})
+      const configurableVariables = this.state.configurableVariables
+      const oldProp = configurableVariables[section][key]
+      const newProp = Object.assign({}, oldProp, { value })
+      const newSection = Object.assign({}, configurableVariables[section], {[key]: newProp })
+      const newConfig = Object.assign({}, configurableVariables, {[section]: newSection})
+      this.setState({configurableVariables: newConfig})
     }
     const isInChordMode = this.state.synthArray.length > 1
 
@@ -50,9 +46,15 @@ class App extends Component {
     }
     return (
       <div>
-        <Menu changeProp={changeProp} config={this.props.config}/>
+        <Menu changeProp={changeProp} config={this.state.configurableVariables}/>
         <div className='main-button chord-toggle' onClick={setChords}>{isInChordMode ? 'Chords' : 'Single note'}</div>
-        <Synth config={this.props.config} synthCollection={synthCollection}/>
+        <Synth
+          config={this.state.configurableVariables}
+          colorArray={this.state.colorArray}
+          pitchArray={this.state.pitchArray}
+          debuggerMode={this.state.debuggerMode}
+          synthCollection={synthCollection}
+          />
       </div>
     );
   }

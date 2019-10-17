@@ -5,10 +5,10 @@ import SaveStats from './SaveStats';
 class Synth extends Component {
   constructor(props) {
     super(props)
-    const { maxOctave, pitchArray, colorArray } = props.config
-    const structuredPitchArray = [...Array(maxOctave).keys()].map((o, octaveIndex) => {
-      return pitchArray.map((pitch, pitchIndex) => {
-        return { octave: octaveIndex + 1, color: colorArray[pitchIndex], pitch }
+    const { maxOctave } = props.config.advanced
+    const structuredPitchArray = [...Array(maxOctave.value).keys()].map((o, octaveIndex) => {
+      return props.pitchArray.map((pitch, pitchIndex) => {
+        return { octave: octaveIndex + 1, color: props.colorArray[pitchIndex], pitch }
       })
     }).flat().reverse()
 
@@ -33,11 +33,12 @@ class Synth extends Component {
   }
 
   fire(accX) {
-    const { noteDuration, maxVelocity, fireThreshold, tactileFeedbackDuration } = this.props.config
+    const { maxVelocity, fireThreshold, tactileFeedbackDuration } = this.props.config.advanced
+    const { noteDuration } = this.props.config.simple
     const { pitchMark, structuredPitchArray, minor } = this.state
-    const absoluteVelocity = (accX - fireThreshold) / maxVelocity
+    const absoluteVelocity = (accX - fireThreshold.value) / maxVelocity.value
     const adjustedVelocity = Math.min(absoluteVelocity, 1)
-    window.navigator.vibrate && window.navigator.vibrate(tactileFeedbackDuration)
+    window.navigator.vibrate && window.navigator.vibrate(tactileFeedbackDuration.value)
     this.props.synthCollection.map((synth, index) => {
       if (synth.context.state !== 'running') { // This is most of all for safety. I think also it solved an ios issue where sound would not resume after minimizing
         synth.context.resume();
@@ -45,18 +46,18 @@ class Synth extends Component {
       const pitchSpan = index === 1 ? (minor ? 3 : 4) : (index === 2 ? 7 : 0)
       const pitchObject = structuredPitchArray[pitchMark + pitchSpan]
       const pitch = pitchObject.pitch + pitchObject.octave
-      synth.triggerAttackRelease(pitch, noteDuration, undefined, adjustedVelocity)
+      synth.triggerAttackRelease(pitch, noteDuration.value, undefined, adjustedVelocity)
       return null
     })
   }
 
   shouldEngage({event, history}) {
-    const { motionFrequency, fireThreshold, fireRecovery } = this.props.config
+    const { motionFrequency, fireThreshold, fireRecovery } = this.props.config.advanced
     const { uninterestinEvents, lifted } = this.state
     const accX = event.dm.gx
-    const enoughForceForFire = accX > fireThreshold
+    const enoughForceForFire = accX > fireThreshold.value
     if (enoughForceForFire) {
-      const enoughUninterestingEventsHavePassed = fireRecovery < (uninterestinEvents * motionFrequency)
+      const enoughUninterestingEventsHavePassed = fireRecovery.value < (uninterestinEvents * motionFrequency.value)
       if (lifted || enoughUninterestingEventsHavePassed) {
         return !!history.length && (accX < history[history.length -1].accX) // is peak
       }
@@ -64,12 +65,12 @@ class Synth extends Component {
   }
 
   deviceMotionEvent(event) {
-    const { liftedThreshold, debuggerMode, maxHistoryLength, maxHistoryLengthForStats, historyCrunch } = this.props.config
+    const { liftedThreshold, maxHistoryLength, maxHistoryLengthForStats, historyCrunch } = this.props.config.advanced
     const oldHistory = this.state.history
-    const topHistoryLength = debuggerMode ? maxHistoryLengthForStats : maxHistoryLength
-    const history = oldHistory.length > topHistoryLength ? oldHistory.slice(oldHistory.length - historyCrunch) : oldHistory
+    const topHistoryLength = this.props.debuggerMode ? maxHistoryLengthForStats.value : maxHistoryLength.value
+    const history = oldHistory.length > topHistoryLength ? oldHistory.slice(oldHistory.length - historyCrunch.value) : oldHistory
     const accX = event.dm.gx
-    const lift = accX < liftedThreshold
+    const lift = accX < liftedThreshold.value
     const fire = this.shouldEngage({event, history})
     const uninterestinEvents = fire ? 0 : (this.state.uninterestinEvents + 1)
     const lifted = fire ? false : lift ? true : this.state.lifted
@@ -95,7 +96,7 @@ class Synth extends Component {
   }
 
   checkPitch(event) {
-    const { pitchShiftDegreeThreshold } = this.props.config
+    const { value: pitchShiftDegreeThreshold } = this.props.config.simple.pitchShiftDegreeThreshold
     const { pitchMark, pitchAlphaAnchor, structuredPitchArray } = this.state
     let alpha = event.do.alpha
     const gamma = event.do.gamma
@@ -118,11 +119,11 @@ class Synth extends Component {
   }
 
   componentDidMount() {
-    const { motionFrequency } = this.props.config
+    const { motionFrequency } = this.props.config.advanced
     const { structuredPitchArray } = this.state
     var gyroNorm = new GyroNorm();
     const gyroNormOptions = {
-      frequency: motionFrequency,					// ( How often the object sends the values - milliseconds )
+      frequency: motionFrequency.value,					// ( How often the object sends the values - milliseconds )
       gravityNormalized: true,		        // ( If the gravity related values to be normalized )
       orientationBase: GyroNorm.GAME,	   	// ( Can be GyroNorm.GAME or GyroNorm.WORLD. gn.GAME returns orientation values with respect to the head direction of the device. gn.WORLD returns the orientation values with respect to the actual north direction of the world. )
       decimalCount: 1,				            // ( How many digits after the decimal point will there be in the return values )
@@ -141,7 +142,7 @@ class Synth extends Component {
 
   render() {
     const { pitchMark, structuredPitchArray, minor, debuggerInfo, history } = this.state
-    const { synthCollection, config } = this.props
+    const { synthCollection, debuggerMode } = this.props
     const currentPitch = structuredPitchArray[pitchMark] || {}
     return (
       <div className='synth'>
@@ -156,7 +157,7 @@ class Synth extends Component {
         }
         <div className='main-button attack-toggle' onClick={() => this.fire(30)}>Attack</div>
         {
-          config.debuggerMode && <span>
+          debuggerMode && <span>
             <SaveStats history={history}/>
             <div className='debugger'>
               <div>Acceleration X: {debuggerInfo.accX}</div>
@@ -166,7 +167,7 @@ class Synth extends Component {
             </div>
           </span>
         }
-        <div className='pitch-indicator'>{currentPitch.pitch + currentPitch.octave}</div>
+        <div className='pitch-indicator'>{currentPitch.pitch && currentPitch.pitch + currentPitch.octave}</div>
       </div>
     )
   }
