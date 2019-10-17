@@ -31,12 +31,16 @@ class App extends Component {
         release
       }
     }
-    const synthCollection = this.state.synthArray.map(() => new Tone.Synth(synthOptions).toMaster())
+    const reverb = new Tone.Freeverb().toMaster();
+    const synthCollection = this.state.synthArray.map(() => new Tone.Synth(synthOptions).connect(reverb))
     synthCollection.map(synth => {
       synth.volume.value = defaultVolume
       return synth
     })
-    const reset = () => synthCollection.map(synth => synth.dispose())
+    const reset = () => {
+      synthCollection.map(synth => synth.dispose())
+      reverb.dispose()
+    }
     const changeProp = prop => e => {
       const value = e.target.value / 100
       reset()
