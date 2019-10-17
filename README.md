@@ -16,6 +16,10 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run deploy`
+### `npm run deploy-production`
 
 Builds and deploys the app to https://gyrosynth.surge.sh
+
+### `npm run deploy-staging`
+
+Builds and deploys the app to https://gyrosynthstaging.surge.sh
