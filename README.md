@@ -18,8 +18,8 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 ### `npm run deploy-production`
 
-Builds and deploys the app to https://gyrosynth.surge.sh
+Builds and deploys the app to https://gyrosynth.ianabildskou.now.sh
 
 ### `npm run deploy-staging`
 
-Builds and deploys the app to https://gyrosynthstaging.surge.sh
+Builds and deploys the app to https://gyrosynthstaging.ianabildskou.now.sh
