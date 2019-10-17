@@ -11,10 +11,12 @@ class Menu extends Component {
   renderSection(setting, section) {
     const settingProps = setting[1]
     const settingKey = setting[0]
+    const valueWithUnit = settingProps.value + (settingProps.unit ? ' ' + settingProps.unit : '')
     return (
       <div key={settingKey} className={"slidecontainer " + section}>
         <div className='setting-name'>{settingProps.label}</div>
         <div className='setting-description'>{settingProps.description}</div>
+        <div className='slider-value'>{valueWithUnit}</div>
         <input
           defaultValue={settingProps.value * 100}
           type="range"
