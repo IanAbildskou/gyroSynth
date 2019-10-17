@@ -14,6 +14,7 @@ class Menu extends Component {
     return (
       <div key={settingKey} className="slidecontainer">
         <div className='setting-name'>{settingProps.label}</div>
+        <div className='setting-description'>{settingProps.description}</div>
         <input
           defaultValue={settingProps.value * 100}
           type="range"

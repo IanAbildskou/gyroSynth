@@ -42,8 +42,7 @@ body {
   vertical-align: middle;
 }
 
-.main-button,
-.slider {
+.main-button {
   width: 94%;
   margin: 0 3% 3%;
   border-radius: 4px;
@@ -90,8 +89,8 @@ body {
 }
 
 .slidecontainer {
-  margin-top: 10px;
-  height: 50px;
+  margin-top: 32px;
+  margin: 0 3% 3%;
 }
 
 .menu {
@@ -128,18 +127,23 @@ svg {
 }
 
 .slider {
+  width: 100%;
   -webkit-appearance: none;
   height: 25px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.2);
   outline: none;
   -webkit-transition: .2s;
   transition: opacity .2s;
+  border-radius: 4px;
 }
 
 .setting-name {
   font-weight: bold;
   font-size: 1.2em;
-  margin-left: 3%;
+  margin-bottom: 4px;
+}
+
+.setting-description {
   margin-bottom: 4px;
 }
 
