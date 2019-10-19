@@ -16,6 +16,24 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run deploy`
+### `npm run deploy-production`
 
-Builds and deploys the app to https://gyrosynth.surge.sh
+Builds and deploys the app to https://gyrosynth.ianabildskou.now.sh
+
+### `npm run deploy-staging`
+
+Builds and deploys the app to https://gyrosynthstaging.ianabildskou.now.sh
+
+## Setting up tunneling
+
+To test on your phone from your local build you can set up a tunnel to your desktop
+Install `localtunnel` with
+
+#### `npm install -g localtunnel`
+
+Then run the tunnel with
+
+#### `lt --port 3000`
+
+or whatever port you have set up.
+You should then get a link you can go to on your phone.
