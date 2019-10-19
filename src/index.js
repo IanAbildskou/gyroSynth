@@ -41,7 +41,7 @@ const config = {
       },
       maxVelocity: {
         label: 'Max velocity',
-        value: 50,
+        value: 70,
         maxValue: 100,
         minValue: 0,
         unit: 'm/s²',
@@ -57,14 +57,14 @@ const config = {
       },
       maxHistoryLength: {
         label: 'Max history length',
-        value: 50,
+        value: 250,
         maxValue: 100,
         minValue: 1,
         description: 'How many entries of history do we want to keep around for peak detection for trigger attack. Less history means better performance but worse peak detection'
       },
       maxHistoryLengthForStats: {
         label: 'Max history length for stats',
-        value: 10000,
+        value: 100,
         maxValue: 1000000,
         minValue: 1,
         description: 'This is history max length for when advanced mode is enabled. Good for exporting stats to analyse. We want to have a lot of history to export when debugging'
@@ -83,6 +83,14 @@ const config = {
         minValue: 1,
         unit: 'ms',
         description: 'For how long should the phone vibrate when an attack is triggered.'
+      },
+      switchHandAmbienceDuration: {
+        label: 'How long rest when switching hands',
+        value: 50,
+        maxValue: 500,
+        minValue: 10,
+        unit: 'ms',
+        description: 'For how long should we wait when switching hands for the ambience to resolve'
       }
     },
     simple: {
@@ -135,7 +143,7 @@ const config = {
       },
       pitchShiftDegreeThreshold: {
         label: 'Pitch shift degree threshold',
-        value: 20,
+        value: 10,
         maxValue: 100,
         minValue: 1,
         unit: '°',

@@ -19,6 +19,7 @@ class Synth extends Component {
         beta: 'No rotation detected',
         accX: 'No acceleration detected'
       },
+      leftHanded: true,
       history: [],
       uninterestinEvents: 0,
       lifted: true,
@@ -52,15 +53,31 @@ class Synth extends Component {
     })
   }
 
-  shouldEngage({event, history}) {
+  shouldEngage({normalizedAccX, history}) {
     const { motionFrequency, fireThreshold, fireRecovery } = this.props.config.advanced
     const { uninterestinEvents, lifted } = this.state
-    const accX = event.dm.gx
-    const enoughForceForFire = accX > fireThreshold.value
+    const enoughForceForFire = normalizedAccX > fireThreshold.value
     if (enoughForceForFire) {
       const enoughUninterestingEventsHavePassed = fireRecovery.value < (uninterestinEvents * motionFrequency.value)
       if (lifted || enoughUninterestingEventsHavePassed) {
-        return !!history.length && (accX < history[history.length -1].accX) // is peak
+        return !!history.length && (normalizedAccX < history[history.length -1].normalizedAccX) // is peak
+      }
+    }
+  }
+
+  determineAmbience({event, history}) {
+    const { motionFrequency, switchHandAmbienceDuration } = this.props.config.advanced
+    const { leftHanded } = this.state
+    const accX = event.dm.gx
+    const withinRange = value => (value > 2) && (value < 12)
+    const checkIfInRange = value => withinRange(value * (leftHanded ? -1 : 1))
+    if (checkIfInRange(accX)) {
+      const ambienceThreshold = switchHandAmbienceDuration / motionFrequency
+      const historySlice = history.slice(history.length - ambienceThreshold, history.length)
+      const ambienceArray = historySlice.map(({ accX }) => checkIfInRange(accX))
+      const shouldSwitch = !ambienceArray.includes(false)
+      if (shouldSwitch) {
+        this.setState({ leftHanded: !leftHanded })
       }
     }
   }
@@ -71,20 +88,24 @@ class Synth extends Component {
     const topHistoryLength = this.props.debuggerMode ? maxHistoryLengthForStats.value : maxHistoryLength.value
     const history = oldHistory.length > topHistoryLength ? oldHistory.slice(oldHistory.length - historyCrunch.value) : oldHistory
     const accX = event.dm.gx
-    const lift = accX < liftedThreshold.value
-    const fire = this.shouldEngage({event, history})
+    const normalizedAccX = accX * (this.state.leftHanded ? 1 : -1)
+    const lift = normalizedAccX < liftedThreshold.value
+    const fire = this.shouldEngage({normalizedAccX, history})
+    this.determineAmbience({event, history})
     const uninterestinEvents = fire ? 0 : (this.state.uninterestinEvents + 1)
     const lifted = fire ? false : lift ? true : this.state.lifted
     this.checkPitch(event)
-    fire && this.fire(accX)
+    fire && this.fire(normalizedAccX)
     const historyObject = {
       accX,
+      normalizedAccX,
       fire,
       lifted,
       uninterestinEvents
     }
     this.setState({
       debuggerInfo: {
+        leftHanded: this.state.leftHanded,
         alpha: event.do.alpha || 'No rotation detected',
         beta: event.do.beta || 'No rotation detected',
         gamma: event.do.gamma || 'No rotation detected',
@@ -139,6 +160,7 @@ class Synth extends Component {
     const initialPitchMark = Math.floor(structuredPitchArray.length / 2) // The initial pitch mark is just the absolute middle
     this.setPitch(initialPitchMark, 0) // Initial anchor is at 0 degress
     // setInterval(() => this.fire(50), 200)
+    // this.determineAmbience({event: {dm: {gx: -10}}})
   }
 
   render() {
@@ -161,6 +183,8 @@ class Synth extends Component {
           debuggerMode && <span>
             <SaveStats history={history}/>
             <div className='debugger'>
+              <div>{debuggerInfo.leftHanded ? 'Left hand' : 'Right hand'}</div>
+              <div>Ambience: {this.state.ambience}</div>
               <div>Acceleration X: {debuggerInfo.accX}</div>
               <div>Orientation alpha: {debuggerInfo.alpha}</div>
               <div>Orientation beta: {debuggerInfo.beta}</div>
