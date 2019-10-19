@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import './App.css';
 import Synth from './Synth';
 import Menu from './Menu';
 import StartScreen from './StartScreen';
 import Tone from 'tone';
+import detectChrome from './isChrome';
 
 class App extends Component {
   constructor(props) {
@@ -49,7 +49,7 @@ class App extends Component {
       reset()
       this.setState({synthArray: isInChordMode ? [1] : [1, 2, 3]})
     }
-    return (
+    return detectChrome ? (
       <div>
         <StartScreen/>
         <Menu changeProp={changeProp} config={this.state.configurableVariables}/>
@@ -62,7 +62,7 @@ class App extends Component {
           synthCollection={synthCollection}
           />
       </div>
-    );
+    ) : <StartScreen/>;
   }
 }
 

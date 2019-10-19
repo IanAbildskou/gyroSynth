@@ -1,8 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import './App.css';
 import * as serviceWorker from './serviceWorker';
 import fulltilt from './fulltilt'; // eslint-disable-line
+import detectChrome from './isChrome';
+import StartScreen from './StartScreen';
 
 const config = {
   configurableVariables: {
@@ -147,7 +149,19 @@ const config = {
   colorArray: ['#d21d1d', '#fffa17', '#2bc823', '#0fddde', '#1d63ce', '#6a18d4', '#d418a1', '#ff7f0e', '#acff0e', '#ff8282', '#8b7bc8', '#cddc39']
 }
 
-ReactDOM.render(<App config={config} />, document.getElementById('root'));
+const render = App => ReactDOM.render(App, document.getElementById('root'));
+
+if (detectChrome()) {
+  import('./App')
+  .then((App) => {
+     render(<App.default config={config}/>)
+  });
+} else {
+  import('./StartScreen')
+  .then((App) => {
+     render(<App.default/>)
+  });
+}
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
