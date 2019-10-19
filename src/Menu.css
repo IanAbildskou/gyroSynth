@@ -23,6 +23,11 @@
   line-height: 80px;
 }
 
+.debug-toggle {
+  height: 80px;
+  line-height: 80px;
+}
+
 .menu {
   position: absolute;
   transform-origin: bottom;

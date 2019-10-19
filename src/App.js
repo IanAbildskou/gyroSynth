@@ -10,12 +10,13 @@ class App extends Component {
     super(props)
     this.state = Object.assign({}, {
       synthArray: [1],
-      enableReverb: false
+      enableReverb: false,
+      enableDebug: false
     }, props.config)
   }
 
   render() {
-    const { enableReverb, configurableVariables, synthArray } = this.state
+    const { enableReverb, enableDebug, configurableVariables, synthArray } = this.state
     const { volume, attack, decay, sustain, release } = configurableVariables.simple
     const synthOptions = {
       oscillator: {
@@ -49,9 +50,8 @@ class App extends Component {
       const newConfig = Object.assign({}, configurableVariables, {[section]: newSection})
       this.setState({configurableVariables: newConfig})
     }
-    const toggleReverb = () => {
-      console.log('hej');
-      this.setState({ enableReverb: !enableReverb })
+    const toggleSetting = setting => () => {
+      this.setState({ [setting]: !this.state[setting] })
     }
     const isInChordMode = synthArray.length > 1
     const setChords = () => {
@@ -61,13 +61,13 @@ class App extends Component {
     return detectChrome ? (
       <div>
         <StartScreen/>
-        <Menu changeProp={changeProp} enableReverb={enableReverb} toggleReverb={toggleReverb} config={configurableVariables}/>
+        <Menu changeProp={changeProp} enableReverb={enableReverb} enableDebug={enableDebug} toggleSetting={toggleSetting} config={configurableVariables}/>
         <div className='main-button chord-toggle' onClick={setChords}>{isInChordMode ? 'Chords' : 'Single note'}</div>
         <Synth
           config={this.state.configurableVariables}
           colorArray={this.state.colorArray}
           pitchArray={this.state.pitchArray}
-          debuggerMode={this.state.debuggerMode}
+          debuggerMode={enableDebug}
           synthCollection={synthCollection}
           />
       </div>
