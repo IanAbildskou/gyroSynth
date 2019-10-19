@@ -30,7 +30,8 @@ class Menu extends Component {
   }
 
   render() {
-    const { simple, advanced } = this.props.config
+    const { config, enableReverb, toggleReverb } = this.props
+    const { simple, advanced } = config
     const advancedSettings = Object.entries(advanced)
     const simpleSettings = Object.entries(simple)
     const toggleMenu = () => this.setState({menuOpen: !this.state.menuOpen})
@@ -39,6 +40,7 @@ class Menu extends Component {
         <div className={'slider-container'}>
           <div className='simple-options'>
             <div className={'close-menu'} onClick={toggleMenu}>Close</div>
+            <div className='main-button reverb-toggle' onClick={toggleReverb}>Reverb: { enableReverb ? 'ON' : 'OFF'}</div>
             {simpleSettings.map(setting => this.renderSection(setting, 'simple'))}
           </div>
           <div className='advanced-options'>

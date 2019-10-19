@@ -10,11 +10,13 @@ class App extends Component {
     super(props)
     this.state = Object.assign({}, {
       synthArray: [1],
+      enableReverb: false
     }, props.config)
   }
 
   render() {
-    const { volume, attack, decay, sustain, release } = this.state.configurableVariables.simple
+    const { enableReverb, configurableVariables, synthArray } = this.state
+    const { volume, attack, decay, sustain, release } = configurableVariables.simple
     const synthOptions = {
       oscillator: {
         type: 'sine'
@@ -26,8 +28,13 @@ class App extends Component {
         release: release.volume
       }
     }
+    const synthCollection = synthArray.map(() => new Tone.Synth(synthOptions))
     const reverb = new Tone.Freeverb().toMaster();
-    const synthCollection = this.state.synthArray.map(() => new Tone.Synth(synthOptions).connect(reverb))
+    if (enableReverb) {
+      synthCollection.map(synth => synth.connect(reverb))
+    } else {
+      synthCollection.map(synth => synth.toMaster())
+    }
     synthCollection.map(synth => synth.volume.value = volume.value)
     const reset = () => {
       synthCollection.map(synth => synth.dispose())
@@ -36,15 +43,17 @@ class App extends Component {
     const changeProp = (key, section) => e => {
       const value = e.target.value / 100
       reset()
-      const configurableVariables = this.state.configurableVariables
       const oldProp = configurableVariables[section][key]
       const newProp = Object.assign({}, oldProp, { value })
       const newSection = Object.assign({}, configurableVariables[section], {[key]: newProp })
       const newConfig = Object.assign({}, configurableVariables, {[section]: newSection})
       this.setState({configurableVariables: newConfig})
     }
-    const isInChordMode = this.state.synthArray.length > 1
-
+    const toggleReverb = () => {
+      console.log('hej');
+      this.setState({ enableReverb: !enableReverb })
+    }
+    const isInChordMode = synthArray.length > 1
     const setChords = () => {
       reset()
       this.setState({synthArray: isInChordMode ? [1] : [1, 2, 3]})
@@ -52,7 +61,7 @@ class App extends Component {
     return detectChrome ? (
       <div>
         <StartScreen/>
-        <Menu changeProp={changeProp} config={this.state.configurableVariables}/>
+        <Menu changeProp={changeProp} enableReverb={enableReverb} toggleReverb={toggleReverb} config={configurableVariables}/>
         <div className='main-button chord-toggle' onClick={setChords}>{isInChordMode ? 'Chords' : 'Single note'}</div>
         <Synth
           config={this.state.configurableVariables}

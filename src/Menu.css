@@ -18,6 +18,11 @@
   margin: 0 3% 3%;
 }
 
+.reverb-toggle {
+  height: 80px;
+  line-height: 80px;
+}
+
 .menu {
   position: absolute;
   transform-origin: bottom;
