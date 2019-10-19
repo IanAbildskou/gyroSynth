@@ -4,7 +4,6 @@ import './App.css';
 import * as serviceWorker from './serviceWorker';
 import fulltilt from './fulltilt'; // eslint-disable-line
 import detectChrome from './isChrome';
-import StartScreen from './StartScreen';
 
 const config = {
   configurableVariables: {
