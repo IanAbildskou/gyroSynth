@@ -6,13 +6,11 @@
   width: 100%;
   z-index: 1000;
   background-color: #ff6f61;
-  box-sizing: border-box;
-  padding: 16px;
-  transition: 200ms
+  transition: 200ms;
 }
 
 .start-screen.closed {
-  left: -100%;
+  left: -150%;
 }
 
 .start-button {
@@ -20,10 +18,43 @@
   line-height: 80px;
   margin: 0;
   margin-top: 32px;
+  width: 100%;
 }
 
 .start-screen-container {
   position: absolute;
   top: 50%;
+  left: 0;
+  width: 100%;
   transform: translate(0, -70%);
+  animation-name: fade-in;
+  animation-duration: 1s;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.start-screen-container p {
+  max-width: 100%;
+}
+
+.proceed-anyway {
+  text-decoration: underline;
+}
+
+.warning {
+  background-color: white;
+  color: #ff6f61;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 5em;
+  text-align: center;
+  width: calc(100% + 32px);
+  display: block;
+  margin: 0 -16px;
+}
+
+@keyframes fade-in {
+  0%   {opacity: 0;}
+  25%  {opacity: 0;}
+  100% {opacity: 1;}
 }

@@ -38,13 +38,42 @@
     <meta name="msapplication-square150x150logo" content="./favicon/mstile-150x150.png" />
     <meta name="msapplication-wide310x150logo" content="./favicon/mstile-310x150.png" />
     <meta name="msapplication-square310x310logo" content="./favicon/mstile-310x310.png" />
-    <title>gyroSynth</title>
+    <title>GyroSynth</title>
+    <style>
+      body {
+        background-color: #ff6f61;
+        font-family: monospace;
+        color: white;
+      }
+
+      .loading-container {
+        font-weight: bold;
+        position: absolute;
+        font-size: 2em;
+        top: 50%;
+        left: 0;
+        transform: translate(0, -50%);
+        text-align: center;
+        width: 100%;
+      }
+
+      .loading-container img {
+        width: 100px;
+      }
+    </style>
   </head>
   <body>
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
-    <div id="root"></div>
+    <div id="root">
+      <div class="loading-container">
+        <div>
+          <img src="./favicon/logo.svg"/>
+        </div>
+        <div class="loading">Loading GyroSynth...</div>
+      </div>
+    </div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
