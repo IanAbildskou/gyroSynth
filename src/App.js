@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Synth from './Synth';
 import Menu from './Menu';
+import StartScreen from './StartScreen';
 import Tone from 'tone';
 
 class App extends Component {
@@ -50,6 +51,7 @@ class App extends Component {
     }
     return (
       <div>
+        <StartScreen/>
         <Menu changeProp={changeProp} config={this.state.configurableVariables}/>
         <div className='main-button chord-toggle' onClick={setChords}>{isInChordMode ? 'Chords' : 'Single note'}</div>
         <Synth

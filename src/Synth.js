@@ -1,3 +1,4 @@
+import './Synth.css';
 import React, { Component } from 'react'
 import GyroNorm from 'gyronorm';
 import SaveStats from './SaveStats';

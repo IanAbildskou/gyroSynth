@@ -1,0 +1,29 @@
+.start-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 1000;
+  background-color: #ff6f61;
+  box-sizing: border-box;
+  padding: 16px;
+  transition: 200ms
+}
+
+.start-screen.closed {
+  left: -100%;
+}
+
+.start-button {
+  height: 80px;
+  line-height: 80px;
+  margin: 0;
+  margin-top: 32px;
+}
+
+.start-screen-container {
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -70%);
+}

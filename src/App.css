@@ -15,42 +15,15 @@ body {
   padding-top: 48px;
 }
 
-.debugger {
-  position: fixed;
-  bottom: 0;
-  margin-left: 4px;
-}
-
-.arrow {
-  margin: 0 3%;
-  fill: white;
-  width: 25px;
-  display: inline-block;
-  vertical-align: middle;
-}
-
-.save-stats {
-  position: absolute;
-  right: 4px;
-  bottom: 4px;
-}
-
-.header h1 {
-  display: inline-block;
-  margin: 16px 0;
-  line-height: 16px;
-  vertical-align: middle;
-}
-
 .main-button {
   width: 94%;
   margin: 0 3% 3%;
   border-radius: 4px;
-}
-
-.pedal-button {
-  height: 200px;
-  line-height: 200px;
+  color: white;
+  text-align: center;
+  font-size: 2em;
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 .chord-toggle {
@@ -63,144 +36,6 @@ body {
   line-height: 80px;
 }
 
-.main-button {
-  color: white;
-  text-align: center;
-  font-size: 2em;
-  font-weight: bold;
-  background-color: rgba(0, 0, 0, 0.2);
-}
-
-.pitch-indicator {
-  position: absolute;
-  top: 0;
-  right: 0;
-  margin: 16px 3%;
-  height: 48px;
-  color: white;
-  text-align: center;
-  font-size: 2em;
-  font-weight: bold;
-  line-height: 16px;
-}
-
-.pedal-button.on {
-  background-color: rgba(0, 0, 0, 0.4);
-}
-
-.slidecontainer {
-  margin-top: 48px;
-  margin: 0 3% 3%;
-}
-
-.menu {
-  position: absolute;
-  transform-origin: bottom;
-  transform: translateY(-100%);
-  transition: 200ms;
-  width: 100%;
-}
-
-.menu.open {
-  transform-origin: top;
-  transform: translateY(calc(0px - 48px));
-  z-index: 10;
-  height: 100%;
-  background-color: white;
-}
-
-.simple-options {
-  background-color: white;
-  color: black;
-  width: 100%;
-  padding-bottom: 32px;
-}
-
-.advanced-options {
-  background-color: black;
-  color: white;
-  width: 100%;
-}
-
-.close-menu,
-.advanced-option-header {
-  display: block;
-  width: 100%;
-  text-align: center;
-  font-size: 3em;
-  padding: 16px;
-  box-sizing: border-box;
-}
-
-.slider-value {
-  display: block;
-  width: 100%;
-  text-align: center;
-  font-size: 2em;
-  font-weight: bold;
-  padding: 8px;
-  box-sizing: border-box;
-}
-
 svg {
   transition: 200ms;
-}
-
-.menu.open svg {
-  transform: rotate(180deg);
-}
-
-.slider {
-  width: 100%;
-  -webkit-appearance: none;
-  height: 25px;
-  background: rgba(0, 0, 0, 0.2);
-  outline: none;
-  -webkit-transition: .2s;
-  transition: opacity .2s;
-  border-radius: 4px;
-}
-
-.advanced-options .slider {
-  width: 100%;
-  -webkit-appearance: none;
-  height: 25px;
-  background: rgba(255, 255, 255, 0.2);
-  outline: none;
-  -webkit-transition: .2s;
-  transition: opacity .2s;
-  border-radius: 4px;
-}
-
-.setting-name {
-  font-weight: bold;
-  font-size: 1.2em;
-  margin-bottom: 4px;
-}
-
-.setting-description {
-  margin-bottom: 4px;
-}
-
-.slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 25px;
-  height: 25px;
-  border-radius: 4px;
-  background: yellow;
-  cursor: pointer;
-}
-
-.slider::-moz-range-thumb {
-  width: 25px;
-  height: 25px;
-  border-radius: 4px;
-  background: yellow;
-  cursor: pointer;
-}
-
-.slider-container {
-  height: 100%;
-  overflow-y: scroll;
 }

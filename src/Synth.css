@@ -1,0 +1,32 @@
+.debugger {
+  position: fixed;
+  bottom: 0;
+  margin-left: 4px;
+}
+
+.pedal-button {
+  height: 200px;
+  line-height: 200px;
+}
+
+.attack-toggle {
+  height: 80px;
+  line-height: 80px;
+}
+
+.pitch-indicator {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 16px 3%;
+  height: 48px;
+  color: white;
+  text-align: center;
+  font-size: 2em;
+  font-weight: bold;
+  line-height: 16px;
+}
+
+.pedal-button.on {
+  background-color: rgba(0, 0, 0, 0.4);
+}
