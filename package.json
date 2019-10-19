@@ -17,7 +17,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "deploy-production": "npm run build && now build -A ../now.json",
-    "deploy-staging": "npm run build && now build -A ../now.json --name gyroSynthStaging"
+    "deploy-staging": "npm run build && now build -A ../now.json --name gyroSynthStaging",
+    "tunnel": "lt --port 3000 --subdomain gyrosynth"
   },
   "eslintConfig": {
     "extends": "react-app"

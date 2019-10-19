@@ -33,7 +33,7 @@ Install `localtunnel` with
 
 Then run the tunnel with
 
-#### `lt --port 3000`
+#### `npm run tunnel`
 
-or whatever port you have set up.
-You should then get a link you can go to on your phone.
+You can then go to https://gyrosynth.localtunnel.me
+You need to be using port 3000.

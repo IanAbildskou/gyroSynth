@@ -33,19 +33,12 @@ class Synth extends Component {
   }
 
   fire(accX) {
-<<<<<<< HEAD
-    const { noteDuration, maxVelocity, fireThreshold, tactileFeedbackLength } = this.props.config
-    const absoluteVelocity = (accX - fireThreshold) / maxVelocity
-    const adjustedVelocity = Math.min(absoluteVelocity, 1)
-    window.navigator.vibrate(tactileFeedbackLength)
-=======
     const { maxVelocity, fireThreshold, tactileFeedbackDuration } = this.props.config.advanced
     const { noteDuration } = this.props.config.simple
     const { pitchMark, structuredPitchArray, minor } = this.state
     const absoluteVelocity = (accX - fireThreshold.value) / maxVelocity.value
     const adjustedVelocity = Math.min(absoluteVelocity, 1)
     window.navigator.vibrate && window.navigator.vibrate(tactileFeedbackDuration.value)
->>>>>>> master
     this.props.synthCollection.map((synth, index) => {
       if (synth.context.state !== 'running') { // This is most of all for safety. I think also it solved an ios issue where sound would not resume after minimizing
         synth.context.resume();
