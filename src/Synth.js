@@ -36,7 +36,7 @@ class Synth extends Component {
 
   fire(accX) {
     const { maxVelocity, fireThreshold, tactileFeedbackDuration } = this.props.config.advanced
-    const { pitchMark, structuredPitchArray, minor } = this.state
+    const { pitchMark, structuredPitchArray, minor, pressed } = this.state
     const absoluteVelocity = (accX - fireThreshold.value) / maxVelocity.value
     const adjustedVelocity = Math.min(absoluteVelocity, 1)
     window.navigator.vibrate && window.navigator.vibrate(tactileFeedbackDuration.value)
@@ -47,7 +47,7 @@ class Synth extends Component {
       const pitchSpan = index === 1 ? (minor ? 3 : 4) : (index === 2 ? 7 : 0)
       const pitchObject = structuredPitchArray[pitchMark + pitchSpan]
       const pitch = pitchObject.pitch + pitchObject.octave
-      synth.triggerRelease()
+      pressed && synth.triggerRelease()
       synth.triggerAttack(pitch, undefined, adjustedVelocity)
       return null
     })
@@ -83,55 +83,54 @@ class Synth extends Component {
   }
 
   deviceMotionEvent(event) {
-    const { liftedThreshold, maxHistoryLength, maxHistoryLengthForStats, historyCrunch } = this.props.config.advanced
-    const oldHistory = this.state.history
-    const topHistoryLength = this.props.debuggerMode ? maxHistoryLengthForStats.value : maxHistoryLength.value
-    const history = oldHistory.length > topHistoryLength ? oldHistory.slice(oldHistory.length - historyCrunch.value) : oldHistory
+    const { config, debuggerMode } = this.props
+    const { liftedThreshold, maxHistoryLength, maxHistoryLengthForStats, historyCrunch } = config.advanced
+    const { history, pressed, leftHanded, uninterestinEvents, lifted } = this.state
+    const topHistoryLength = debuggerMode ? maxHistoryLengthForStats.value : maxHistoryLength.value
+    const historySlice = history.length > topHistoryLength ? history.slice(history.length - historyCrunch.value) : history
     const accX = event.dm.gx
-    const pressed = this.state.pressed
-    const normalizedAccX = accX * (this.state.leftHanded ? 1 : -1)
+    const normalizedAccX = accX * (leftHanded ? 1 : -1)
     const lift = normalizedAccX < liftedThreshold.value
-    const fire = this.shouldEngage({normalizedAccX, history})
-    this.determineAmbience({event, history})
-    const uninterestinEvents = fire ? 0 : (this.state.uninterestinEvents + 1)
-    const lifted = fire ? false : lift ? true : this.state.lifted
+    const fire = this.shouldEngage({ normalizedAccX, history: historySlice })
+    this.determineAmbience({ event, history: historySlice })
+    const newUninterestinEvents = fire ? 0 : (uninterestinEvents + 1)
+    const shouldLift = fire ? false : lift ? true : lifted
     this.checkPitch(event)
     fire && this.fire(normalizedAccX)
     const release = !fire && this.checkLift(event)
     const historyObject = {
-      ...event.do,
       accX,
-      normalizedAccX,
-      fire,
-      lifted,
-      uninterestinEvents
+      normalizedAccX
+    }
+    const debuggerInfo = debuggerMode && {
+      leftHanded,
+      alpha: event.do.alpha || 'No rotation detected',
+      beta: event.do.beta || 'No rotation detected',
+      gamma: event.do.gamma || 'No rotation detected',
+      accX: accX || 'No acceleration detected'
     }
     this.setState({
-      debuggerInfo: {
-        leftHanded: this.state.leftHanded,
-        alpha: event.do.alpha || 'No rotation detected',
-        beta: event.do.beta || 'No rotation detected',
-        gamma: event.do.gamma || 'No rotation detected',
-        accX: accX || 'No acceleration detected'
-      },
+      debuggerInfo,
       pressed: fire ? true : release ? false : pressed,
-      lifted,
-      history: history.concat([historyObject]),
-      uninterestinEvents
+      lifted: shouldLift,
+      history: historySlice.concat([historyObject]),
+      uninterestinEvents: newUninterestinEvents
     })
   }
 
   checkLift(event) {
     const { pressed, leftHanded } = this.state
+    const { releaseTilt } = this.props.config.advanced
     let beta = event.do.beta
     const gamma = event.do.gamma
+    const releaseTiltAngle = releaseTilt.value
     if (pressed) {
-      const thinkAboutLifting = beta > 45 && beta < 135
+      const thinkAboutLifting = beta > releaseTiltAngle && beta < (180 - releaseTiltAngle)
       if (thinkAboutLifting) {
         if (gamma < 0) {
           beta = leftHanded ? beta + 90 : beta - 90
         }
-        if (beta > 45) {
+        if (beta > releaseTiltAngle) {
           this.props.synthCollection.map((synth, index) => synth.triggerRelease())
           return true
         }

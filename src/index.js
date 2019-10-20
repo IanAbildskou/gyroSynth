@@ -92,6 +92,14 @@ const config = {
         minValue: 10,
         unit: 'ms',
         description: 'For how long should we wait when switching hands for the ambience to resolve'
+      },
+      releaseTilt: {
+        label: 'Release tilt angle',
+        value: 10,
+        maxValue: 90,
+        minValue: 1,
+        unit: '°',
+        description: 'At what angle of tilt should the attack release'
       }
     },
     simple: {
@@ -121,7 +129,7 @@ const config = {
       },
       sustain: {
         label: 'Sustain',
-        value: 0.01,
+        value: 1,
         maxValue: 1,
         minValue: 0.01,
         description: ''
