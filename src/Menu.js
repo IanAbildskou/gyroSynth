@@ -1,11 +1,16 @@
 import './Menu.css';
 import React, { Component } from 'react';
+import { ArrowForward } from '@material-ui/icons';
+import { IconButton } from '@material-ui/core';
 
 class Menu extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      menuOpen: false
+      menuOpen: false,
+      settingPageOpen: false,
+      settingKey: undefined,
+      settingSection: undefined
     }
   }
 
@@ -14,16 +19,31 @@ class Menu extends Component {
     const settingKey = setting[0]
     const valueWithUnit = settingProps.value + (settingProps.unit ? ' ' + settingProps.unit : '')
     return (
-      <div key={settingKey} className={"slidecontainer " + section}>
-        <div className='setting-name'>{settingProps.label}</div>
-        <div className='setting-description'>{settingProps.description}</div>
+      <div onClick={() => this.setState({settingKey, settingSection: section, settingPageOpen: true})} key={settingKey} className={"main-button " + section}>
+        <div>{settingProps.label + ': ' + valueWithUnit}</div>
+      </div>
+    )
+  }
+
+  renderSettingPage() {
+    const { config } = this.props
+    const { settingPageOpen, settingKey, settingSection } = this.state
+    const { value, unit, label, description, minValue, maxValue } = (settingSection && settingKey && config[settingSection][settingKey]) || {minValue: 0, value: 0, maxValue: 0}
+    const valueWithUnit = label && value + (unit ? ' ' + unit : '')
+    return (
+      <div className={"setting-page " + (settingPageOpen && 'open')}>
+        <IconButton color='primary' className={'close-menu'} onClick={() => this.setState({settingPageOpen: false})}>
+          <ArrowForward/>
+        </IconButton>
+        <div className='setting-page-header'>{label}</div>
+        <div className='setting-description'>{description}</div>
         <div className='slider-value'>{valueWithUnit}</div>
         <input
-          defaultValue={settingProps.value * 100}
+          defaultValue={value * 100}
           type="range"
-          min={settingProps.minValue * 100}
-          max={settingProps.maxValue * 100}
-          className="slider" id="myRange" onChange={this.props.changeProp(settingKey, section)}
+          min={minValue * 100}
+          max={maxValue * 100}
+          className="slider" id="myRange" onChange={this.props.changeProp(settingKey, settingSection)}
         />
       </div>
     )
@@ -34,27 +54,24 @@ class Menu extends Component {
     const { simple, advanced } = config
     const advancedSettings = Object.entries(advanced)
     const simpleSettings = Object.entries(simple)
-    const toggleMenu = () => this.setState({menuOpen: !this.state.menuOpen})
+    const toggleMenu = this.props.toggleMenu
     return (
-      <div className={'menu' + (this.state.menuOpen ? ' open' : '')}>
-        <div className={'slider-container'}>
-          <div className='simple-options'>
-            <div className={'close-menu'} onClick={toggleMenu}>Close</div>
-            <div className='main-button reverb-toggle' onClick={toggleSetting('enableReverb')}>Reverb: { enableReverb ? 'ON' : 'OFF'}</div>
-            <div className='main-button debug-toggle' onClick={toggleSetting('enableDebug')}>Debugger: { enableDebug ? 'ON' : 'OFF'}</div>
-            {simpleSettings.map(setting => this.renderSection(setting, 'simple'))}
+      <div className={'menu' + (this.props.menuOpen ? ' open' : '')}>
+        {this.renderSettingPage()}
+        <div className='simple-options'>
+          <div className='simple-option-header'>
+            <IconButton color='secondary' className={'close-menu'} onClick={toggleMenu}>
+              <ArrowForward/>
+            </IconButton>
+            Options
           </div>
-          <div className='advanced-options'>
-            <div className='advanced-option-header'>Advanced options</div>
-            {advancedSettings.map(setting => this.renderSection(setting, 'advanced'))}
-            <div className={'close-menu'} onClick={toggleMenu}>Close</div>
-          </div>
+          <div className='main-button reverb-toggle' onClick={toggleSetting('enableReverb')}>Reverb: { enableReverb ? 'ON' : 'OFF'}</div>
+          <div className='main-button debug-toggle' onClick={toggleSetting('enableDebug')}>Debugger: { enableDebug ? 'ON' : 'OFF'}</div>
+          {simpleSettings.map(setting => this.renderSection(setting, 'simple'))}
         </div>
-        <div className='header' onClick={toggleMenu}>
-          <svg className='arrow' viewBox="0 0 70.71 49.5">
-            <polygon points="35.35 21.21 14.14 0 0 14.14 35.35 49.5 70.71 14.14 56.57 0 35.35 21.21"/>
-          </svg>
-          <h1>gyroSynth</h1>
+        <div className='advanced-options'>
+          <div className='advanced-option-header'>Advanced options</div>
+          {advancedSettings.map(setting => this.renderSection(setting, 'advanced'))}
         </div>
       </div>
     );

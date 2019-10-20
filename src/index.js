@@ -4,6 +4,7 @@ import './App.css';
 import * as serviceWorker from './serviceWorker';
 import fulltilt from './fulltilt'; // eslint-disable-line
 import detectChrome from './isChrome';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 const config = {
   configurableVariables: {
@@ -155,17 +156,29 @@ const config = {
   colorArray: ['#d21d1d', '#ff6f61', '#2bc823', '#0fddde', '#1d63ce', '#6a18d4', '#d418a1', '#cddc39', '#ff7f0e', '#acff0e', '#ff8282', '#8b7bc8']
 }
 
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#fff'
+    },
+    secondary: {
+      main: '#000'
+    }
+  }
+});
+
 const render = App => ReactDOM.render(App, document.getElementById('root'));
 
 if (detectChrome()) {
   import('./App')
   .then((App) => {
-     render(<App.default config={config}/>)
+     render(<MuiThemeProvider theme={theme}><App.default config={config}/></MuiThemeProvider>)
   });
 } else {
   import('./StartScreen')
   .then((App) => {
-     render(<App.default/>)
+     render(<MuiThemeProvider theme={theme}><App.default/></MuiThemeProvider>)
   });
 }
 

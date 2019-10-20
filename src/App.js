@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import Synth from './Synth';
-import Menu from './Menu';
+import MenuComponent from './Menu';
 import StartScreen from './StartScreen';
 import Tone from 'tone';
 import detectChrome from './isChrome';
+import { Menu } from '@material-ui/icons';
+import { IconButton } from '@material-ui/core';
 
 class App extends Component {
   constructor(props) {
@@ -11,7 +13,8 @@ class App extends Component {
     this.state = Object.assign({}, {
       synthArray: [1],
       enableReverb: false,
-      enableDebug: false
+      enableDebug: false,
+      menuOpen: false
     }, props.config)
   }
 
@@ -58,10 +61,25 @@ class App extends Component {
       reset()
       this.setState({synthArray: isInChordMode ? [1] : [1, 2, 3]})
     }
+    const toggleMenu = () => this.setState({menuOpen: !this.state.menuOpen})
     return detectChrome ? (
       <div>
         <StartScreen/>
-        <Menu changeProp={changeProp} enableReverb={enableReverb} enableDebug={enableDebug} toggleSetting={toggleSetting} config={configurableVariables}/>
+        <div className='header'>
+          <IconButton color='primary' className={'open-menu'} onClick={toggleMenu}>
+            <Menu/>
+          </IconButton>
+          <h1>GyroSynth</h1>
+        </div>
+        <MenuComponent
+          menuOpen={this.state.menuOpen}
+          toggleMenu={toggleMenu}
+          changeProp={changeProp}
+          enableReverb={enableReverb}
+          enableDebug={enableDebug}
+          toggleSetting={toggleSetting}
+          config={configurableVariables}
+        />
         <div className='main-button chord-toggle' onClick={setChords}>{isInChordMode ? 'Chords' : 'Single note'}</div>
         <Synth
           config={this.state.configurableVariables}
@@ -69,7 +87,7 @@ class App extends Component {
           pitchArray={this.state.pitchArray}
           debuggerMode={enableDebug}
           synthCollection={synthCollection}
-          />
+        />
       </div>
     ) : <StartScreen/>;
   }

@@ -33,10 +33,6 @@
   box-sizing: border-box;
 }
 
-.start-screen-container p {
-  max-width: 100%;
-}
-
 .proceed-anyway {
   text-decoration: underline;
 }
