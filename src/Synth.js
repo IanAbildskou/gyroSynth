@@ -34,23 +34,36 @@ class Synth extends Component {
     this.setState({pitchMark, pitchAlphaAnchor})
   }
 
+  getPitch() {
+    const { pitchMark, structuredPitchArray, minor } = this.state
+    let pitch
+    const getPitchFromMark = (pitchMark) => {
+      const pitchObject = structuredPitchArray[pitchMark]
+      return pitchObject.pitch + pitchObject.octave
+    }
+    if (this.props.chords) {
+      const pitchArray = [pitchMark, pitchMark + ( minor ? 4 : 3), 7]
+      pitch = pitchArray.map(pitchMark => getPitchFromMark(pitchMark))
+    } else {
+      pitch = getPitchFromMark(pitchMark)
+    }
+    return pitch
+  }
+
   fire(accX) {
     const { maxVelocity, fireThreshold, tactileFeedbackDuration } = this.props.config.advanced
-    const { pitchMark, structuredPitchArray, minor, pressed } = this.state
+    const { pressed } = this.state
     const absoluteVelocity = (accX - fireThreshold.value) / maxVelocity.value
     const adjustedVelocity = Math.min(absoluteVelocity, 1)
     window.navigator.vibrate && window.navigator.vibrate(tactileFeedbackDuration.value)
-    this.props.synthCollection.map((synth, index) => {
-      if (synth.context.state !== 'running') { // This is most of all for safety. I think also it solved an ios issue where sound would not resume after minimizing
-        synth.context.resume();
-      }
-      const pitchSpan = index === 1 ? (minor ? 3 : 4) : (index === 2 ? 7 : 0)
-      const pitchObject = structuredPitchArray[pitchMark + pitchSpan]
-      const pitch = pitchObject.pitch + pitchObject.octave
-      pressed && synth.triggerRelease()
-      synth.triggerAttack(pitch, undefined, adjustedVelocity)
-      return null
-    })
+    const synth = this.props.synthCollection
+    if (synth.context.state !== 'running') { // This is most of all for safety. I think also it solved an ios issue where sound would not resume after minimizing
+      synth.context.resume();
+    }
+    const pitch = this.getPitch()
+    pressed && this.release()
+    synth.triggerAttack(pitch, undefined, adjustedVelocity)
+    return null
   }
 
   shouldEngage({normalizedAccX, history}) {
@@ -118,6 +131,11 @@ class Synth extends Component {
     })
   }
 
+  release() {
+    const { chords, synthCollection } = this.props
+    chords ? synthCollection.releaseAll() : synthCollection.triggerRelease()
+  }
+
   checkLift(event) {
     const { pressed, leftHanded } = this.state
     const { releaseTilt } = this.props.config.advanced
@@ -131,7 +149,7 @@ class Synth extends Component {
           beta = leftHanded ? beta + 90 : beta - 90
         }
         if (beta > releaseTiltAngle) {
-          this.props.synthCollection.map((synth, index) => synth.triggerRelease())
+          this.release()
           return true
         }
       }
@@ -186,11 +204,11 @@ class Synth extends Component {
 
   render() {
     const { pitchMark, structuredPitchArray, minor, debuggerInfo, history } = this.state
-    const { synthCollection, debuggerMode } = this.props
+    const { chords, debuggerMode, synthCollection } = this.props
     const currentPitch = structuredPitchArray[pitchMark] || {}
     return (
       <div className='synth'>
-        {(synthCollection.length > 1) && <div
+        {chords && <div
           className={'main-button pedal-button ' + (minor ? ' on': '')}
           onTouchStart={() => {
             this.setState({minor: true})
@@ -199,7 +217,10 @@ class Synth extends Component {
             this.setState({minor: false})
           }}>{minor ? 'Minor' : 'Major'}</div>
         }
-        <div className='main-button attack-toggle' onClick={() => this.fire(30)}>Attack</div>
+        <div
+          className='main-button attack-toggle'
+          onClick={() => synthCollection.triggerAttackRelease(this.getPitch(), 0.5, undefined, 1)}
+        >Attack</div>
         {
           debuggerMode && <span>
             <SaveStats history={history}/>

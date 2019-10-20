@@ -11,7 +11,7 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = Object.assign({}, {
-      synthArray: [1],
+      chords: false,
       enableReverb: false,
       enableDebug: false,
       menuOpen: false
@@ -19,29 +19,47 @@ class App extends Component {
   }
 
   render() {
-    const { enableReverb, enableDebug, configurableVariables, synthArray } = this.state
-    const { volume, attack, decay, sustain, release } = configurableVariables.simple
+    const { enableReverb, enableDebug, configurableVariables, chords } = this.state
+    const { volume } = configurableVariables.simple
     const synthOptions = {
       oscillator: {
-        type: 'sine'
+        type: 'square',
+        modulationIndex: 2,
+        modulationType: 'triangle',
+        harmonicity: 0.5
+      },
+      filter : {
+        Q: 1,
+        type: 'lowpass',
+        rolloff: -24
       },
       envelope: {
-        attack: attack.value,
-        decay: decay.value,
-        sustain: sustain.value,
-        release: release.value
+        attack: 0.01,
+        decay: 0.1,
+        sustain: 0.4,
+        release: 2
+      },
+      filterEnvelope: {
+        attack: 0.01,
+        decay: 0.1,
+        sustain: 0.8,
+        release: 1.5,
+        baseFrequency: 50,
+        octaves: 4,
+        exponent: 2
       }
     }
-    const synthCollection = synthArray.map(() => new Tone.Synth(synthOptions))
+    const synthConstructor = Tone.MonoSynth
+    const synth = chords ? new Tone.PolySynth(3, synthConstructor, synthOptions) : new synthConstructor(synthOptions)
     const reverb = new Tone.Freeverb().toMaster();
     if (enableReverb) {
-      synthCollection.map(synth => synth.connect(reverb))
+      synth.connect(reverb)
     } else {
-      synthCollection.map(synth => synth.toMaster())
+      synth.toMaster()
     }
-    synthCollection.map(synth => synth.volume.value = volume.value)
+    synth.volume.value = volume.value
     const reset = () => {
-      synthCollection.map(synth => synth.dispose())
+      synth.dispose()
       reverb.dispose()
     }
     const changeProp = (key, section) => e => {
@@ -56,10 +74,9 @@ class App extends Component {
     const toggleSetting = setting => () => {
       this.setState({ [setting]: !this.state[setting] })
     }
-    const isInChordMode = synthArray.length > 1
     const setChords = () => {
       reset()
-      this.setState({synthArray: isInChordMode ? [1] : [1, 2, 3]})
+      this.setState({chords: !chords})
     }
     const toggleMenu = () => this.setState({menuOpen: !this.state.menuOpen})
     return detectChrome ? (
@@ -80,13 +97,14 @@ class App extends Component {
           toggleSetting={toggleSetting}
           config={configurableVariables}
         />
-        <div className='main-button chord-toggle' onClick={setChords}>{isInChordMode ? 'Chords' : 'Single note'}</div>
+      <div className='main-button chord-toggle' onClick={setChords}>{chords ? 'Chords' : 'Single note'}</div>
         <Synth
           config={this.state.configurableVariables}
           colorArray={this.state.colorArray}
           pitchArray={this.state.pitchArray}
           debuggerMode={enableDebug}
-          synthCollection={synthCollection}
+          synthCollection={synth}
+          chords={chords}
         />
       </div>
     ) : <StartScreen/>;

@@ -95,7 +95,7 @@ const config = {
       },
       releaseTilt: {
         label: 'Release tilt angle',
-        value: 10,
+        value: 30,
         maxValue: 90,
         minValue: 1,
         unit: '°',
@@ -103,48 +103,40 @@ const config = {
       }
     },
     simple: {
-      noteDuration: {
-        label: 'Note duration',
-        value: 0.5,
-        maxValue: 10,
-        minValue: 0.01,
-        unit: 's',
-        description: 'What is the duration of a note'
-      },
-      attack: {
-        label: 'Attack',
-        value: 0.01,
-        maxValue: 10,
-        minValue: 0.01,
-        unit: 's',
-        description: ''
-      },
-      decay: {
-        label: 'Decay',
-        value: 1,
-        maxValue: 10,
-        minValue: 0.1,
-        unit: 's',
-        description: ''
-      },
-      sustain: {
-        label: 'Sustain',
-        value: 1,
-        maxValue: 1,
-        minValue: 0.01,
-        description: ''
-      },
-      release: {
-        label: 'Release',
-        value: 0.1,
-        maxValue: 10,
-        minValue: 0.01,
-        unit: 's',
-        description: ''
-      },
+      // attack: {
+      //   label: 'Attack',
+      //   value: 0.01,
+      //   maxValue: 10,
+      //   minValue: 0.01,
+      //   unit: 's',
+      //   description: ''
+      // },
+      // decay: {
+      //   label: 'Decay',
+      //   value: 1,
+      //   maxValue: 10,
+      //   minValue: 0.1,
+      //   unit: 's',
+      //   description: ''
+      // },
+      // sustain: {
+      //   label: 'Sustain',
+      //   value: 1,
+      //   maxValue: 1,
+      //   minValue: 0.01,
+      //   description: ''
+      // },
+      // release: {
+      //   label: 'Release',
+      //   value: 0.1,
+      //   maxValue: 10,
+      //   minValue: 0.01,
+      //   unit: 's',
+      //   description: ''
+      // },
       volume: {
         label: 'Volume',
-        value: 50,
+        value: 0,
         maxValue: 150,
         minValue: 0,
         unit: 'dB',
