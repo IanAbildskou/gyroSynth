@@ -36,7 +36,6 @@ class Synth extends Component {
 
   fire(accX) {
     const { maxVelocity, fireThreshold, tactileFeedbackDuration } = this.props.config.advanced
-    const { noteDuration } = this.props.config.simple
     const { pitchMark, structuredPitchArray, minor } = this.state
     const absoluteVelocity = (accX - fireThreshold.value) / maxVelocity.value
     const adjustedVelocity = Math.min(absoluteVelocity, 1)
@@ -48,7 +47,8 @@ class Synth extends Component {
       const pitchSpan = index === 1 ? (minor ? 3 : 4) : (index === 2 ? 7 : 0)
       const pitchObject = structuredPitchArray[pitchMark + pitchSpan]
       const pitch = pitchObject.pitch + pitchObject.octave
-      synth.triggerAttackRelease(pitch, noteDuration.value, undefined, adjustedVelocity)
+      synth.triggerRelease()
+      synth.triggerAttack(pitch, undefined, adjustedVelocity)
       return null
     })
   }
@@ -88,6 +88,7 @@ class Synth extends Component {
     const topHistoryLength = this.props.debuggerMode ? maxHistoryLengthForStats.value : maxHistoryLength.value
     const history = oldHistory.length > topHistoryLength ? oldHistory.slice(oldHistory.length - historyCrunch.value) : oldHistory
     const accX = event.dm.gx
+    const pressed = this.state.pressed
     const normalizedAccX = accX * (this.state.leftHanded ? 1 : -1)
     const lift = normalizedAccX < liftedThreshold.value
     const fire = this.shouldEngage({normalizedAccX, history})
@@ -96,7 +97,9 @@ class Synth extends Component {
     const lifted = fire ? false : lift ? true : this.state.lifted
     this.checkPitch(event)
     fire && this.fire(normalizedAccX)
+    const release = !fire && this.checkLift(event)
     const historyObject = {
+      ...event.do,
       accX,
       normalizedAccX,
       fire,
@@ -111,10 +114,29 @@ class Synth extends Component {
         gamma: event.do.gamma || 'No rotation detected',
         accX: accX || 'No acceleration detected'
       },
+      pressed: fire ? true : release ? false : pressed,
       lifted,
       history: history.concat([historyObject]),
       uninterestinEvents
     })
+  }
+
+  checkLift(event) {
+    const { pressed, leftHanded } = this.state
+    let beta = event.do.beta
+    const gamma = event.do.gamma
+    if (pressed) {
+      const thinkAboutLifting = beta > 45 && beta < 135
+      if (thinkAboutLifting) {
+        if (gamma < 0) {
+          beta = leftHanded ? beta + 90 : beta - 90
+        }
+        if (beta > 45) {
+          this.props.synthCollection.map((synth, index) => synth.triggerRelease())
+          return true
+        }
+      }
+    }
   }
 
   checkPitch(event) {

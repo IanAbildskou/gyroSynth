@@ -27,9 +27,9 @@ class App extends Component {
       },
       envelope: {
         attack: attack.value,
-        decay: decay.volume,
-        sustain: sustain.volume,
-        release: release.volume
+        decay: decay.value,
+        sustain: sustain.value,
+        release: release.value
       }
     }
     const synthCollection = synthArray.map(() => new Tone.Synth(synthOptions))

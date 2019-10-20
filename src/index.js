@@ -65,7 +65,7 @@ const config = {
       },
       maxHistoryLengthForStats: {
         label: 'Max history length for stats',
-        value: 100,
+        value: 10000,
         maxValue: 1000000,
         minValue: 1,
         description: 'This is history max length for when advanced mode is enabled. Good for exporting stats to analyse. We want to have a lot of history to export when debugging'
@@ -136,8 +136,8 @@ const config = {
       },
       volume: {
         label: 'Volume',
-        value: 20,
-        maxValue: 50,
+        value: 50,
+        maxValue: 150,
         minValue: 0,
         unit: 'dB',
         description: ''
