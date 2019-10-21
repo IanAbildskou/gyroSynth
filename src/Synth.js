@@ -67,12 +67,11 @@ class Synth extends Component {
   }
 
   shouldEngage({normalizedAccX, history}) {
-    const { motionFrequency, fireThreshold, fireRecovery } = this.props.config.advanced
-    const { uninterestinEvents, lifted } = this.state
+    const { fireThreshold } = this.props.config.advanced
+    const { lifted } = this.state
     const enoughForceForFire = normalizedAccX > fireThreshold.value
     if (enoughForceForFire) {
-      const enoughUninterestingEventsHavePassed = fireRecovery.value < (uninterestinEvents * motionFrequency.value)
-      if (lifted || enoughUninterestingEventsHavePassed) {
+      if (lifted) {
         return !!history.length && (normalizedAccX < history[history.length -1].normalizedAccX) // is peak
       }
     }
@@ -98,7 +97,7 @@ class Synth extends Component {
   deviceMotionEvent(event) {
     const { config, debuggerMode } = this.props
     const { liftedThreshold, maxHistoryLength, maxHistoryLengthForStats, historyCrunch } = config.advanced
-    const { history, pressed, leftHanded, uninterestinEvents, lifted } = this.state
+    const { history, pressed, leftHanded, lifted } = this.state
     const topHistoryLength = debuggerMode ? maxHistoryLengthForStats.value : maxHistoryLength.value
     const historySlice = history.length > topHistoryLength ? history.slice(history.length - historyCrunch.value) : history
     const accX = event.dm.gx
@@ -106,7 +105,6 @@ class Synth extends Component {
     const lift = normalizedAccX < liftedThreshold.value
     const fire = this.shouldEngage({ normalizedAccX, history: historySlice })
     this.determineAmbience({ event, history: historySlice })
-    const newUninterestinEvents = fire ? 0 : (uninterestinEvents + 1)
     const shouldLift = fire ? false : lift ? true : lifted
     this.checkPitch(event)
     fire && this.fire(normalizedAccX)
@@ -126,8 +124,7 @@ class Synth extends Component {
       debuggerInfo,
       pressed: fire ? true : release ? false : pressed,
       lifted: shouldLift,
-      history: historySlice.concat([historyObject]),
-      uninterestinEvents: newUninterestinEvents
+      history: historySlice.concat([historyObject])
     })
   }
 

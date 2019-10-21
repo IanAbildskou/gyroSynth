@@ -32,14 +32,6 @@ const config = {
         unit: 'm/s²',
         description: 'What is the acceleration threshold for triggering a lift'
       },
-      fireRecovery: {
-        label: 'Auto lift timeout',
-        value: 1000,
-        maxValue: 3000,
-        minValue: 0,
-        unit: 'ms',
-        description: 'Time before another attack can occur without lift'
-      },
       maxVelocity: {
         label: 'Max velocity',
         value: 70,
