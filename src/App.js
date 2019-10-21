@@ -11,7 +11,6 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = Object.assign({}, {
-      chords: false,
       enableReverb: false,
       enableDebug: false,
       menuOpen: false
@@ -19,7 +18,7 @@ class App extends Component {
   }
 
   render() {
-    const { enableReverb, enableDebug, configurableVariables, chords } = this.state
+    const { enableReverb, enableDebug, configurableVariables } = this.state
     const { volume } = configurableVariables.simple
     const synthOptions = {
       oscillator: {
@@ -50,16 +49,21 @@ class App extends Component {
       }
     }
     const synthConstructor = Tone.MonoSynth
-    const synth = chords ? new Tone.PolySynth(3, synthConstructor, synthOptions) : new synthConstructor(synthOptions)
+    const monoSynth = new synthConstructor(synthOptions)
+    const polySynth = new Tone.PolySynth(3, synthConstructor, synthOptions)
     const reverb = new Tone.Freeverb().toMaster();
     if (enableReverb) {
-      synth.connect(reverb)
+      monoSynth.connect(reverb)
+      polySynth.connect(reverb)
     } else {
-      synth.toMaster()
+      monoSynth.toMaster()
+      polySynth.toMaster()
     }
-    synth.volume.value = volume.value
+    monoSynth.volume.value = volume.value
+    polySynth.volume.value = volume.value
     const reset = () => {
-      synth.dispose()
+      monoSynth.dispose()
+      polySynth.dispose()
       reverb.dispose()
     }
     const changeProp = (key, section) => e => {
@@ -73,10 +77,6 @@ class App extends Component {
     }
     const toggleSetting = setting => () => {
       this.setState({ [setting]: !this.state[setting] })
-    }
-    const setChords = () => {
-      reset()
-      this.setState({chords: !chords})
     }
     const toggleMenu = () => this.setState({menuOpen: !this.state.menuOpen})
     return detectChrome ? (
@@ -97,14 +97,13 @@ class App extends Component {
           toggleSetting={toggleSetting}
           config={configurableVariables}
         />
-      <div className='main-button chord-toggle' onClick={setChords}>{chords ? 'Chords' : 'Single note'}</div>
         <Synth
           config={this.state.configurableVariables}
           colorArray={this.state.colorArray}
           pitchArray={this.state.pitchArray}
           debuggerMode={enableDebug}
-          synthCollection={synth}
-          chords={chords}
+          polySynth={polySynth}
+          monoSynth={monoSynth}
         />
       </div>
     ) : <StartScreen/>;
