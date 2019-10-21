@@ -96,30 +96,36 @@ class Synth extends Component {
 
   deviceMotionEvent(event) {
     const { config, debuggerMode } = this.props
-    const { liftedThreshold, maxHistoryLength, maxHistoryLengthForStats, historyCrunch } = config.advanced
+    const { liftedThreshold, maxHistoryLength, maxHistoryLengthForStats, historyCrunch, releaseTilt } = config.advanced
     const { history, pressed, leftHanded, lifted } = this.state
     const topHistoryLength = debuggerMode ? maxHistoryLengthForStats.value : maxHistoryLength.value
     const historySlice = history.length > topHistoryLength ? history.slice(history.length - historyCrunch.value) : history
+    const normalizedBeta = this.getNormalizedBeta(event)
+    this.determineAmbience({ event, history: historySlice })
+    const isInDangerZone = (normalizedBeta < releaseTilt.value) && (normalizedBeta > -releaseTilt.value)
     const accX = event.dm.gx
     const normalizedAccX = accX * (leftHanded ? 1 : -1)
     const lift = normalizedAccX < liftedThreshold.value
-    const fire = this.shouldEngage({ normalizedAccX, history: historySlice })
-    this.determineAmbience({ event, history: historySlice })
-    const shouldLift = fire ? false : lift ? true : lifted
-    this.checkPitch(event)
-    fire && this.fire(normalizedAccX)
-    const release = !fire && this.checkLift(event)
-    const historyObject = {
-      accX,
-      normalizedAccX
-    }
     const debuggerInfo = debuggerMode && {
       leftHanded,
+      normalizedBeta,
       alpha: event.do.alpha || 'No rotation detected',
       beta: event.do.beta || 'No rotation detected',
       gamma: event.do.gamma || 'No rotation detected',
       accX: accX || 'No acceleration detected'
     }
+    let fire
+    if (isInDangerZone) {
+      fire = this.shouldEngage({ normalizedAccX, history: historySlice })
+      this.checkPitch(event)
+      fire && this.fire(normalizedAccX)
+    }
+    const historyObject = {
+      accX,
+      normalizedAccX
+    }
+    const release = !fire && this.checkLift(event)
+    const shouldLift = fire ? false : lift ? true : lifted
     this.setState({
       debuggerInfo,
       pressed: fire ? true : release ? false : pressed,
@@ -136,10 +142,13 @@ class Synth extends Component {
   getNormalizedBeta(event) {
     const { leftHanded } = this.state
     let beta = event.do.beta
-    if (beta < 0) return 0
     const gamma = event.do.gamma
     if ((leftHanded && gamma < 0) || (!leftHanded && gamma > 0)) {
-      beta = 180 - beta
+      if (beta < 0) {
+        beta = -(180 + beta)
+      } else {
+        beta = 180 - beta
+      }
     }
     return beta
   }
@@ -227,7 +236,7 @@ class Synth extends Component {
             <SaveStats history={history}/>
             <div className='debugger'>
               <div>{debuggerInfo.leftHanded ? 'Left hand' : 'Right hand'}</div>
-              <div>Ambience: {this.state.ambience}</div>
+              <div>Normalized beta: {debuggerInfo.normalizedBeta}</div>
               <div>Acceleration X: {debuggerInfo.accX}</div>
               <div>Orientation alpha: {debuggerInfo.alpha}</div>
               <div>Orientation beta: {debuggerInfo.beta}</div>
