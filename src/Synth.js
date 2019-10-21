@@ -21,7 +21,7 @@ class Synth extends Component {
       },
       leftHanded: true,
       history: [],
-      uninterestinEvents: 0,
+      minor: false,
       lifted: true,
       structuredPitchArray
     }
@@ -106,12 +106,13 @@ class Synth extends Component {
     const accX = event.dm.gx
     const normalizedAccX = accX * (leftHanded ? 1 : -1)
     const lift = normalizedAccX < liftedThreshold.value
+    const gamma = event.do.gamma
     const debuggerInfo = debuggerMode && {
       leftHanded,
       normalizedBeta,
       alpha: event.do.alpha || 'No rotation detected',
       beta: event.do.beta || 'No rotation detected',
-      gamma: event.do.gamma || 'No rotation detected',
+      gamma: gamma || 'No rotation detected',
       accX: accX || 'No acceleration detected'
     }
     let fire
@@ -127,6 +128,7 @@ class Synth extends Component {
     const release = !fire && this.checkLift(event)
     const shouldLift = fire ? false : lift ? true : lifted
     this.setState({
+      minor: leftHanded && (gamma > 0),
       debuggerInfo,
       pressed: fire ? true : release ? false : pressed,
       lifted: shouldLift,
@@ -214,21 +216,13 @@ class Synth extends Component {
   }
 
   render() {
-    const { pitchMark, structuredPitchArray, minor, debuggerInfo, history, leftHanded } = this.state
+    const { pitchMark, structuredPitchArray, debuggerInfo, history, leftHanded, minor } = this.state
     const { debuggerMode } = this.props
     const synth = leftHanded ? this.props.polySynth : this.props.monoSynth
     const currentPitch = structuredPitchArray[pitchMark] || {}
+    const pitch = currentPitch.pitch + (minor ? 'm' : '') + currentPitch.octave
     return (
       <div className='synth'>
-        {leftHanded && <div
-          className={'main-button pedal-button ' + (minor ? ' on': '')}
-          onTouchStart={() => {
-            this.setState({minor: true})
-          }}
-          onTouchEnd={() => {
-            this.setState({minor: false})
-          }}>{minor ? 'Minor' : 'Major'}</div>
-        }
         <div
           className='main-button attack-toggle'
           onClick={() => synth.triggerAttackRelease(this.getPitch(), 0.5, undefined, 1)}
@@ -246,7 +240,7 @@ class Synth extends Component {
             </div>
           </span>
         }
-        <div className='pitch-indicator'>{currentPitch.pitch && currentPitch.pitch + currentPitch.octave}</div>
+        <div className='pitch-indicator'>{pitch}</div>
       </div>
     )
   }
