@@ -223,12 +223,12 @@ class Synth extends Component {
     const pitch = currentPitch.pitch + (minor ? 'm' : '') + currentPitch.octave
     return (
       <div className='synth'>
-        <div
-          className='main-button attack-toggle'
-          onClick={() => synth.triggerAttackRelease(this.getPitch(), 0.5, undefined, 1)}
-        >Attack</div>
         {
           debuggerMode && <span>
+            <div
+              className='main-button attack-toggle'
+              onClick={() => synth.triggerAttackRelease(this.getPitch(), 0.5, undefined, 1)}
+            >Attack</div>
             <SaveStats history={history}/>
             <div className='debugger'>
               <div>{debuggerInfo.leftHanded ? 'Left hand' : 'Right hand'}</div>
