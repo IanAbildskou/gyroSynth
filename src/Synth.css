@@ -16,15 +16,15 @@
 
 .pitch-indicator {
   position: absolute;
-  top: 0;
   right: 0;
-  margin: 16px 3%;
-  height: 48px;
+  display: block;
+  width: 100%;
+  top: 40%;
+  transform: translateY(0%);
   color: white;
   text-align: center;
-  font-size: 2em;
+  font-size: 10em;
   font-weight: bold;
-  line-height: 16px;
 }
 
 .pedal-button.on {
