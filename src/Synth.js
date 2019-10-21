@@ -136,22 +136,25 @@ class Synth extends Component {
     chords ? synthCollection.releaseAll() : synthCollection.triggerRelease()
   }
 
-  checkLift(event) {
-    const { pressed, leftHanded } = this.state
-    const { releaseTilt } = this.props.config.advanced
+  getNormalizedBeta(event) {
+    const { leftHanded } = this.state
     let beta = event.do.beta
     const gamma = event.do.gamma
+    if (gamma < 0) {
+      beta = leftHanded ? beta + 90 : beta - 90
+    }
+    return beta
+  }
+
+  checkLift(event) {
+    const { pressed } = this.state
+    const { releaseTilt } = this.props.config.advanced
     const releaseTiltAngle = releaseTilt.value
     if (pressed) {
-      const thinkAboutLifting = beta > releaseTiltAngle && beta < (180 - releaseTiltAngle)
-      if (thinkAboutLifting) {
-        if (gamma < 0) {
-          beta = leftHanded ? beta + 90 : beta - 90
-        }
-        if (beta > releaseTiltAngle) {
-          this.release()
-          return true
-        }
+      const beta = this.getNormalizedBeta(event)
+      if (beta > releaseTiltAngle) {
+        this.release()
+        return true
       }
     }
   }
