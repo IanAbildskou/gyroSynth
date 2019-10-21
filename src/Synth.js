@@ -139,9 +139,10 @@ class Synth extends Component {
   getNormalizedBeta(event) {
     const { leftHanded } = this.state
     let beta = event.do.beta
+    if (beta < 0) return 0
     const gamma = event.do.gamma
-    if (gamma < 0) {
-      beta = leftHanded ? beta + 90 : beta - 90
+    if ((leftHanded && gamma < 0) || (!leftHanded && gamma > 0)) {
+      beta = 180 - beta
     }
     return beta
   }
