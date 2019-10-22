@@ -104,7 +104,7 @@
 .slider {
   width: 100%;
   -webkit-appearance: none;
-  height: 400px;
+  height: 4000px;
   background: rgba(0, 0, 0, 0.2);
   outline: none;
   -webkit-transition: .2s;
@@ -126,16 +126,14 @@
   -webkit-appearance: none;
   appearance: none;
   width: 25px;
-  height: 400px;
-  border-radius: 4px;
+  height: 4000px;
   background: yellow;
   cursor: pointer;
 }
 
 .slider::-moz-range-thumb {
   width: 25px;
-  height: 400px;
-  border-radius: 4px;
+  height: 4000px;
   background: yellow;
   cursor: pointer;
 }

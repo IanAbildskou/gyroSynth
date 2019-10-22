@@ -38,7 +38,7 @@ const config = {
         value: 5,
         maxValue: 100,
         minValue: 1,
-        unit: 'ms/detection',
+        unit: 'Hz',
         description: 'What is the resolution for motion detection (ms/detection)'
       },
       maxHistoryLength: {
