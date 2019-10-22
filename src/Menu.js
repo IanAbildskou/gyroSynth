@@ -1,7 +1,9 @@
 import './Menu.css';
 import React, { Component } from 'react';
+import lodash from 'lodash';
 import { ArrowForward } from '@material-ui/icons';
 import { IconButton } from '@material-ui/core';
+import SettingPage from './SettingPage';
 
 class Menu extends Component {
   constructor(props) {
@@ -28,25 +30,19 @@ class Menu extends Component {
   renderSettingPage() {
     const { config } = this.props
     const { settingPageOpen, settingKey, settingSection } = this.state
-    const { value, unit, label, description, minValue, maxValue } = (settingSection && settingKey && config[settingSection][settingKey]) || {minValue: 0, value: 0, maxValue: 0}
-    const valueWithUnit = label && value + (unit ? ' ' + unit : '')
-    return (
-      <div className={"setting-page " + (settingPageOpen && 'open')}>
-        <IconButton color='primary' className={'close-menu'} onClick={() => this.setState({settingPageOpen: false})}>
-          <ArrowForward/>
-        </IconButton>
-        <div className='setting-page-header'>{label}</div>
-        <div className='setting-description'>{description}</div>
-        <div className='slider-value'>{valueWithUnit}</div>
-        <input
-          defaultValue={value * 100}
-          type="range"
-          min={minValue * 100}
-          max={maxValue * 100}
-          className="slider" id="myRange" onChange={this.props.changeProp(settingKey, settingSection)}
-        />
-      </div>
-    )
+    const { value } = (settingSection && settingKey && config[settingSection][settingKey]) || {minValue: 0, value: 0, maxValue: 0}
+    const debouncedFunction = lodash.debounce((value) => {
+      this.props.changeProp(settingKey, settingSection, value)
+    }, 100)
+    return <SettingPage
+      value={value}
+      closeSettingPage={() => this.setState({settingPageOpen: false})}
+      settingPageOpen={settingPageOpen}
+      debouncedFunction={debouncedFunction}
+      settingKey={settingKey}
+      settingSection={settingSection}
+      config={config}
+    />
   }
 
   render() {

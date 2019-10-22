@@ -66,8 +66,8 @@ class App extends Component {
       polySynth.dispose()
       reverb.dispose()
     }
-    const changeProp = (key, section) => e => {
-      const value = e.target.value / 100
+    const changeProp = (key, section, realValue) => {
+      const value = realValue
       reset()
       const oldProp = configurableVariables[section][key]
       const newProp = Object.assign({}, oldProp, { value })
