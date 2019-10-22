@@ -27,9 +27,11 @@ class Synth extends Component {
   }
 
   setPitch(pitchMark, pitchAlphaAnchor) {
+    const { tactileFeedbackPitchDuration } = this.props.config.advanced
     const pitch = this.state.structuredPitchArray[pitchMark]
     const color = pitch && pitch.color
     document.getElementsByTagName('BODY')[0].style.backgroundColor = color
+    this.vibrate(tactileFeedbackPitchDuration.value)
     this.setState({pitchMark, pitchAlphaAnchor})
   }
 
@@ -49,12 +51,16 @@ class Synth extends Component {
     return pitch
   }
 
+  vibrate(duration) {
+    window.navigator.vibrate && window.navigator.vibrate(duration)
+  }
+
   fire(accX) {
     const { maxVelocity, fireThreshold, tactileFeedbackDuration } = this.props.config.advanced
     const { pressed, leftHanded } = this.state
     const absoluteVelocity = (accX - fireThreshold.value) / maxVelocity.value
     const adjustedVelocity = Math.min(absoluteVelocity, 1)
-    window.navigator.vibrate && window.navigator.vibrate(tactileFeedbackDuration.value)
+    this.vibrate(tactileFeedbackDuration.value)
     const synth = leftHanded ? this.props.polySynth : this.props.monoSynth
     if (synth.context.state !== 'running') { // This is most of all for safety. I think also it solved an ios issue where sound would not resume after minimizing
       synth.context.resume();
@@ -138,6 +144,7 @@ class Synth extends Component {
   release() {
     const { polySynth, monoSynth } = this.props
     const { leftHanded } = this.state
+    this.stopVibrate()
     leftHanded ? polySynth.releaseAll() : monoSynth.triggerRelease()
   }
 

@@ -63,12 +63,20 @@ const config = {
         description: 'How many history entries do we want to scrape off per slice. This is a performance parameter.'
       },
       tactileFeedbackDuration: {
-        label: 'Tactile feedback duration',
+        label: 'Tactile feedback duration for attack',
         value: 50,
         maxValue: 1000,
         minValue: 1,
         unit: 'ms',
         description: 'For how long should the phone vibrate when an attack is triggered.'
+      },
+      tactileFeedbackPitchDuration: {
+        label: 'Tactile feedback duration for pitch shift',
+        value: 20,
+        maxValue: 1000,
+        minValue: 1,
+        unit: 'ms',
+        description: 'For how long should the phone vibrate when a pitch shift is triggered.'
       },
       switchHandAmbienceDuration: {
         label: 'How long rest when switching hands',
