@@ -6,8 +6,7 @@ import SaveStats from './SaveStats';
 class Synth extends Component {
   constructor(props) {
     super(props)
-    const { maxOctave } = props.config.advanced
-    const structuredPitchArray = [...Array(maxOctave.value).keys()].map((o, octaveIndex) => {
+    const structuredPitchArray = [...Array(6).keys()].map((o, octaveIndex) => { // 6 is max number of supported octaves
       return props.pitchArray.map((pitch, pitchIndex) => {
         return { octave: octaveIndex + 1, color: props.colorArray[pitchIndex], pitch }
       })

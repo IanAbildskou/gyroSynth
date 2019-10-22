@@ -9,13 +9,6 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 const config = {
   configurableVariables: {
     advanced: {
-      maxOctave: {
-        label: 'Available octaves',
-        value: 6,
-        maxValue: 10,
-        minValue: 1,
-        description: 'How many octaves should be available to shift through',
-      },
       fireThreshold: {
         label: 'Trigger attack threshold',
         value: 15,
