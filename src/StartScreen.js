@@ -7,26 +7,29 @@ class StartScreen extends Component {
     super(props)
     this.state = {
       open: true,
-      hasMotion: false
+      hasMotion: false,
+      hasCheckedForMotion: false
     }
   }
 
-  hasDeviceMotion() {
-    const checkMotion = e => {
-      const hasMotion = !!e.accelerationIncludingGravity.x
-      this.setState({ hasMotion })
+  checkMotion = e => {
+    if (!this.state.hasCheckedForMotion) {
+      const { x: xg, y: yg, z: zg } = e.accelerationIncludingGravity
+      const { x, y, z } = e.acceleration
+      const hasMotion = !!xg || !!yg || !!zg || !!x || !!y || !!z
+      this.setState({ hasMotion, hasCheckedForMotion: true })
     }
-    const hasMotion = this.state.hasMotion
-    !hasMotion
-      ? window.addEventListener('devicemotion', checkMotion)
-      : window.removeEventListener("devicemotion", checkMotion);
+  }
+
+  componentDidMount() {
+    window.addEventListener('devicemotion', this.checkMotion)
   }
 
   render() {
-    const { hasMotion, open } = this.state
+    const { hasMotion, open, hasCheckedForMotion } = this.state
     const close = () => this.setState({open: false})
     const isChrome = detectChrome()
-    this.hasDeviceMotion()
+    hasCheckedForMotion && window.removeEventListener('devicemotion', this.checkMotion);
     return (
       <div className={'start-screen ' + (!open && 'closed')}>
         <div className='start-screen-container'>
