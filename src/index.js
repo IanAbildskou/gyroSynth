@@ -66,7 +66,7 @@ const config = {
         label: 'Tactile feedback duration for attack',
         value: 50,
         maxValue: 1000,
-        minValue: 1,
+        minValue: 0,
         unit: 'ms',
         description: 'For how long should the phone vibrate when an attack is triggered.'
       },
@@ -74,7 +74,7 @@ const config = {
         label: 'Tactile feedback duration for pitch shift',
         value: 20,
         maxValue: 1000,
-        minValue: 1,
+        minValue: 0,
         unit: 'ms',
         description: 'For how long should the phone vibrate when a pitch shift is triggered.'
       },

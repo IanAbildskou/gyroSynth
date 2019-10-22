@@ -1,6 +1,7 @@
 import './Synth.css';
 import React, { Component } from 'react'
 import GyroNorm from 'gyronorm';
+import Tone from 'tone';
 import SaveStats from './SaveStats';
 
 class Synth extends Component {
@@ -55,7 +56,7 @@ class Synth extends Component {
     window.navigator.vibrate && window.navigator.vibrate(duration)
   }
 
-  fire(accX) {
+  fire(accX, pitch) {
     const { maxVelocity, fireThreshold, tactileFeedbackDuration } = this.props.config.advanced
     const { pressed, leftHanded } = this.state
     const absoluteVelocity = (accX - fireThreshold.value) / maxVelocity.value
@@ -65,7 +66,6 @@ class Synth extends Component {
     if (synth.context.state !== 'running') { // This is most of all for safety. I think also it solved an ios issue where sound would not resume after minimizing
       synth.context.resume();
     }
-    const pitch = this.getPitch()
     pressed && this.release()
     synth.triggerAttack(pitch, undefined, adjustedVelocity)
     return null
@@ -99,6 +99,17 @@ class Synth extends Component {
     }
   }
 
+  bend(event) {
+    const synth = this.props.monoSynth
+    const correctedTilt = 90 - Math.abs(event.do.gamma)
+    const currentFrequency = Tone.Frequency(this.state.pressed).toFrequency()
+    const maxBendFrequency = Tone.Frequency(this.state.pressed).transpose(2).toFrequency()
+    const diff = maxBendFrequency - currentFrequency
+    const bend = (correctedTilt * diff) / 100
+    const newFrequency = currentFrequency + bend
+    synth.frequency.rampTo(newFrequency, 0)
+  }
+
   deviceMotionEvent(event) {
     const { config, debuggerMode } = this.props
     const { liftedThreshold, maxHistoryLength, maxHistoryLengthForStats, historyCrunch, releaseTilt } = config.advanced
@@ -120,11 +131,13 @@ class Synth extends Component {
       gamma: gamma || 'No rotation detected',
       accX: accX || 'No acceleration detected'
     }
-    let fire
+    let fire, pitch
     if (isInDangerZone) {
       fire = this.shouldEngage({ normalizedAccX, history: historySlice })
       this.checkPitch(event)
-      fire && this.fire(normalizedAccX)
+      pitch = this.getPitch()
+      fire && this.fire(normalizedAccX, pitch)
+      !fire && pressed && !leftHanded && this.bend(event)
     }
     const historyObject = {
       accX,
@@ -135,7 +148,7 @@ class Synth extends Component {
     this.setState({
       minor: leftHanded && (gamma > 0),
       debuggerInfo,
-      pressed: fire ? true : release ? false : pressed,
+      pressed: fire ? pitch : release ? false : pressed,
       lifted: shouldLift,
       history: historySlice.concat([historyObject])
     })
@@ -144,7 +157,6 @@ class Synth extends Component {
   release() {
     const { polySynth, monoSynth } = this.props
     const { leftHanded } = this.state
-    this.stopVibrate()
     leftHanded ? polySynth.releaseAll() : monoSynth.triggerRelease()
   }
 
