@@ -7,53 +7,51 @@ import getNormalizedBeta from './getNormalizedBeta';
 import getPitch from './getPitch';
 import shouldEngage from './shouldEngage';
 
-export default ({
-  liftedThresholdValue,
-  maxHistoryLengthValue,
-  maxHistoryLengthForStatsValue,
-  historyCrunchValue,
-  releaseTiltValue,
-  debuggerMode,
-  pressed,
-  leftHanded,
-  lifted,
-  beta,
-  alpha,
-  gamma,
-  accX,
-  fireThresholdValue,
-  switchHandAmbienceDurationValue,
-  motionFrequencyValue,
-  tactileFeedbackPitchDurationValue,
-  pitchShiftDegreeThresholdValue,
-  structuredPitchArray,
-  minor,
-  maxVelocityValue,
-  tactileFeedbackDurationValue,
-  polySynth,
-  monoSynth,
-  pitchMark,
-  pitchAlphaAnchor,
-  updateState
-}) => {
+export default props => {
+  const {
+    liftedThresholdValue,
+    maxHistoryLengthValue,
+    maxHistoryLengthForStatsValue,
+    historyCrunchValue,
+    releaseTiltValue,
+    debuggerMode,
+    pressed,
+    leftHanded,
+    lifted,
+    beta,
+    alpha,
+    gamma,
+    accX,
+    minor,
+    pitchMark,
+    pitchAlphaAnchor,
+    updateState
+  } = props
   const history = window.gyroSynthHistory || []
   const topHistoryLength = debuggerMode ? maxHistoryLengthForStatsValue : maxHistoryLengthValue
   const historySlice = history.length > topHistoryLength ? history.slice(history.length - historyCrunchValue) : history
-  const normalizedBeta = getNormalizedBeta({
-    beta,
-    gamma,
-    leftHanded
-  })
-  const shouldSwitchHands = determineAmbience({
-    accX,
-    history: historySlice,
-    switchHandAmbienceDurationValue,
-    motionFrequencyValue,
-    leftHanded
-  })
-  const isInDangerZone = (normalizedBeta < releaseTiltValue) && (normalizedBeta > (-1 * releaseTiltValue))
+  const normalizedBeta = getNormalizedBeta(props)
+  const shouldSwitchHands = determineAmbience({ history: historySlice, ...props})
   const normalizedAccX = accX * (leftHanded ? 1 : -1)
-  const lift = normalizedAccX < liftedThresholdValue
+  const isInDangerZone = (normalizedBeta < releaseTiltValue) && (normalizedBeta > (-1 * releaseTiltValue))
+  let shouldFire, pitch, newPitch, lift, release
+  if (isInDangerZone) {
+    newPitch = checkPitch(props)
+    pitch = getPitch(props)
+    shouldFire = shouldEngage({
+      normalizedAccX,
+      history: historySlice,
+      ...props
+    })
+    if (shouldFire) {
+      fire({ ...props, pitch })
+    } else {
+      pressed && !leftHanded && bend(props)
+      lift = normalizedAccX < liftedThresholdValue
+    }
+  } else {
+    release = !shouldFire && checkLift(props)
+  }
   const debuggerInfo = debuggerMode && {
     historyLength: history.length,
     leftHanded,
@@ -64,62 +62,13 @@ export default ({
     accX,
     lifted
   }
-  let shouldFire, pitch, newPitch
-  if (isInDangerZone) {
-    shouldFire = shouldEngage({
-      normalizedAccX,
-      history: historySlice,
-      fireThresholdValue,
-      lifted
-    })
-    newPitch = checkPitch({
-      tactileFeedbackPitchDurationValue,
-      alpha,
-      gamma,
-      pitchShiftDegreeThresholdValue,
-      pitchMark,
-      pitchAlphaAnchor,
-      structuredPitchArray
-    })
-    pitch = getPitch({
-      pitchMark,
-      structuredPitchArray,
-      minor,
-      leftHanded
-    })
-    shouldFire && fire({
-      leftHanded,
-      pressed,
-      maxVelocityValue,
-      fireThresholdValue,
-      tactileFeedbackDurationValue,
-      accX,
-      pitch,
-      polySynth,
-      monoSynth
-    })
-    !shouldFire && pressed && !leftHanded && bend({
-      gamma,
-      pressed,
-      monoSynth
-    })
-  }
   const historyObject = {
     accX,
     normalizedAccX
   }
-  const release = !shouldFire && checkLift({
-    polySynth,
-    monoSynth,
-    pressed,
-    releaseTiltValue,
-    beta,
-    gamma,
-    leftHanded
-  })
-  const shouldToggleLift = shouldFire || (!lifted && lift)
-  const shouldToggleMinor = leftHanded && ((minor && (gamma > 0)) || (!minor && (gamma < 0)))
   window.gyroSynthHistory = historySlice.concat([historyObject])
+  const shouldToggleLift = shouldFire || (!lifted && (lift || release))
+  const shouldToggleMinor = leftHanded && ((minor && (gamma > 0)) || (!minor && (gamma < 0)))
   const shouldUpdateState = shouldToggleMinor || debuggerMode || newPitch || shouldSwitchHands || shouldFire || shouldToggleLift
   if (shouldUpdateState) {
     updateState({
