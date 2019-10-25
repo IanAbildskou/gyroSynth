@@ -30,7 +30,5 @@ export default ({
       pitchAlphaAnchor: adjustedNewAnchor,
       structuredPitchArray
     })
-  } else {
-    return {}
   }
 }

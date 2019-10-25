@@ -62,7 +62,7 @@ import shouldEngage from './shouldEngage';
       gamma: gamma || 'No rotation detected',
       accX: accX || 'No acceleration detected'
     }
-    let shouldFire, pitch, newPitchAlphaAnchor, newPitchMark
+    let shouldFire, pitch, newPitch
     if (isInDangerZone) {
       shouldFire = shouldEngage({
         normalizedAccX,
@@ -70,7 +70,7 @@ import shouldEngage from './shouldEngage';
         fireThresholdValue,
         lifted
       })
-      const newPitch = checkPitch({
+      newPitch = checkPitch({
         tactileFeedbackPitchDurationValue,
         alpha,
         gamma,
@@ -79,8 +79,6 @@ import shouldEngage from './shouldEngage';
         pitchAlphaAnchor,
         structuredPitchArray
       })
-      newPitchAlphaAnchor = newPitch.pitchAlphaAnchor
-      newPitchMark = newPitch.pitchMark
       pitch = getPitch({
         pitchMark,
         structuredPitchArray,
@@ -121,8 +119,8 @@ import shouldEngage from './shouldEngage';
     updateState({
       minor: leftHanded && (gamma > 0),
       debuggerInfo,
-      pitchAlphaAnchor: newPitchAlphaAnchor || pitchAlphaAnchor,
-      pitchMark: newPitchMark || pitchMark,
+      pitchAlphaAnchor: newPitch ? newPitch.pitchAlphaAnchor : pitchAlphaAnchor,
+      pitchMark: newPitch ? newPitch.pitchMark : pitchMark,
       leftHanded: shouldSwitchHands ? !leftHanded : leftHanded,
       pressed: shouldFire ? pitch : release ? false : pressed,
       lifted: shouldLift,
