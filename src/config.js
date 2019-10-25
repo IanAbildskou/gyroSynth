@@ -30,7 +30,7 @@ export default {
         value: 5,
         maxValue: 100,
         minValue: 1,
-        unit: 'Hz',
+        unit: 'ms/detect',
         description: 'What is the resolution for motion detection (ms/detection)'
       },
       maxHistoryLength: {
