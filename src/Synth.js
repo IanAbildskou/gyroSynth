@@ -20,7 +20,6 @@ class Synth extends Component {
         accX: 'No acceleration detected'
       },
       leftHanded: true,
-      history: [],
       minor: false,
       lifted: true,
       structuredPitchArray,
@@ -31,7 +30,7 @@ class Synth extends Component {
   }
 
   onMotion({ alpha, beta, gamma, accX, updateState }) {
-    const { pitchMark, pitchAlphaAnchor, structuredPitchArray, history, leftHanded, minor, pressed, lifted } = this.state
+    const { pitchMark, pitchAlphaAnchor, structuredPitchArray, leftHanded, minor, pressed, lifted } = this.state
     const { debuggerMode, synthObject, config } = this.props
     const { polySynth, monoSynth } = synthObject
     const { tactileFeedbackDuration, maxVelocity, tactileFeedbackPitchDuration, switchHandAmbienceDuration, motionFrequency, maxHistoryLength, liftedThreshold, maxHistoryLengthForStats, historyCrunch, releaseTilt, fireThreshold } = config.advanced
@@ -47,7 +46,6 @@ class Synth extends Component {
       historyCrunchValue: historyCrunch.value,
       releaseTiltValue: releaseTilt.value,
       debuggerMode,
-      history,
       pressed,
       leftHanded,
       lifted,
@@ -90,12 +88,12 @@ class Synth extends Component {
   }
 
   render() {
-    const { pitchMark, structuredPitchArray, debuggerInfo, history, leftHanded, minor } = this.state
+    const { pitchMark, structuredPitchArray, debuggerInfo, leftHanded, minor } = this.state
     const { debuggerMode, synthObject } = this.props
     const { polySynth, monoSynth } = synthObject
     const synth = getSynth({ leftHanded, monoSynth, polySynth })
     const currentPitch = structuredPitchArray[pitchMark] || {}
-    const pitch = currentPitch.pitch + (minor ? 'm' : '') + currentPitch.octave
+    const pitch = currentPitch.pitch + ((minor && leftHanded) ? 'm' : '') + currentPitch.octave
     return (
       <div className='synth'>
         {
@@ -109,14 +107,9 @@ class Synth extends Component {
                 leftHanded
               }), 0.5, undefined, 1)}
             >Attack</div>
-            <SaveStats history={history}/>
+            <SaveStats/>
             <div className='debugger'>
-              <div>{debuggerInfo.leftHanded ? 'Left hand' : 'Right hand'}</div>
-              <div>Normalized beta: {debuggerInfo.normalizedBeta}</div>
-              <div>Acceleration X: {debuggerInfo.accX}</div>
-              <div>Orientation alpha: {debuggerInfo.alpha}</div>
-              <div>Orientation beta: {debuggerInfo.beta}</div>
-              <div>Orientation gamma: {debuggerInfo.gamma}</div>
+              {Object.entries(debuggerInfo).map(info => <div key={info[0]}>{info[0] + ': ' + info[1]}</div>)}
             </div>
           </span>
         }

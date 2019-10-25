@@ -5,7 +5,7 @@ import saveAs from 'file-saver';
 class SaveStats extends Component {
   render() {
     const save = () => {
-      const history = this.props.history
+      const history = window.gyroSynthHistory || []
       const keys = Object.keys(history[0])
       var exportedData = ''
       keys.map((key, index) => {
