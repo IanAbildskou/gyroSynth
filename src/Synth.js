@@ -1,18 +1,17 @@
 import './Synth.css';
 import React, { Component } from 'react'
 import GyroNorm from 'gyronorm';
-import Tone from 'tone';
 import SaveStats from './SaveStats';
+import getPitch from './synthFunctions/getPitch';
+import getSynth from './synthFunctions/getSynth';
+import getStructuredPitchArray from './synthFunctions/getStructuredPitchArray';
+import deviceMotionEvent from './synthFunctions/deviceMotionEvent';
 
 class Synth extends Component {
   constructor(props) {
     super(props)
-    const structuredPitchArray = [...Array(6).keys()].map((o, octaveIndex) => { // 6 is max number of supported octaves
-      return props.pitchArray.map((pitch, pitchIndex) => {
-        return { octave: octaveIndex + 1, color: props.colorArray[pitchIndex], pitch }
-      })
-    }).flat().reverse()
-
+    const { pitchArray, colorArray } = props
+    const structuredPitchArray = getStructuredPitchArray({ pitchArray, colorArray })
     this.state = {
       debuggerInfo: {
         alpha: 'No rotation detected',
@@ -27,195 +26,15 @@ class Synth extends Component {
     }
   }
 
-  setPitch(pitchMark, pitchAlphaAnchor) {
-    const { tactileFeedbackPitchDuration } = this.props.config.advanced
-    const pitch = this.state.structuredPitchArray[pitchMark]
-    const color = pitch && pitch.color
-    document.getElementsByTagName('BODY')[0].style.backgroundColor = color
-    this.vibrate(tactileFeedbackPitchDuration.value)
-    this.setState({pitchMark, pitchAlphaAnchor})
-  }
-
-  getPitch() {
-    const { pitchMark, structuredPitchArray, minor, leftHanded } = this.state
-    let pitch
-    const getPitchFromMark = (pitchMark) => {
-      const pitchObject = structuredPitchArray[pitchMark]
-      return pitchObject.pitch + pitchObject.octave
-    }
-    if (leftHanded) {
-      const pitchArray = [pitchMark, pitchMark + ( minor ? 4 : 3), 7]
-      pitch = pitchArray.map(pitchMark => getPitchFromMark(pitchMark))
-    } else {
-      pitch = getPitchFromMark(pitchMark)
-    }
-    return pitch
-  }
-
-  vibrate(duration) {
-    window.navigator.vibrate && window.navigator.vibrate(duration)
-  }
-
-  fire(accX, pitch) {
-    const { maxVelocity, fireThreshold, tactileFeedbackDuration } = this.props.config.advanced
-    const { pressed, leftHanded } = this.state
-    const absoluteVelocity = (accX - fireThreshold.value) / maxVelocity.value
-    const adjustedVelocity = Math.min(absoluteVelocity, 1)
-    this.vibrate(tactileFeedbackDuration.value)
-    const synth = leftHanded ? this.props.polySynth : this.props.monoSynth
-    if (synth.context.state !== 'running') { // This is most of all for safety. I think also it solved an ios issue where sound would not resume after minimizing
-      synth.context.resume();
-    }
-    pressed && this.release()
-    synth.triggerAttack(pitch, undefined, adjustedVelocity)
-    return null
-  }
-
-  shouldEngage({normalizedAccX, history}) {
-    const { fireThreshold } = this.props.config.advanced
-    const { lifted } = this.state
-    const enoughForceForFire = normalizedAccX > fireThreshold.value
-    if (enoughForceForFire) {
-      if (lifted) {
-        return !!history.length && (normalizedAccX < history[history.length -1].normalizedAccX) // is peak
-      }
-    }
-  }
-
-  determineAmbience({event, history}) {
-    const { motionFrequency, switchHandAmbienceDuration } = this.props.config.advanced
-    const { leftHanded } = this.state
-    const accX = event.dm.gx
-    const withinRange = value => (value > 2) && (value < 12)
-    const checkIfInRange = value => withinRange(value * (leftHanded ? -1 : 1))
-    if (checkIfInRange(accX)) {
-      const ambienceThreshold = switchHandAmbienceDuration / motionFrequency
-      const historySlice = history.slice(history.length - ambienceThreshold, history.length)
-      const ambienceArray = historySlice.map(({ accX }) => checkIfInRange(accX))
-      const shouldSwitch = !ambienceArray.includes(false)
-      if (shouldSwitch) {
-        this.setState({ leftHanded: !leftHanded })
-      }
-    }
-  }
-
-  bend(event) {
-    const synth = this.props.monoSynth
-    const correctedTilt = 90 - Math.abs(event.do.gamma)
-    const currentFrequency = Tone.Frequency(this.state.pressed).toFrequency()
-    const maxBendFrequency = Tone.Frequency(this.state.pressed).transpose(2).toFrequency()
-    const diff = maxBendFrequency - currentFrequency
-    const bend = (correctedTilt * diff) / 100
-    const newFrequency = currentFrequency + bend
-    synth.frequency.rampTo(newFrequency, 0)
-  }
-
-  deviceMotionEvent(event) {
-    const { config, debuggerMode } = this.props
-    const { liftedThreshold, maxHistoryLength, maxHistoryLengthForStats, historyCrunch, releaseTilt } = config.advanced
-    const { history, pressed, leftHanded, lifted } = this.state
-    const topHistoryLength = debuggerMode ? maxHistoryLengthForStats.value : maxHistoryLength.value
-    const historySlice = history.length > topHistoryLength ? history.slice(history.length - historyCrunch.value) : history
-    const normalizedBeta = this.getNormalizedBeta(event)
-    this.determineAmbience({ event, history: historySlice })
-    const isInDangerZone = (normalizedBeta < releaseTilt.value) && (normalizedBeta > -releaseTilt.value)
-    const accX = event.dm.gx
-    const normalizedAccX = accX * (leftHanded ? 1 : -1)
-    const lift = normalizedAccX < liftedThreshold.value
-    const gamma = event.do.gamma
-    const debuggerInfo = debuggerMode && {
-      leftHanded,
-      normalizedBeta,
-      alpha: event.do.alpha || 'No rotation detected',
-      beta: event.do.beta || 'No rotation detected',
-      gamma: gamma || 'No rotation detected',
-      accX: accX || 'No acceleration detected'
-    }
-    let fire, pitch
-    if (isInDangerZone) {
-      fire = this.shouldEngage({ normalizedAccX, history: historySlice })
-      this.checkPitch(event)
-      pitch = this.getPitch()
-      fire && this.fire(normalizedAccX, pitch)
-      !fire && pressed && !leftHanded && this.bend(event)
-    }
-    const historyObject = {
-      accX,
-      normalizedAccX
-    }
-    const release = !fire && this.checkLift(event)
-    const shouldLift = fire ? false : lift ? true : lifted
-    this.setState({
-      minor: leftHanded && (gamma > 0),
-      debuggerInfo,
-      pressed: fire ? pitch : release ? false : pressed,
-      lifted: shouldLift,
-      history: historySlice.concat([historyObject])
-    })
-  }
-
-  release() {
-    const { polySynth, monoSynth } = this.props
-    const { leftHanded } = this.state
-    leftHanded ? polySynth.releaseAll() : monoSynth.triggerRelease()
-  }
-
-  getNormalizedBeta(event) {
-    const { leftHanded } = this.state
-    let beta = event.do.beta
-    const gamma = event.do.gamma
-    if ((leftHanded && gamma < 0) || (!leftHanded && gamma > 0)) {
-      if (beta < 0) {
-        beta = -(180 + beta)
-      } else {
-        beta = 180 - beta
-      }
-    }
-    return beta
-  }
-
-  checkLift(event) {
-    const { pressed } = this.state
-    const { releaseTilt } = this.props.config.advanced
-    const releaseTiltAngle = releaseTilt.value
-    if (pressed) {
-      const beta = this.getNormalizedBeta(event)
-      if (beta > releaseTiltAngle) {
-        this.release()
-        return true
-      }
-    }
-  }
-
-  checkPitch(event) {
-    const { value: pitchShiftDegreeThreshold } = this.props.config.simple.pitchShiftDegreeThreshold
-    const { pitchMark, pitchAlphaAnchor, structuredPitchArray } = this.state
-    let alpha = event.do.alpha
-    const gamma = event.do.gamma
-    if (gamma < 0) {
-      alpha = (alpha > 180) ? (alpha - 180) : (alpha + 180)
-    }
-    const difference = alpha - pitchAlphaAnchor
-    const absoluteDistance = Math.min(Math.abs(difference), Math.abs(difference + 360), Math.abs(difference - 360))
-    const shouldShift = absoluteDistance >= (pitchShiftDegreeThreshold / 2)
-    if (shouldShift) {
-      const isCrossingBoundary = Math.abs(difference) > 180
-      const pitchUp = isCrossingBoundary ? difference < 0 : difference > 0
-      const pitchChange = Math.floor(absoluteDistance / (pitchShiftDegreeThreshold / 2)) * (pitchUp ? 1 : -1)
-      const newMark = pitchMark + pitchChange
-      const adjustedNewMark = Math.min(Math.max(newMark, 0), structuredPitchArray.length -1) // can only be between 0 and max pitch
-      const newAnchor = pitchAlphaAnchor + (pitchChange * pitchShiftDegreeThreshold)
-      const adjustedNewAnchor = (newAnchor > 360) ? newAnchor - 360 : (newAnchor < 0) ? 360 + newAnchor : newAnchor
-      this.setPitch(adjustedNewMark, adjustedNewAnchor)
-    }
-  }
-
   componentDidMount() {
-    const { motionFrequency } = this.props.config.advanced
-    const { structuredPitchArray } = this.state
+    const { pitchMark, pitchAlphaAnchor, structuredPitchArray, history, leftHanded, minor, pressed, lifted } = this.state
+    const { debuggerMode, synthObject, config } = this.props
+    const { polySynth, monoSynth } = synthObject
+    const { tactileFeedbackDuration, maxVelocity, tactileFeedbackPitchDuration, switchHandAmbienceDuration, motionFrequency, maxHistoryLength, liftedThreshold, maxHistoryLengthForStats, historyCrunch, releaseTilt, fireThreshold } = config.advanced
+    const { pitchShiftDegreeThreshold } = config.simple
     var gyroNorm = new GyroNorm();
     const gyroNormOptions = {
-      frequency: motionFrequency.value,					// ( How often the object sends the values - milliseconds )
+      frequency: motionFrequency.value,		// ( How often the object sends the values - milliseconds )
       gravityNormalized: true,		        // ( If the gravity related values to be normalized )
       orientationBase: GyroNorm.GAME,	   	// ( Can be GyroNorm.GAME or GyroNorm.WORLD. gn.GAME returns orientation values with respect to the head direction of the device. gn.WORLD returns the orientation values with respect to the actual north direction of the world. )
       decimalCount: 1,				            // ( How many digits after the decimal point will there be in the return values )
@@ -224,19 +43,46 @@ class Synth extends Component {
     }
     gyroNorm.init(gyroNormOptions).then(() => {
       gyroNorm.start(event => {
-        this.deviceMotionEvent(event);
+        const accX = event.dm.gx
+        const { alpha, beta, gamma } = event.do
+        deviceMotionEvent({
+          accX,
+          alpha,
+          beta,
+          gamma,
+          liftedThresholdValue: liftedThreshold.value,
+          maxHistoryLengthValue: maxHistoryLength.value,
+          maxHistoryLengthForStatsValue: maxHistoryLengthForStats.value,
+          historyCrunchValue: historyCrunch.value,
+          releaseTiltValue: releaseTilt.value,
+          debuggerMode,
+          history,
+          pressed,
+          leftHanded,
+          lifted,
+          fireThresholdValue: fireThreshold.value,
+          switchHandAmbienceDurationValue: switchHandAmbienceDuration.value,
+          motionFrequencyValue: motionFrequency.value,
+          tactileFeedbackPitchDurationValue: tactileFeedbackPitchDuration.value,
+          pitchShiftDegreeThresholdValue: pitchShiftDegreeThreshold.value,
+          structuredPitchArray,
+          minor,
+          maxVelocityValue: maxVelocity.value,
+          tactileFeedbackDurationValue: tactileFeedbackDuration.value,
+          polySynth,
+          monoSynth,
+          pitchMark,
+          pitchAlphaAnchor
+        });
       })
     });
-    const initialPitchMark = Math.floor(structuredPitchArray.length / 2) // The initial pitch mark is just the absolute middle
-    this.setPitch(initialPitchMark, 0) // Initial anchor is at 0 degress
-    // setInterval(() => this.fire(50), 200)
-    // this.determineAmbience({event: {dm: {gx: -10}}})
   }
 
   render() {
     const { pitchMark, structuredPitchArray, debuggerInfo, history, leftHanded, minor } = this.state
-    const { debuggerMode } = this.props
-    const synth = leftHanded ? this.props.polySynth : this.props.monoSynth
+    const { debuggerMode, synthObject } = this.props
+    const { polySynth, monoSynth } = synthObject
+    const synth = getSynth({ leftHanded, monoSynth, polySynth })
     const currentPitch = structuredPitchArray[pitchMark] || {}
     const pitch = currentPitch.pitch + (minor ? 'm' : '') + currentPitch.octave
     return (
@@ -245,7 +91,12 @@ class Synth extends Component {
           debuggerMode && <span>
             <div
               className='main-button attack-toggle'
-              onClick={() => synth.triggerAttackRelease(this.getPitch(), 0.5, undefined, 1)}
+              onClick={() => synth.triggerAttackRelease(getPitch({
+                pitchMark,
+                structuredPitchArray,
+                minor,
+                leftHanded
+              }), 0.5, undefined, 1)}
             >Attack</div>
             <SaveStats history={history}/>
             <div className='debugger'>
