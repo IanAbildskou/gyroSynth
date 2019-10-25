@@ -72,8 +72,8 @@ export default {
       },
       switchHandAmbienceDuration: {
         label: 'How long rest when switching hands',
-        value: 50,
-        maxValue: 500,
+        value: 500,
+        maxValue: 1500,
         minValue: 10,
         unit: 'ms',
         description: 'For how long should we wait when switching hands for the ambience to resolve'

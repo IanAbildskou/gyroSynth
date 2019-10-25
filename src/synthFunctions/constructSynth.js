@@ -54,11 +54,11 @@ export default ({
     reverb.dispose()
   }
   const initialPitchMark = Math.floor(structuredPitchArray.length / 2) // The initial pitch mark is just the absolute middle
-  setPitch({
+  const { pitchMark, pitchAlphaAnchor } = setPitch({
     tactileFeedbackPitchDurationValue,
     pitchMark: initialPitchMark,
     pitchAlphaAnchor: 0,
     structuredPitchArray
   }) // Initial anchor is at 0 degress
-  return { polySynth, monoSynth, reset }
+  return { polySynth, monoSynth, reset, pitchMark, pitchAlphaAnchor }
 }

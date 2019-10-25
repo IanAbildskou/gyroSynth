@@ -34,7 +34,8 @@ import shouldEngage from './shouldEngage';
     polySynth,
     monoSynth,
     pitchMark,
-    pitchAlphaAnchor
+    pitchAlphaAnchor,
+    updateState
   }) => {
     const topHistoryLength = debuggerMode ? maxHistoryLengthForStatsValue : maxHistoryLengthValue
     const historySlice = history.length > topHistoryLength ? history.slice(history.length - historyCrunchValue) : history
@@ -50,7 +51,7 @@ import shouldEngage from './shouldEngage';
       motionFrequencyValue,
       leftHanded
     })
-    const isInDangerZone = (normalizedBeta < releaseTiltValue) && (normalizedBeta > -releaseTiltValue)
+    const isInDangerZone = (normalizedBeta < releaseTiltValue) && (normalizedBeta > (-1 * releaseTiltValue))
     const normalizedAccX = accX * (leftHanded ? 1 : -1)
     const lift = normalizedAccX < liftedThresholdValue
     const debuggerInfo = debuggerMode && {
@@ -117,7 +118,7 @@ import shouldEngage from './shouldEngage';
       leftHanded
     })
     const shouldLift = shouldFire ? false : lift ? true : lifted
-    this.setState({
+    updateState({
       minor: leftHanded && (gamma > 0),
       debuggerInfo,
       pitchAlphaAnchor: newPitchAlphaAnchor || pitchAlphaAnchor,

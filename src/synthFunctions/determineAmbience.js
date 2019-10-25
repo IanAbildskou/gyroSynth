@@ -5,7 +5,7 @@ export default ({
   motionFrequencyValue,
   leftHanded
 }) => {
-  const withinRange = value => (value > 2) && (value < 12)
+  const withinRange = value => (value > 6) && (value < 11)
   const checkIfInRange = value => withinRange(value * (leftHanded ? -1 : 1))
   if (checkIfInRange(accX)) {
     const ambienceThreshold = switchHandAmbienceDurationValue / motionFrequencyValue
