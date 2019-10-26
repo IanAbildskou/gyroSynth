@@ -5,7 +5,7 @@ export default ({ pitchMark, structuredPitchArray, minor, leftHanded }) => {
     return pitchObject.pitch + pitchObject.octave
   }
   if (leftHanded) {
-    const pitchArray = [pitchMark, pitchMark + ( minor ? 4 : 3), 7]
+    const pitchArray = [pitchMark, pitchMark + ( minor ? 3 : 4), pitchMark + 7]
     pitch = pitchArray.map(pitchMark => getPitchFromMark(pitchMark))
   } else {
     pitch = getPitchFromMark(pitchMark)

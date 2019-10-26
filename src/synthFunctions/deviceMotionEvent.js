@@ -60,7 +60,9 @@ export default props => {
     beta,
     gamma,
     accX,
-    lifted
+    lifted,
+    pitchMark: (newPitch && newPitch.pitchMark) || pitchMark,
+    pitchAlphaAnchor
   }
   const historyObject = {
     accX,

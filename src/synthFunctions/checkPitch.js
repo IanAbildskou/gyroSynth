@@ -7,9 +7,10 @@ export default ({
   pitchShiftDegreeThresholdValue,
   pitchMark,
   pitchAlphaAnchor,
-  structuredPitchArray
+  structuredPitchArray,
+  leftHanded
 }) => {
-  let normalizedAlpha = alpha
+  let normalizedAlpha = 360 - alpha
   if (gamma < 0) {
     normalizedAlpha = (normalizedAlpha > 180) ? (normalizedAlpha - 180) : (normalizedAlpha + 180)
   }
@@ -21,7 +22,7 @@ export default ({
     const pitchUp = isCrossingBoundary ? difference < 0 : difference > 0
     const pitchChange = Math.floor(absoluteDistance / (pitchShiftDegreeThresholdValue / 2)) * (pitchUp ? 1 : -1)
     const newMark = pitchMark + pitchChange
-    const adjustedNewMark = Math.min(Math.max(newMark, 0), structuredPitchArray.length -1) // can only be between 0 and max pitch
+    const adjustedNewMark = Math.min(Math.max(newMark, 0), structuredPitchArray.length - (leftHanded ? 8 : 1)) // The 8 is because of chords being 7 notes wide
     const newAnchor = pitchAlphaAnchor + (pitchChange * pitchShiftDegreeThresholdValue)
     const adjustedNewAnchor = (newAnchor > 360) ? newAnchor - 360 : (newAnchor < 0) ? 360 + newAnchor : newAnchor
     return setPitch({

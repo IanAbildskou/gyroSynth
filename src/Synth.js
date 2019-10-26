@@ -85,6 +85,17 @@ class Synth extends Component {
         this.onMotion({ alpha, beta, gamma, accX, updateState })
       })
     });
+    // var i = 1;
+    // const mimicsMotion = () => {
+    //   setTimeout(() => {
+    //     this.onMotion({ alpha: -i, beta: 0, gamma: 80, accX: 9.8, updateState })
+    //     i++;
+    //     if (i < 1000) {
+    //       mimicsMotion();
+    //     }
+    //   }, 50)
+    // }
+    // mimicsMotion();
   }
 
   render() {

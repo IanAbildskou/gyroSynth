@@ -5,4 +5,4 @@ export default ({
     return pitchArray.map((pitch, pitchIndex) => {
       return { octave: octaveIndex + 1, color: colorArray[pitchIndex], pitch }
     })
-  }).flat().reverse()
+  }).flat()
