@@ -72,8 +72,8 @@ export default {
       },
       switchHandAmbienceDuration: {
         label: 'How long rest when switching hands',
-        value: 500,
-        maxValue: 1500,
+        value: 1000,
+        maxValue: 2500,
         minValue: 10,
         unit: 'ms',
         description: 'For how long should we wait when switching hands for the ambience to resolve'
@@ -85,6 +85,14 @@ export default {
         minValue: 1,
         unit: '°',
         description: 'At what angle of tilt should the attack release'
+      },
+      distanceFromGravityToToggleHand: {
+        label: 'Distance from gravity to switch hands',
+        value: 3,
+        maxValue: 10,
+        minValue: 0,
+        unit: 'm/s²',
+        description: 'When trying to switch hands, how close to gravitiy does the ambient acceleration have to be to register'
       }
     },
     simple: {
@@ -134,9 +142,18 @@ export default {
         minValue: 1,
         unit: '°',
         description: 'How many degrees does each pitch get to occupy. How pro are you?'
+      },
+      bendRange: {
+        label: 'How many semi tones to bend',
+        value: 2,
+        maxValue: 24,
+        minValue: 1,
+        unit: 'semi tones',
+        description: 'How many semi tones should the range of the bending mechanisme have.'
       }
     }
   },
+  gravity: 9.8,
   pitchArray: ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'],
   colorArray: ['#d21d1d', '#ff6f61', '#2bc823', '#0fddde', '#1d63ce', '#6a18d4', '#d418a1', '#cddc39', '#ff7f0e', '#acff0e', '#ff8282', '#8b7bc8']
 }

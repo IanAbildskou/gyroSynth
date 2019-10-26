@@ -20,7 +20,7 @@ class App extends Component {
   }
 
   render() {
-    const { enableReverb, enableDebug, configurableVariables, pitchArray, colorArray, menuOpen } = this.state
+    const { enableReverb, enableDebug, configurableVariables, pitchArray, gravity, colorArray, menuOpen } = this.state
     const { tactileFeedbackPitchDuration } = this.state.configurableVariables.advanced
     const { volume } = this.state.configurableVariables.simple
     const synthObject = constructSynth({
@@ -70,6 +70,7 @@ class App extends Component {
           pitchArray={pitchArray}
           debuggerMode={enableDebug}
           synthObject={synthObject}
+          gravity={gravity}
         />
       </div>
     ) : <StartScreen/>;

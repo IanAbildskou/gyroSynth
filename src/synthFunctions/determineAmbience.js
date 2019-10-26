@@ -2,10 +2,12 @@ export default ({
   accX,
   history,
   switchHandAmbienceDurationValue,
+  distanceFromGravityToToggleHandValue,
   motionFrequencyValue,
+  gravity,
   leftHanded
 }) => {
-  const withinRange = value => (value > 9) && (value < 10)
+  const withinRange = value => (value > (gravity - distanceFromGravityToToggleHandValue)) && (value < gravity + distanceFromGravityToToggleHandValue)
   const checkIfInRange = value => withinRange(value * (leftHanded ? -1 : 1))
   if (checkIfInRange(accX)) {
     const ambienceThreshold = switchHandAmbienceDurationValue / motionFrequencyValue

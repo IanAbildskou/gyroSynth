@@ -31,10 +31,10 @@ class Synth extends Component {
 
   onMotion({ alpha, beta, gamma, accX, updateState }) {
     const { pitchMark, pitchAlphaAnchor, structuredPitchArray, leftHanded, minor, pressed, lifted } = this.state
-    const { debuggerMode, synthObject, config } = this.props
+    const { debuggerMode, synthObject, config, gravity } = this.props
     const { polySynth, monoSynth } = synthObject
-    const { tactileFeedbackDuration, maxVelocity, tactileFeedbackPitchDuration, switchHandAmbienceDuration, motionFrequency, maxHistoryLength, liftedThreshold, maxHistoryLengthForStats, historyCrunch, releaseTilt, fireThreshold } = config.advanced
-    const { pitchShiftDegreeThreshold } = config.simple
+    const { distanceFromGravityToToggleHand, tactileFeedbackDuration, maxVelocity, tactileFeedbackPitchDuration, switchHandAmbienceDuration, motionFrequency, maxHistoryLength, liftedThreshold, maxHistoryLengthForStats, historyCrunch, releaseTilt, fireThreshold } = config.advanced
+    const { pitchShiftDegreeThreshold, bendRange } = config.simple
     deviceMotionEvent({
       accX,
       alpha,
@@ -58,11 +58,14 @@ class Synth extends Component {
       minor,
       maxVelocityValue: maxVelocity.value,
       tactileFeedbackDurationValue: tactileFeedbackDuration.value,
+      distanceFromGravityToToggleHandValue: distanceFromGravityToToggleHand.value,
       polySynth,
       monoSynth,
       pitchMark,
       pitchAlphaAnchor,
-      updateState
+      updateState,
+      gravity,
+      bendRangeValue: bendRange.value
     });
   }
 
