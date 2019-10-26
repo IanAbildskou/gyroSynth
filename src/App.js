@@ -39,9 +39,13 @@ class App extends Component {
       this.setState({configurableVariables: newConfig})
     }
     const toggleSetting = setting => () => {
+      synthObject.reset()
       this.setState({ [setting]: !this.state[setting] })
     }
-    const toggleMenu = () => this.setState({menuOpen: !menuOpen})
+    const toggleMenu = () => {
+      synthObject.reset()
+      this.setState({menuOpen: !menuOpen})
+    }
     return detectChrome ? (
       <div>
         <StartScreen/>
