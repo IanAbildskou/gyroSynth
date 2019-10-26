@@ -26,14 +26,19 @@ Builds and deploys the app to https://gyrosynthstaging.ianabildskou.now.sh
 
 ## Setting up tunneling
 
-To test on your phone from your local build you can set up a tunnel to your desktop
-Install `localtunnel` with
+Download the ngrok client from here https://dashboard.ngrok.com/get-started
 
-#### `npm install -g localtunnel`
+unpack it and put the .exe/.dmg file in the same directory as your gyroSynth project
+So that they are next to each other. Don't put the executable inside the gyrosynth project.
 
-Then run the tunnel with
+First time setup you should also put an auth token in your ngrok instance like this:
 
-#### `npm run tunnel`
+`authtoken somAuthToken`
 
-You can then go to https://gyrosynth.localtunnel.me
-You need to be using port 3000.
+I can get you the auth token from my ngrok dashboard
+
+After you've done all that you can run the tunnel with:
+
+`cd .. && ngrok http -subdomain=gyrosynth 3000`
+
+If someone is already using that subdomain you can pick another one
