@@ -1,4 +1,5 @@
 import bend from './bend';
+import tremolo from './tremolo';
 import checkLift from './checkLift';
 import checkPitch from './checkPitch';
 import determineAmbience from './determineAmbience';
@@ -47,6 +48,7 @@ export default props => {
       fire({ ...props, pitch })
     } else {
       pressed && !leftHanded && bend(props)
+      pressed && leftHanded && tremolo(props)
       lift = normalizedAccX < liftedThresholdValue
     }
   } else {

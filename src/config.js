@@ -150,6 +150,14 @@ export default {
         minValue: 1,
         unit: 'semi tones',
         description: 'How many semi tones should the range of the bending mechanisme have.'
+      },
+      maxTremoloVolume: {
+        label: 'Maximum increase in volume from tremolo',
+        value: 20,
+        maxValue: 100,
+        minValue: 1,
+        unit: 'dB',
+        description: 'How big an increase in volume can the tremolo mechanisme give you.'
       }
     }
   },
