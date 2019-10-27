@@ -137,7 +137,7 @@ class Synth extends Component {
             </div>
           </div>
         </div>
-        <img alt='' src='assets/hand.svg'/>
+        <img className={'hand-shadow ' + (!leftHanded && 'right')} alt='' src='assets/hand.svg'/>
       </div>
     )
   }
