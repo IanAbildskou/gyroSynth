@@ -30,3 +30,14 @@
 .pedal-button.on {
   background-color: rgba(0, 0, 0, 0.4);
 }
+
+.hand-indicator {
+  font-size: 18px;
+}
+
+.hand-indicator div {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  padding: 8px;
+  display: inline-block;
+}

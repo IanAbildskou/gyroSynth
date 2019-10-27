@@ -33,7 +33,7 @@ class Synth extends Component {
     const { pitchMark, pitchAlphaAnchor, structuredPitchArray, leftHanded, minor, pressed, lifted } = this.state
     const { debuggerMode, synthObject, config, gravity } = this.props
     const { polySynth, monoSynth } = synthObject
-    const { distanceFromGravityToToggleHand, tactileFeedbackDuration, maxVelocity, tactileFeedbackPitchDuration, switchHandAmbienceDuration, motionFrequency, maxHistoryLength, liftedThreshold, maxHistoryLengthForStats, historyCrunch, releaseTilt, fireThreshold } = config.advanced
+    const { tactileFeedbackDuration, maxVelocity, tactileFeedbackPitchDuration, motionFrequency, maxHistoryLength, liftedThreshold, maxHistoryLengthForStats, historyCrunch, releaseTilt, fireThreshold } = config.advanced
     const { pitchShiftDegreeThreshold, bendRange, volume, maxTremoloVolume } = config.simple
     deviceMotionEvent({
       accX,
@@ -50,7 +50,7 @@ class Synth extends Component {
       leftHanded,
       lifted,
       fireThresholdValue: fireThreshold.value,
-      switchHandAmbienceDurationValue: switchHandAmbienceDuration.value,
+      // switchHandAmbienceDurationValue: switchHandAmbienceDuration.value,
       motionFrequencyValue: motionFrequency.value,
       tactileFeedbackPitchDurationValue: tactileFeedbackPitchDuration.value,
       pitchShiftDegreeThresholdValue: pitchShiftDegreeThreshold.value,
@@ -58,7 +58,7 @@ class Synth extends Component {
       minor,
       maxVelocityValue: maxVelocity.value,
       tactileFeedbackDurationValue: tactileFeedbackDuration.value,
-      distanceFromGravityToToggleHandValue: distanceFromGravityToToggleHand.value,
+      // distanceFromGravityToToggleHandValue: distanceFromGravityToToggleHand.value,
       polySynth,
       monoSynth,
       pitchMark,
@@ -129,7 +129,15 @@ class Synth extends Component {
             </div>
           </span>
         }
-        <div className='pitch-indicator'>{pitch}</div>
+        <div className='pitch-indicator'>
+          {pitch}
+          <div className='hand-indicator' onClick={() => this.setState({ leftHanded: !leftHanded })}>
+            <div>
+              {leftHanded ? 'Left hand / Chords' : 'Right hand / Single notes'}
+            </div>
+          </div>
+        </div>
+        <img alt='' src='assets/hand.svg'/>
       </div>
     )
   }

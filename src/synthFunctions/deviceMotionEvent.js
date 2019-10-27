@@ -2,7 +2,7 @@ import bend from './bend';
 import tremolo from './tremolo';
 import checkLift from './checkLift';
 import checkPitch from './checkPitch';
-import determineAmbience from './determineAmbience';
+// import determineAmbience from './determineAmbience';
 import fire from './fire';
 import getNormalizedBeta from './getNormalizedBeta';
 import getPitch from './getPitch';
@@ -32,7 +32,7 @@ export default props => {
   const topHistoryLength = debuggerMode ? maxHistoryLengthForStatsValue : maxHistoryLengthValue
   const historySlice = history.length > topHistoryLength ? history.slice(history.length - historyCrunchValue) : history
   const normalizedBeta = getNormalizedBeta(props)
-  const shouldSwitchHands = determineAmbience({ history: historySlice, ...props})
+  // const shouldSwitchHands = determineAmbience({ history: historySlice, ...props})
   const normalizedAccX = accX * (leftHanded ? 1 : -1)
   const isInDangerZone = (normalizedBeta < releaseTiltValue) && (normalizedBeta > (-1 * releaseTiltValue))
   let shouldFire, pitch, newPitch, lift, release
@@ -73,14 +73,14 @@ export default props => {
   window.gyroSynthHistory = historySlice.concat([historyObject])
   const shouldToggleLift = shouldFire || (!lifted && (lift || release))
   const shouldToggleMinor = leftHanded && ((minor && (gamma > 0)) || (!minor && (gamma < 0)))
-  const shouldUpdateState = shouldToggleMinor || debuggerMode || newPitch || shouldSwitchHands || shouldFire || shouldToggleLift
+  const shouldUpdateState = shouldToggleMinor || debuggerMode || newPitch || shouldFire || shouldToggleLift // || shouldSwitchHands
   if (shouldUpdateState) {
     updateState({
       minor: shouldToggleMinor ? !minor : minor,
       debuggerInfo,
       pitchAlphaAnchor: newPitch ? newPitch.pitchAlphaAnchor : pitchAlphaAnchor,
       pitchMark: newPitch ? newPitch.pitchMark : pitchMark,
-      leftHanded: shouldSwitchHands ? !leftHanded : leftHanded,
+      // leftHanded: shouldSwitchHands ? !leftHanded : leftHanded,
       pressed: shouldFire ? pitch : release ? false : pressed,
       lifted: shouldToggleLift ? !lifted : lifted
     })

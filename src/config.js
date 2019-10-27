@@ -70,14 +70,14 @@ export default {
         unit: 'ms',
         description: 'For how long should the phone vibrate when a pitch shift is triggered.'
       },
-      switchHandAmbienceDuration: {
-        label: 'How long rest when switching hands',
-        value: 2000,
-        maxValue: 2500,
-        minValue: 10,
-        unit: 'ms',
-        description: 'For how long should we wait when switching hands for the ambience to resolve'
-      },
+      // switchHandAmbienceDuration: {
+      //   label: 'How long rest when switching hands',
+      //   value: 2000,
+      //   maxValue: 2500,
+      //   minValue: 10,
+      //   unit: 'ms',
+      //   description: 'For how long should we wait when switching hands for the ambience to resolve'
+      // },
       releaseTilt: {
         label: 'Release tilt angle',
         value: 30,
@@ -86,14 +86,14 @@ export default {
         unit: '°',
         description: 'At what angle of tilt should the attack release'
       },
-      distanceFromGravityToToggleHand: {
-        label: 'Distance from gravity to switch hands',
-        value: 1,
-        maxValue: 10,
-        minValue: 0,
-        unit: 'm/s²',
-        description: 'When trying to switch hands, how close to gravitiy does the ambient acceleration have to be to register'
-      }
+      // distanceFromGravityToToggleHand: {
+      //   label: 'Distance from gravity to switch hands',
+      //   value: 1,
+      //   maxValue: 10,
+      //   minValue: 0,
+      //   unit: 'm/s²',
+      //   description: 'When trying to switch hands, how close to gravitiy does the ambient acceleration have to be to register'
+      // }
     },
     simple: {
       // attack: {
@@ -129,7 +129,7 @@ export default {
       // },
       volume: {
         label: 'Volume',
-        value: 10,
+        value: 0,
         maxValue: 150,
         minValue: 0,
         unit: 'dB',
@@ -153,7 +153,7 @@ export default {
       },
       maxTremoloVolume: {
         label: 'Maximum increase in volume from tremolo',
-        value: 30,
+        value: 20,
         maxValue: 100,
         minValue: 1,
         unit: 'dB',
