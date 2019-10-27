@@ -4,7 +4,6 @@ import { IconButton } from '@material-ui/core';
 import Synth from './Synth';
 import MenuComponent from './Menu';
 import StartScreen from './StartScreen';
-import detectChrome from './isChrome';
 import config from './config';
 import constructSynth from './synthFunctions/constructSynth';
 import getStructuredPitchArray from './synthFunctions/getStructuredPitchArray';
@@ -46,7 +45,7 @@ class App extends Component {
       synthObject.reset()
       this.setState({menuOpen: !menuOpen})
     }
-    return detectChrome ? (
+    return (
       <div>
         <StartScreen/>
         <div className='header'>
@@ -73,7 +72,7 @@ class App extends Component {
           gravity={gravity}
         />
       </div>
-    ) : <StartScreen/>;
+    )
   }
 }
 

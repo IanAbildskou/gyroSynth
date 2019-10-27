@@ -1,6 +1,8 @@
 import './StartScreen.css';
 import React, { Component } from 'react';
-import detectChrome from './isChrome';
+import isSupportedBrowser from './isSupportedBrowser';
+import { detect } from 'detect-browser';
+import config from './config';
 
 class StartScreen extends Component {
   constructor(props) {
@@ -28,14 +30,15 @@ class StartScreen extends Component {
   render() {
     const { hasMotion, open, hasCheckedForMotion } = this.state
     const close = () => this.setState({open: false})
-    const isChrome = detectChrome()
+    const isSupported = isSupportedBrowser()
+    const browserName = detect().name
     hasCheckedForMotion && window.removeEventListener('devicemotion', this.checkMotion);
     return (
       <div className={'start-screen ' + (!open && 'closed')}>
         <div className='start-screen-container'>
           <h1>Welcome to GyroSynth!</h1>
           {
-            isChrome
+            isSupported
               ? hasMotion
                 ? <div>
                     <p>Hold your phone like a drumstick and hit the empty air in front of you to produce sound.</p>
@@ -50,8 +53,11 @@ class StartScreen extends Component {
                   </div>
             : <div>
                 <div className='warning'>Warning</div>
-                <p>It looks like you're not using a Google Chrome browser right now.</p>
-                <p>As of now GyroSynth only works in the Chrome browser due to limited device API support.</p>
+                <p>It looks like you're using a <span className='current-browser-name'>{browserName}</span> browser right now.</p>
+                <p>As of now GyroSynth only works on the following browsers due to limited device API support:</p>
+                <ul className='supported-browser-list'>
+                  {config.supportedBrowsers.map((browerName, index) => <li key={index}><span>{browerName}</span></li>)}
+                </ul>
               </div>
           }
         </div>

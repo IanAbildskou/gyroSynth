@@ -54,3 +54,11 @@
   25%  {opacity: 0;}
   100% {opacity: 1;}
 }
+
+.current-browser-name,
+.supported-browser-list li span {
+  font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  padding: 2px;
+}

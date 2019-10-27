@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './App.css';
 import fulltilt from './fulltilt'; // eslint-disable-line
-import detectChrome from './isChrome';
+import isSupportedBrowser from './isSupportedBrowser';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 const theme = createMuiTheme({
@@ -18,7 +18,7 @@ const theme = createMuiTheme({
 
 const render = App => ReactDOM.render(App, document.getElementById('root'));
 
-if (detectChrome()) {
+if (isSupportedBrowser()) {
   import('./App')
   .then((App) => {
      render(<MuiThemeProvider theme={theme}><App.default/></MuiThemeProvider>)
