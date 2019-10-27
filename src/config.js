@@ -11,9 +11,9 @@ export default {
       },
       liftedThreshold: {
         label: 'Lifted threshold',
-        value: 10,
+        value: 2,
         maxValue: 40,
-        minValue: 1,
+        minValue: 0,
         unit: 'm/s²',
         description: 'What is the acceleration threshold for triggering a lift'
       },

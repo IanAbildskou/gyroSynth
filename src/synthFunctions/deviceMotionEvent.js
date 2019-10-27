@@ -49,12 +49,14 @@ export default props => {
     } else {
       pressed && !leftHanded && bend(props)
       pressed && leftHanded && tremolo(props)
-      lift = normalizedAccX < liftedThresholdValue
+      lift = normalizedAccX < (-liftedThresholdValue)
     }
   } else {
     release = !shouldFire && checkLift(props)
   }
   const debuggerInfo = debuggerMode && {
+    normalizedAccX,
+    liftedThresholdValue,
     historyLength: history.length,
     leftHanded,
     normalizedBeta,
