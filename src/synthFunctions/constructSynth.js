@@ -1,5 +1,6 @@
 import Tone from 'tone';
 import setPitch from './setPitch';
+import getInitialPitchMark from './getInitialPitchMark';
 
 export default ({
   volumeValue,
@@ -53,7 +54,7 @@ export default ({
     polySynth.dispose()
     reverb.dispose()
   }
-  const initialPitchMark = Math.floor(structuredPitchArray.length / 2) // The initial pitch mark is just the absolute middle
+  const initialPitchMark = getInitialPitchMark({ structuredPitchArray })
   const { pitchMark, pitchAlphaAnchor } = setPitch({
     tactileFeedbackPitchDurationValue,
     pitchMark: initialPitchMark,

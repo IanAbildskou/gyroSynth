@@ -6,6 +6,7 @@ import getPitch from './synthFunctions/getPitch';
 import getSynth from './synthFunctions/getSynth';
 import getStructuredPitchArray from './synthFunctions/getStructuredPitchArray';
 import deviceMotionEvent from './synthFunctions/deviceMotionEvent';
+import getInitialPitchMark from './synthFunctions/getInitialPitchMark';
 
 class Synth extends Component {
   constructor(props) {
@@ -131,7 +132,10 @@ class Synth extends Component {
         }
         <div className='pitch-indicator'>
           {pitch}
-          <div className='hand-indicator' onClick={() => this.setState({ leftHanded: !leftHanded })}>
+          <div className='hand-indicator' onClick={() => this.setState({
+              pitchMark: getInitialPitchMark({ structuredPitchArray }),
+              leftHanded: !leftHanded
+            })}>
             <div>
               {leftHanded ? 'Left hand / Chords' : 'Right hand / Single notes'}
             </div>
