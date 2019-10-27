@@ -37,8 +37,8 @@ First time setup you should also put an auth token in your ngrok instance like t
 
 I can get you the auth token from my ngrok dashboard
 
-After you've done all that you can run the tunnel with:
+After you've done all that you can run the tunnel from inside the gyroSynth repo with:
 
-`cd .. && ngrok http -subdomain=gyrosynth 3000`
+`npm run tunnel`
 
 If someone is already using that subdomain you can pick another one
