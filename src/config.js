@@ -3,7 +3,7 @@ export default {
     advanced: {
       fireThreshold: {
         label: 'Trigger attack threshold',
-        value: 15,
+        value: 20,
         maxValue: 50,
         minValue: 1,
         unit: 'm/s²',
@@ -11,7 +11,7 @@ export default {
       },
       liftedThreshold: {
         label: 'Lifted threshold',
-        value: 5,
+        value: 10,
         maxValue: 40,
         minValue: 1,
         unit: 'm/s²',
@@ -19,8 +19,8 @@ export default {
       },
       maxVelocity: {
         label: 'Max velocity',
-        value: 70,
-        maxValue: 100,
+        value: 100,
+        maxValue: 200,
         minValue: 0,
         unit: 'm/s²',
         description: 'What is the minimum acceleration to trigger maximum velocity'
@@ -72,7 +72,7 @@ export default {
       },
       switchHandAmbienceDuration: {
         label: 'How long rest when switching hands',
-        value: 1000,
+        value: 2000,
         maxValue: 2500,
         minValue: 10,
         unit: 'ms',
@@ -88,7 +88,7 @@ export default {
       },
       distanceFromGravityToToggleHand: {
         label: 'Distance from gravity to switch hands',
-        value: 3,
+        value: 1,
         maxValue: 10,
         minValue: 0,
         unit: 'm/s²',

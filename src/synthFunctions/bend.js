@@ -8,5 +8,5 @@ export default ({ gamma, pressed, monoSynth, bendRangeValue }) => {
     const diff = maxBendFrequency - currentFrequency
     const bend = (correctedTilt * diff) / 100
     const newFrequency = currentFrequency + bend
-    monoSynth.frequency.rampTo(newFrequency, 0)
+    monoSynth.frequency.value = newFrequency
   }
