@@ -43,11 +43,6 @@ body {
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-.chord-toggle {
-  height: 80px;
-  line-height: 80px;
-}
-
 .attack-toggle {
   height: 80px;
   line-height: 80px;

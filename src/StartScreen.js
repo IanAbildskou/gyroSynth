@@ -29,7 +29,10 @@ class StartScreen extends Component {
 
   render() {
     const { hasMotion, open, hasCheckedForMotion } = this.state
-    const close = () => this.setState({open: false})
+    const close = () => {
+      this.setState({open: false})
+      this.props.finishIntro()
+    }
     const isSupported = isSupportedBrowser()
     const browserName = detect().name
     hasCheckedForMotion && window.removeEventListener('devicemotion', this.checkMotion);
