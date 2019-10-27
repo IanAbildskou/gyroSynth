@@ -129,7 +129,7 @@ export default {
       // },
       volume: {
         label: 'Volume',
-        value: 0,
+        value: 10,
         maxValue: 150,
         minValue: 0,
         unit: 'dB',
@@ -137,7 +137,7 @@ export default {
       },
       pitchShiftDegreeThreshold: {
         label: 'Pitch shift degree threshold',
-        value: 10,
+        value: 20,
         maxValue: 100,
         minValue: 1,
         unit: '°',
@@ -153,7 +153,7 @@ export default {
       },
       maxTremoloVolume: {
         label: 'Maximum increase in volume from tremolo',
-        value: 20,
+        value: 30,
         maxValue: 100,
         minValue: 1,
         unit: 'dB',
