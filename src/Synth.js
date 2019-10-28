@@ -2,6 +2,7 @@ import './Synth.css';
 import React, { Component } from 'react'
 import GyroNorm from 'gyronorm';
 import SaveStats from './SaveStats';
+import PitchIndicator from './PitchIndicator';
 import getPitch from './synthFunctions/getPitch';
 import getSynth from './synthFunctions/getSynth';
 import getStructuredPitchArray from './synthFunctions/getStructuredPitchArray';
@@ -105,12 +106,10 @@ class Synth extends Component {
   }
 
   render() {
-    const { pitchMark, structuredPitchArray, debuggerInfo, leftHanded, minor } = this.state
+    const { pitchMark, structuredPitchArray, debuggerInfo, leftHanded, minor, pitchAlphaAnchor } = this.state
     const { debuggerMode, synthObject } = this.props
     const { polySynth, monoSynth } = synthObject
     const synth = getSynth({ leftHanded, monoSynth, polySynth })
-    const currentPitch = structuredPitchArray[pitchMark] || {}
-    const pitch = currentPitch.pitch + ((minor && leftHanded) ? 'm' : '') + currentPitch.octave
     return (
       <div className='synth'>
         {
@@ -130,15 +129,20 @@ class Synth extends Component {
             </div>
           </span>
         }
-        <div className='pitch-indicator'>
-          {pitch}
-          <div className='hand-indicator' onClick={() => this.setState({
-              pitchMark: getInitialPitchMark({ structuredPitchArray }),
-              leftHanded: !leftHanded
-            })}>
-            <div>
-              {leftHanded ? 'Left hand / Chords' : 'Right hand / Single notes'}
-            </div>
+        <PitchIndicator
+          pitchMark={pitchMark}
+          minor={minor}
+          leftHanded={leftHanded}
+          structuredPitchArray={structuredPitchArray}
+          updatePitch={pitchMark => this.setState({ pitchMark })}
+          pitchAlphaAnchor={pitchAlphaAnchor}
+        />
+        <div className='hand-indicator' onClick={() => this.setState({
+          pitchMark: getInitialPitchMark({ structuredPitchArray }),
+          leftHanded: !leftHanded
+        })}>
+          <div>
+            {leftHanded ? 'Left hand / Chords' : 'Right hand / Single notes'}
           </div>
         </div>
         <img className={'hand-shadow ' + (!leftHanded && 'right')} alt='' src='assets/hand.svg'/>

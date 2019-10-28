@@ -4,34 +4,16 @@
   margin-left: 4px;
 }
 
-.pedal-button {
-  height: 200px;
-  line-height: 200px;
-}
-
 .attack-toggle {
   height: 80px;
   line-height: 80px;
 }
 
-.pitch-indicator {
-  position: absolute;
-  right: 0;
-  display: block;
-  width: 100%;
-  top: 40%;
-  transform: translateY(0%);
-  color: white;
-  text-align: center;
-  font-size: 10em;
-  font-weight: bold;
-}
-
-.pedal-button.on {
-  background-color: rgba(0, 0, 0, 0.4);
-}
-
 .hand-indicator {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  top: calc(50% + 76px); /* 76px is half the height of the pitch indicator which is centered */
   font-size: 18px;
 }
 

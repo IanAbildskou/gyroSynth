@@ -1,0 +1,22 @@
+.pitch-string-container {
+  display: inline-block
+}
+
+.pitch-indicator {
+  position: absolute;
+  right: 0;
+  display: block;
+  width: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  color: white;
+  overflow-x: scroll;
+  font-size: 10em;
+  font-weight: bold;
+}
+
+.pitch-string-container {
+  text-align: center;
+  line-height: 175px;
+  vertical-align: middle;
+}

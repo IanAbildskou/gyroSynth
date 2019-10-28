@@ -9,6 +9,10 @@
   transition: 200ms;
 }
 
+.start-screen li {
+  margin-top: 8px;
+}
+
 .start-screen.closed {
   left: -150%;
 }
