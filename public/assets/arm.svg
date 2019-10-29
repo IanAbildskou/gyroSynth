@@ -1,0 +1,234 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 420">
+  <defs>
+    <style>
+      .cls-1 {
+        opacity: 0.1;
+      }
+
+      .cls-2,
+      .cls-3 {
+        stroke: #000;
+      }
+
+      .cls-2,
+      .cls-3,
+      .cls-7 {
+        stroke-miterlimit: 10;
+      }
+
+      .cls-3,
+      .cls-7 {
+        stroke-width: 4px;
+      }
+
+      .cls-4 {
+        fill: black;
+      }
+
+      .cls-5 {
+        fill: #ddac8a;
+      }
+
+      .cls-6 {
+        fill: #4f2222;
+      }
+
+      .cls-7 {
+        fill: none;
+        stroke: #efefef;
+      }
+
+      .top-group {
+        transform: translate(0, 250px);
+      }
+
+      .note {
+        transform: translate(320px, 330px);
+        fill: #efefef;
+        animation-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+      }
+    </style>
+    <filter id="f1" x="0" y="0">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" />
+    </filter>
+  </defs>
+  <title>
+    Asset 3
+  </title>
+    <g id="Layer_1-2" data-name="Layer 1" class="top-group">
+      <g class="cls-1" filter="url(#f1)">
+        <animateTransform
+          attributeName="transform"
+          attributeType="XML"
+          type="rotate"
+          dur="2s"
+          begin="0s"
+          repeatCount="indefinite"
+          values="0 10 50; -1 10 50; 3 10 50; -58 10 50; -57 10 50; -58 10 50; -62 10 50; 0 10 50"
+          keyTimes="0; 0.2; 0.3; 0.5; 0.8; 0.9; 0.95; 1"
+          keySplines="
+          .18 .73 .87 .24;
+          .18 .73 .87 .24;
+          .18 .73 .87 .24;
+          0.19, 1, 0.22, 1;
+          .18 .73 .87 .24;
+          .18 .73 .87 .24;
+          0.19, 1, 0.22, 1
+          .18 .73 .87 .24;
+          "
+          fill="freeze"
+        />
+        <g>
+          <animateTransform
+            attributeName="transform"
+            attributeType="XML"
+            type="rotate"
+            dur="2s"
+            begin="0s"
+            repeatCount="indefinite"
+            values="
+              0 150 0;
+              -0.5 180 70;
+              1.5 180 70;
+              -29 180 70;
+              -28 180 70;
+              -29 180 70;
+              -33 180 70;
+              0 180 70
+            "
+            keyTimes="0; 0.2; 0.3; 0.5; 0.8; 0.9; 0.95; 1"
+            fill="freeze"
+          />
+          <rect class="cls-2" x="218.58" y="78.89" width="119.01" height="58.7" rx="11.1" transform="translate(-19.27 83.2) rotate(-16.45)"/>
+          <polygon class="cls-2" points="293.12 131.93 292.51 138.65 287.02 146.58 281.52 149.03 277.86 144.75 274.19 149.03 269.31 152.08 262.59 151.47 260.76 148.42 255.27 156.35 249.77 156.35 245.5 155.74 240 158.8 234.51 156.35 230.84 151.47 233.28 147.19 235.12 144.75 238.78 143.53 240.61 145.36 244.28 142.31 247.94 141.09 253.44 141.09 255.88 142.31 258.32 138.04 260.76 135.59 264.43 134.98 270.53 134.98 276.03 136.81 277.25 138.65 280.3 134.98 283.35 132.54 287.63 131.93 293.12 131.93"/>
+          <polygon class="cls-2" points="222.91 131.93 219.85 131.93 214.36 127.66 205.2 123.99 197.26 118.5 192.99 114.22 191.16 109.95 204.59 62.32 217.41 64.77 241.83 61.1 260.76 64.77 281.52 63.54 291.29 65.38 296.79 62.32 301.67 64.77 301.67 68.43 301.67 73.31 296.18 76.98 290.07 80.64 282.74 80.64 272.97 80.64 261.98 83.08 256.49 88.58 251.6 92.24 244.89 95.3 235.12 97.74 222.91 99.57 215.58 100.18 222.91 131.93"/>
+        </g>
+        <polygon class="cls-2" points="195.65 59.9 184.8 108.26 8.5 70.76 22.5 13.76 195.65 59.9"/>
+        <g>
+          <animateTransform
+            attributeName="transform"
+            attributeType="XML"
+            type="rotate"
+            dur="2s"
+            begin="0s"
+            repeatCount="indefinite"
+            values="
+              0 150 0;
+              -0.5 180 70;
+              1.5 180 70;
+              -15 180 70;
+              -15 180 70;
+              -15 180 70;
+              -15 180 70;
+              0 180 70
+            "
+            keyTimes="0; 0.2; 0.3; 0.5; 0.8; 0.9; 0.95; 1"
+            fill="freeze"
+          />
+          <rect class="cls-2" x="186.83" y="59.52" width="12.03" height="52.4" transform="translate(32.75 -51.78) rotate(16.69)"/>
+          <rect class="cls-3" x="187.28" y="79.51" width="11.51" height="11.2" transform="matrix(0.96, 0.29, -0.29, 0.96, 32.58, -51.85)"/>
+        </g>
+      </g>
+      <g>
+        <animateTransform
+          attributeName="transform"
+          attributeType="XML"
+          type="rotate"
+          dur="2s"
+          begin="0s"
+          repeatCount="indefinite"
+          values="0 10 50; -1 10 50; 3 10 50; -58 10 50; -57 10 50; -58 10 50; -62 10 50; 0 10 50"
+          keyTimes="0; 0.2; 0.3; 0.5; 0.8; 0.9; 0.95; 1"
+          keySplines="
+          .18 .73 .87 .24;
+          .18 .73 .87 .24;
+          .18 .73 .87 .24;
+          0.19, 1, 0.22, 1;
+          .18 .73 .87 .24;
+          .18 .73 .87 .24;
+          0.19, 1, 0.22, 1
+          .18 .73 .87 .24;
+          "
+          fill="freeze"
+        />
+        <g>
+          <animateTransform
+            attributeName="transform"
+            attributeType="XML"
+            type="rotate"
+            dur="2s"
+            begin="0s"
+            repeatCount="indefinite"
+            values="
+              0 150 0;
+              -0.5 180 70;
+              1.5 180 70;
+              -29 180 70;
+              -28 180 70;
+              -29 180 70;
+              -33 180 70;
+              0 180 70
+            "
+            keyTimes="0; 0.2; 0.3; 0.5; 0.8; 0.9; 0.95; 1"
+            fill="freeze"
+          />
+          <rect class="cls-4" x="210.08" y="65.13" width="119.01" height="58.7" rx="11.1" transform="translate(-15.72 80.23) rotate(-16.45)"/>
+          <polygon class="cls-5" points="284.63 118.17 284.01 124.88 278.52 132.82 273.02 135.26 269.36 130.99 265.7 135.26 260.81 138.32 254.1 137.71 252.26 134.65 246.77 142.59 241.27 142.59 237 141.98 231.5 145.03 226.01 142.59 222.34 137.71 224.79 133.43 226.62 130.99 230.28 129.77 232.11 131.6 235.78 128.55 239.44 127.33 244.94 127.33 247.38 128.55 249.82 124.27 252.26 121.83 255.93 121.22 262.03 121.22 267.53 123.05 268.75 124.88 271.8 121.22 274.86 118.78 279.13 118.17 284.63 118.17"/>
+          <polygon class="cls-5" points="214.41 118.17 211.35 118.17 205.86 113.89 196.7 110.23 188.76 104.73 184.49 100.46 182.66 96.19 196.09 48.56 208.91 51 233.34 47.34 252.26 51 273.02 49.78 282.79 51.61 288.29 48.56 293.17 51 293.17 54.66 293.17 59.55 287.68 63.21 281.57 66.88 274.25 66.88 264.48 66.88 253.49 69.32 247.99 74.81 243.1 78.48 236.39 81.53 226.62 83.97 214.41 85.81 207.08 86.42 214.41 118.17"/>
+        </g>
+        <polygon class="cls-5" points="187.15 46.14 176.31 94.5 0 57 14 0 187.15 46.14"/>
+        <g>
+          <animateTransform
+            attributeName="transform"
+            attributeType="XML"
+            type="rotate"
+            dur="2s"
+            begin="0s"
+            repeatCount="indefinite"
+            values="
+              0 150 0;
+              -0.5 180 70;
+              1.5 180 70;
+              -15 180 70;
+              -15 180 70;
+              -15 180 70;
+              -15 180 70;
+              0 180 70
+            "
+            keyTimes="0; 0.2; 0.3; 0.5; 0.8; 0.9; 0.95; 1"
+            fill="freeze"
+          />
+          <rect class="cls-6" x="178.33" y="45.76" width="12.03" height="52.4" transform="translate(28.43 -49.91) rotate(16.69)"/>
+          <rect class="cls-7" x="178.78" y="65.75" width="11.51" height="11.2" transform="matrix(0.96, 0.29, -0.29, 0.96, 28.27, -49.99)"/>
+        </g>
+      </g>
+    </g>
+    <g>
+      <animateTransform
+        attributeName="transform"
+        attributeType="XML"
+        type="translate"
+        dur="2s"
+        begin="0s"
+        repeatCount="indefinite"
+        fill="freeze"
+        values="0 0; 50 -40; 100 -60"
+        keyTimes="0; 0.2; 1"
+        keySplines="
+          0.19, 1, 0.22, 1;
+          0.19, 1, 0.22, 1;
+          0.19, 1, 0.22, 1
+        "
+      />
+      <animate
+        attributeType="CSS"
+        attributeName="opacity"
+        from="1"
+        begin="0s"
+        to="0"
+        dur="2s"
+        repeatCount="indefinite"
+      />
+      <path class="note" d="M33.47,16.32a4.87,4.87,0,0,1-4.57,1.77A4.57,4.57,0,0,1,27,17.31c-.62-.43-1.22-.88-1.8-1.31l0,0-.77-.56-.86-.64,1.17,18.76.08,1.39c.07,1,.07,1,.15,3.31a10.24,10.24,0,0,1-.57,4.46,12.37,12.37,0,0,1-7.94,7.82,11.18,11.18,0,0,1-2.91.61l-.37,0a12.94,12.94,0,0,1-4.82-.74A12.44,12.44,0,0,1,4,47.8,12.23,12.23,0,0,1,.32,41.41a12.4,12.4,0,0,1,2.73-11,12.2,12.2,0,0,1,6.08-3.89,12.39,12.39,0,0,1,5.55-.29l-1.31-21a4.91,4.91,0,0,1,.49-2.61A4.82,4.82,0,0,1,20.78.79c.79.56,1.58,1.13,2.34,1.69l.69.5,2.43,1.78L28.05,6.1l1.37,1,2.92,2.14a5.52,5.52,0,0,1,1.88,2.34A4.88,4.88,0,0,1,33.47,16.32Z"/>
+    </g>
+</svg>
