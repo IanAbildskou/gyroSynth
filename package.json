@@ -22,7 +22,7 @@
     "eject": "react-scripts eject",
     "deploy-production": "npm run build && now build -A ../now.json",
     "deploy-staging": "npm run build && now build -A ../now.json --name gyroSynthStaging",
-    "tunnel": "cd .. && ngrok http -subdomain=gyrosynth 3000 && cd gyroSynth"
+    "tunnel": "cd .. && ./ngrok http -subdomain=gyrosynth 3000 && cd gyroSynth"
   },
   "eslintConfig": {
     "extends": "react-app"
