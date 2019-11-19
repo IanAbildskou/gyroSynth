@@ -50,7 +50,6 @@ class SynthContainer extends Component {
           <IconButton color='primary' className={'open-menu'} onClick={toggleMenu}>
             <Menu/>
           </IconButton>
-          <h1>GyroSynth</h1>
         </div>
         <MenuComponent
           menuOpen={menuOpen}

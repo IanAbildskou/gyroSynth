@@ -23,18 +23,27 @@
   line-height: 80px;
   margin: 0;
   width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border-radius: 0;
+}
+
+.skip-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 16px;
+  font-size: 20px;
 }
 
 .start-screen-container {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 100%;
-  transform: translate(0, -50%);
   animation-name: fade-in;
   animation-duration: 1s;
   padding: 16px;
   box-sizing: border-box;
+  position: relative;
+  height: 100%;
 }
 
 .proceed-anyway {
@@ -70,4 +79,5 @@
 .arm-svg {
   margin-left: -50px;
   width: 300px;
+  height: 280px;
 }
