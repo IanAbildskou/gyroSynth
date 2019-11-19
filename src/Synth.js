@@ -12,7 +12,7 @@ import getInitialPitchMark from './synthFunctions/getInitialPitchMark';
 class Synth extends Component {
   constructor(props) {
     super(props)
-    const { pitchArray, colorArray, synthObject } = props
+    const { pitchArray, colorArray, synthObject, leftHanded } = props
     const { pitchAlphaAnchor, pitchMark } = synthObject
     const structuredPitchArray = getStructuredPitchArray({ pitchArray, colorArray })
     this.state = {
@@ -21,7 +21,7 @@ class Synth extends Component {
         beta: 'No rotation detected',
         accX: 'No acceleration detected'
       },
-      leftHanded: true,
+      leftHanded,
       minor: false,
       lifted: true,
       structuredPitchArray,

@@ -12,7 +12,8 @@ class StartScreen extends Component {
     this.state = {
       open: true,
       hasMotion: false,
-      hasCheckedForMotion: false
+      hasCheckedForMotion: false,
+      forcedAccess: false
     }
   }
 
@@ -30,21 +31,32 @@ class StartScreen extends Component {
   }
 
   render() {
-    const { hasMotion, open, hasCheckedForMotion } = this.state
+    const { hasMotion, open, hasCheckedForMotion, forcedAccess } = this.state
     const close = () => {
       this.setState({open: false})
-      this.props.finishIntro()
+      this.props.close()
     }
     const isSupported = isSupportedBrowser()
     hasCheckedForMotion && window.removeEventListener('devicemotion', this.checkMotion);
+    const forceAccess = () => this.setState({ forcedAccess: true });
     return (
       <div className={'start-screen ' + (!open && 'closed')}>
           {
-            isSupported
-              ? hasMotion
-                ? <Tutorial close={close}/>
-                : <NoInputScreen close={close}/>
-            : <WrongBrowserScreen/>
+            ((isSupported && hasMotion) || forcedAccess)
+              ? <Tutorial launchSynth={this.props.launchSynth} close={close} setLeftHanded={this.props.setLeftHanded}/>
+              : <div className='start-screen-container'>
+                  <h1>Welcome to GyroSynth!</h1>
+                  <div className='warning'>Warning</div>
+                  {
+                    isSupported
+                      ? <div>
+                        <NoInputScreen/>
+                        <div className='proceed-anyway' onClick={forceAccess}>I want to proceed even though GyroSynth won't work correctly</div>
+                      </div>
+                      : <WrongBrowserScreen/>
+                  }
+
+                </div>
           }
       </div>
     );

@@ -11,9 +11,7 @@ class WrongBrowserScreen extends Component {
   render() {
     const browserName = detect().name
     return (
-      <div className='start-screen-container'>
-        <h1>Welcome to GyroSynth!</h1>
-        <div className='warning'>Warning</div>
+      <div>
         <p>It looks like you're using a <span className='current-browser-name'>{browserName}</span> browser right now.</p>
         <p>As of now GyroSynth only works on the following browsers due to limited device API support:</p>
         <ul className='supported-browser-list'>

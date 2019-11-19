@@ -67,6 +67,7 @@ class SynthContainer extends Component {
           debuggerMode={enableDebug}
           synthObject={synthObject}
           gravity={gravity}
+          leftHanded={this.props.leftHanded}
         />
       </div>
     )

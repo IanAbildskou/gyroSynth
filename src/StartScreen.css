@@ -6,8 +6,10 @@
   width: 100%;
   z-index: 1000;
   background-color: #ff6f61;
-  transition: 1000ms;
+  transition: 500ms;
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+  animation-name: fade-in;
+  animation-duration: 1s;
 }
 
 .start-screen li {
@@ -18,7 +20,8 @@
   left: -150%;
 }
 
-.start-button {
+.start-button,
+.pick-hand-buttons {
   height: 80px;
   line-height: 80px;
   margin: 0;
@@ -27,6 +30,14 @@
   bottom: 0;
   left: 0;
   border-radius: 0;
+}
+
+.pick-hand-buttons div {
+  height: 80px;
+  line-height: 80px;
+  margin: 0;
+  width: 50%;
+  display: inline-block;
 }
 
 .skip-button {
@@ -38,8 +49,6 @@
 }
 
 .start-screen-container {
-  animation-name: fade-in;
-  animation-duration: 1s;
   padding: 16px;
   box-sizing: border-box;
   position: relative;
