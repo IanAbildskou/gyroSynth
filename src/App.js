@@ -6,15 +6,17 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      introFinished: false
+      introFinished: false,
+      removeStartScreen: false
     }
   }
 
   render() {
-    const { introFinished } = this.state
+    const { introFinished, removeStartScreen } = this.state
+    introFinished && !removeStartScreen && setTimeout(() => this.setState({ removeStartScreen: true }), 1000);
     return (
       <div>
-        <StartScreen finishIntro={() => this.setState({ introFinished: true })}/>
+        {!removeStartScreen && <StartScreen finishIntro={() => this.setState({ introFinished: true })}/>}
         {introFinished && <SynthContainer/>}
       </div>
     )

@@ -7,7 +7,6 @@ import config from './config';
 class StartScreen extends Component {
   constructor(props) {
     super(props)
-    this.checkMotion = this.checkMotion.bind(this);
     this.state = {
       open: true,
       hasMotion: false,
@@ -26,10 +25,6 @@ class StartScreen extends Component {
 
   componentDidMount() {
     window.addEventListener('devicemotion', this.checkMotion)
-  }
-
-  componentWillUnmount() {
-      window.removeEventListener('devicemotion', this.checkMotio);
   }
 
   render() {
