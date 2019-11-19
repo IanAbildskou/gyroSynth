@@ -15,6 +15,10 @@ body {
   padding-top: 48px;
 }
 
+::-webkit-scrollbar {
+    display: none;
+}
+
 .header h1 {
   display: block;
   margin: 8px 0;
