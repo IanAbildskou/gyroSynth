@@ -42,6 +42,7 @@
   color: black;
   width: 100%;
   padding-bottom: 32px;
+  padding-top: 48px;
 }
 
 .advanced-options {
@@ -72,18 +73,29 @@
 
 .simple-option-header button.close-menu {
   position: absolute;
-  top: 0;
+  top: -48px;
   left: 0;
 }
 
 .simple-option-header button.close-menu:nth-child(2) {
-  right: 0;
-  left: auto;
+  left: 64px;
 }
 
 .simple-option-header button.close-menu:nth-child(3) {
-  right: 48px;
-  left: auto;
+  left: 128px;
+}
+
+.about-open {
+  overflow-y: hidden;
+}
+
+.about-page {
+  overflow-y: scroll;
+  padding-bottom: 32px;
+}
+
+.about-page .start-screen-container {
+  height: auto;
 }
 
 .advanced-option-header {

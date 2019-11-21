@@ -11,7 +11,7 @@ class About extends Component {
 
   render() {
     return (
-      <div className={'start-screen ' + (!this.props.open && 'closed')}>
+      <div className={'start-screen about-page ' + (!this.props.open && 'closed')}>
         <div className='start-screen-container'>
           <IconButton color='primary' className={'close-menu'} onClick={this.props.toggleAbout}>
             <ArrowForward/>

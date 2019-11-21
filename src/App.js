@@ -17,10 +17,17 @@ class App extends Component {
     const { launchSynth, removeStartScreen, leftHanded, startScreenClosed } = this.state
     startScreenClosed && !removeStartScreen && setTimeout(() => this.setState({ removeStartScreen: true }), 1000);
     const setLeftHanded = bool => this.setState({ leftHanded: bool })
-    const launchStartScreen = () => this.setState({ removeStartScreen: false, startScreenClosed: false })
+    const launchStartScreen = () => {
+      window.localStorage.removeItem('hasBeenHereBefore')
+      this.setState({ removeStartScreen: false, startScreenClosed: false })
+    }
     return (
       <div>
-        {!removeStartScreen && <StartScreen close={() => this.setState({ startScreenClosed: true })} setLeftHanded={setLeftHanded} launchSynth={() => this.setState({ launchSynth: true })}/>}
+        {!removeStartScreen && <StartScreen
+          close={() => this.setState({ startScreenClosed: true })}
+          setLeftHanded={setLeftHanded}
+          launchSynth={() => this.setState({ launchSynth: true })
+        }/>}
         {launchSynth && <SynthContainer launchStartScreen={launchStartScreen} leftHanded={leftHanded}/>}
       </div>
     )

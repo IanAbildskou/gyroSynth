@@ -56,7 +56,7 @@ class Menu extends Component {
     const toggleMenu = this.props.toggleMenu
     const toggleAbout = () => this.setState({ aboutOpen: !this.state.aboutOpen })
     return (
-      <div className={'menu' + (this.props.menuOpen ? ' open' : '')}>
+      <div className={'menu' + (this.props.menuOpen ? ' open' : '') + (aboutOpen ? ' about-open' : '')}>
         {this.renderSettingPage()}
         <About open={aboutOpen} toggleAbout={toggleAbout}/>
         <div className='simple-options'>
@@ -70,7 +70,6 @@ class Menu extends Component {
             <IconButton color='secondary' className={'close-menu'} onClick={toggleAbout}>
               <InfoOutlined/>
             </IconButton>
-            Options
           </div>
           <div className='main-button reverb-toggle' onClick={toggleSetting('enableReverb')}>Reverb: { enableReverb ? 'ON' : 'OFF'}</div>
           <div className='main-button debug-toggle' onClick={toggleSetting('enableDebug')}>Debugger: { enableDebug ? 'ON' : 'OFF'}</div>

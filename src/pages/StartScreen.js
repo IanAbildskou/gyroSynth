@@ -2,6 +2,7 @@ import './StartScreen.css';
 import React, { Component } from 'react';
 import isSupportedBrowser from '../helpers/isSupportedBrowser';
 import Tutorial from './Tutorial';
+import WelcomeBack from './WelcomeBack';
 import NoInputScreen from './NoInputScreen';
 import WrongBrowserScreen from './WrongBrowserScreen';
 
@@ -32,18 +33,23 @@ class StartScreen extends Component {
 
   render() {
     const { hasMotion, open, hasCheckedForMotion, forcedAccess } = this.state
+    const { setLeftHanded, launchSynth } = this.props
     const close = () => {
       this.setState({open: false})
       this.props.close()
+      window.localStorage.setItem('hasBeenHereBefore', true)
     }
     const isSupported = isSupportedBrowser()
     hasCheckedForMotion && window.removeEventListener('devicemotion', this.checkMotion);
     const forceAccess = () => this.setState({ forcedAccess: true });
+    const hasBeenHereBefore = window.localStorage.getItem('hasBeenHereBefore')
     return (
       <div className={'start-screen ' + (!open && 'closed')}>
           {
             ((isSupported && hasMotion) || forcedAccess)
-              ? <Tutorial launchSynth={this.props.launchSynth} close={close} setLeftHanded={this.props.setLeftHanded}/>
+              ? hasBeenHereBefore
+                ? <WelcomeBack launchSynth={launchSynth} close={close}/>
+                : <Tutorial launchSynth={launchSynth} close={close} setLeftHanded={setLeftHanded}/>
               : <div className='start-screen-container'>
                   <h1>Welcome to GyroSynth!</h1>
                   <div className='warning'>Warning</div>
