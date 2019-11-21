@@ -76,6 +76,16 @@
   left: 0;
 }
 
+.simple-option-header button.close-menu:nth-child(2) {
+  right: 0;
+  left: auto;
+}
+
+.simple-option-header button.close-menu:nth-child(3) {
+  right: 48px;
+  left: auto;
+}
+
 .advanced-option-header {
   display: block;
   width: 100%;
@@ -94,7 +104,7 @@
   box-sizing: border-box;
 }
 
-.menu.open svg {
+.menu.open .close-menu:nth-child(1) svg {
   transform: rotate(180deg);
 }
 

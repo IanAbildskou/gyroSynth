@@ -1,9 +1,10 @@
 import './Menu.css';
 import React, { Component } from 'react';
 import lodash from 'lodash';
-import { ArrowForward } from '@material-ui/icons';
+import { ArrowForward, HelpOutlineOutlined, InfoOutlined } from '@material-ui/icons';
 import { IconButton } from '@material-ui/core';
 import SettingPage from './SettingPage';
+import About from './About';
 
 class Menu extends Component {
   constructor(props) {
@@ -12,7 +13,8 @@ class Menu extends Component {
       menuOpen: false,
       settingPageOpen: false,
       settingKey: undefined,
-      settingSection: undefined
+      settingSection: undefined,
+      aboutOpen: false
     }
   }
 
@@ -46,18 +48,27 @@ class Menu extends Component {
   }
 
   render() {
-    const { config, enableReverb, toggleSetting, enableDebug } = this.props
+    const { aboutOpen } = this.state
+    const { config, enableReverb, toggleSetting, enableDebug, launchStartScreen } = this.props
     const { simple, advanced } = config
     const advancedSettings = Object.entries(advanced)
     const simpleSettings = Object.entries(simple)
     const toggleMenu = this.props.toggleMenu
+    const toggleAbout = () => this.setState({ aboutOpen: !this.state.aboutOpen })
     return (
       <div className={'menu' + (this.props.menuOpen ? ' open' : '')}>
         {this.renderSettingPage()}
+        <About open={aboutOpen} toggleAbout={toggleAbout}/>
         <div className='simple-options'>
           <div className='simple-option-header'>
             <IconButton color='secondary' className={'close-menu'} onClick={toggleMenu}>
               <ArrowForward/>
+            </IconButton>
+            <IconButton color='secondary' className={'close-menu'} onClick={launchStartScreen}>
+              <HelpOutlineOutlined/>
+            </IconButton>
+            <IconButton color='secondary' className={'close-menu'} onClick={toggleAbout}>
+              <InfoOutlined/>
             </IconButton>
             Options
           </div>

@@ -52,6 +52,7 @@ class SynthContainer extends Component {
           </IconButton>
         </div>
         <MenuComponent
+          launchStartScreen={this.props.launchStartScreen}
           menuOpen={menuOpen}
           toggleMenu={toggleMenu}
           changeProp={changeProp}
