@@ -13,7 +13,6 @@ class SynthContainer extends Component {
     const enableReverb = window.localStorage.getItem('enableReverb')
     const enableDebug = window.localStorage.getItem('enableDebug')
     const configurableVariables = JSON.parse(window.localStorage.getItem('configurableVariables'))
-    console.log(configurableVariables);
     this.state = Object.assign({}, {
       enableReverb: enableReverb || false,
       enableDebug: enableDebug || false,
