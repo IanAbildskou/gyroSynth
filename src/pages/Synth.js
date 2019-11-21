@@ -1,13 +1,13 @@
 import './Synth.css';
 import React, { Component } from 'react'
 import GyroNorm from 'gyronorm';
-import SaveStats from './SaveStats';
-import PitchIndicator from './PitchIndicator';
-import getPitch from './synthFunctions/getPitch';
-import getSynth from './synthFunctions/getSynth';
-import getStructuredPitchArray from './synthFunctions/getStructuredPitchArray';
-import deviceMotionEvent from './synthFunctions/deviceMotionEvent';
-import getInitialPitchMark from './synthFunctions/getInitialPitchMark';
+import SaveStats from '../widgets/SaveStats';
+import PitchIndicator from '../widgets/PitchIndicator';
+import getPitch from '../synthFunctions/getPitch';
+import getSynth from '../synthFunctions/getSynth';
+import getStructuredPitchArray from '../synthFunctions/getStructuredPitchArray';
+import deviceMotionEvent from '../synthFunctions/deviceMotionEvent';
+import getInitialPitchMark from '../synthFunctions/getInitialPitchMark';
 
 class Synth extends Component {
   constructor(props) {

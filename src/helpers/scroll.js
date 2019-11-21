@@ -1,5 +1,3 @@
-
-
 // https://medium.com/@roderickhsiao/implement-smooth-scrolling-79efb20b6535
 // easing functions http://goo.gl/5HLl8
 Math.easeInOutQuad = function (t, b, c, d) {

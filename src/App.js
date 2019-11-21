@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import StartScreen from './StartScreen';
+import StartScreen from './pages/StartScreen';
 import SynthContainer from './SynthContainer';
 
 class App extends Component {

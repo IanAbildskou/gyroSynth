@@ -1,5 +1,5 @@
 import { detect } from 'detect-browser';
-import config from './config';
+import config from '../config';
 
 export default () => {
   const browser = detect()

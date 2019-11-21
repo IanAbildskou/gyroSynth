@@ -1,4 +1,3 @@
-import './Menu.css';
 import React, { Component } from 'react';
 import { ArrowForward } from '@material-ui/icons';
 import { IconButton } from '@material-ui/core';

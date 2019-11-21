@@ -1,7 +1,7 @@
 import './PitchIndicator.css';
-import scroll from './scroll';
+import scroll from '../helpers/scroll';
 import React, { Component } from 'react'
-import setPitch from './synthFunctions/setPitch';
+import setPitch from '../synthFunctions/setPitch';
 
 const magicNumbers = {
   scrollDuration: 200,

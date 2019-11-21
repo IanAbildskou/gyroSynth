@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './App.css';
-import fulltilt from './fulltilt'; // eslint-disable-line
-import isSupportedBrowser from './isSupportedBrowser';
+import fulltilt from './helpers/fulltilt'; // eslint-disable-line
+import isSupportedBrowser from './helpers/isSupportedBrowser';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 const theme = createMuiTheme({
@@ -24,7 +24,7 @@ if (isSupportedBrowser()) {
      render(<MuiThemeProvider theme={theme}><App.default/></MuiThemeProvider>)
   });
 } else {
-  import('./StartScreen')
+  import('./pages/StartScreen')
   .then((App) => {
      render(<MuiThemeProvider theme={theme}><App.default/></MuiThemeProvider>)
   });

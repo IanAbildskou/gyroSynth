@@ -1,8 +1,8 @@
 import './StartScreen.css';
 import React, { Component } from 'react';
-import isSupportedBrowser from './isSupportedBrowser';
+import isSupportedBrowser from '../helpers/isSupportedBrowser';
 import { detect } from 'detect-browser';
-import config from './config';
+import config from '../config';
 
 class StartScreen extends Component {
   constructor(props) {

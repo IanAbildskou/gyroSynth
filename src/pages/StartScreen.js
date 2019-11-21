@@ -1,9 +1,9 @@
 import './StartScreen.css';
 import React, { Component } from 'react';
-import isSupportedBrowser from './isSupportedBrowser';
-import Tutorial from './pages/Tutorial';
-import NoInputScreen from './pages/NoInputScreen';
-import WrongBrowserScreen from './pages/WrongBrowserScreen';
+import isSupportedBrowser from '../helpers/isSupportedBrowser';
+import Tutorial from './Tutorial';
+import NoInputScreen from './NoInputScreen';
+import WrongBrowserScreen from './WrongBrowserScreen';
 
 class StartScreen extends Component {
   constructor(props) {

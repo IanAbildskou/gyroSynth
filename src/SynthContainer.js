@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Menu } from '@material-ui/icons';
 import { IconButton } from '@material-ui/core';
-import Synth from './Synth';
-import MenuComponent from './Menu';
+import Synth from './pages/Synth';
+import MenuComponent from './pages/Menu';
 import config from './config';
 import constructSynth from './synthFunctions/constructSynth';
 import getStructuredPitchArray from './synthFunctions/getStructuredPitchArray';
