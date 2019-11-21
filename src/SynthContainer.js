@@ -10,11 +10,15 @@ import getStructuredPitchArray from './synthFunctions/getStructuredPitchArray';
 class SynthContainer extends Component {
   constructor(props) {
     super(props)
+    const enableReverb = window.localStorage.getItem('enableReverb')
+    const enableDebug = window.localStorage.getItem('enableDebug')
+    const configurableVariables = JSON.parse(window.localStorage.getItem('configurableVariables'))
+    console.log(configurableVariables);
     this.state = Object.assign({}, {
-      enableReverb: false,
-      enableDebug: false,
+      enableReverb: enableReverb || false,
+      enableDebug: enableDebug || false,
       menuOpen: false
-    }, config)
+    }, config, configurableVariables ? { configurableVariables } : {})
   }
 
   render() {
@@ -34,10 +38,18 @@ class SynthContainer extends Component {
       const newProp = Object.assign({}, oldProp, { value })
       const newSection = Object.assign({}, configurableVariables[section], {[key]: newProp })
       const newConfig = Object.assign({}, configurableVariables, {[section]: newSection})
+      window.localStorage.setItem('configurableVariables', JSON.stringify(newConfig))
       this.setState({configurableVariables: newConfig})
     }
+    const reset = () => this.setState({
+      configurableVariables: config.configurableVariables,
+      enableReverb: false,
+      enableDebug: false,
+    })
     const toggleSetting = setting => () => {
       synthObject.reset()
+      const newValue = !this.state[setting]
+      window.localStorage.setItem(setting, newValue )
       this.setState({ [setting]: !this.state[setting] })
     }
     const toggleMenu = () => {
@@ -60,6 +72,7 @@ class SynthContainer extends Component {
           enableDebug={enableDebug}
           toggleSetting={toggleSetting}
           config={configurableVariables}
+          reset={reset}
         />
         <Synth
           config={configurableVariables}

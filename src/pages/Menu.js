@@ -1,7 +1,7 @@
 import './Menu.css';
 import React, { Component } from 'react';
 import lodash from 'lodash';
-import { ArrowForward, HelpOutlineOutlined, InfoOutlined } from '@material-ui/icons';
+import { ArrowForward, HelpOutlineOutlined, InfoOutlined, SettingsBackupRestore } from '@material-ui/icons';
 import { IconButton } from '@material-ui/core';
 import SettingPage from './SettingPage';
 import About from './About';
@@ -67,8 +67,16 @@ class Menu extends Component {
             <IconButton color='secondary' className={'close-menu'} onClick={launchStartScreen}>
               <HelpOutlineOutlined/>
             </IconButton>
-            <IconButton color='secondary' className={'close-menu'} onClick={toggleAbout}>
+            <IconButton color='secondary' className={'close-menu'} onClick={(toggleAbout)}>
               <InfoOutlined/>
+            </IconButton>
+            <IconButton color='secondary' className={'close-menu'} onClick={() => {
+              window.localStorage.removeItem('configurableVariables')
+              window.localStorage.removeItem('enableReverb')
+              window.localStorage.removeItem('enableDebug')
+              this.props.reset()
+            }}>
+              <SettingsBackupRestore/>
             </IconButton>
           </div>
           <div className='main-button reverb-toggle' onClick={toggleSetting('enableReverb')}>Reverb: { enableReverb ? 'ON' : 'OFF'}</div>

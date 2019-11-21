@@ -85,6 +85,10 @@
   left: 128px;
 }
 
+.simple-option-header button.close-menu:nth-child(4) {
+  left: 192px;
+}
+
 .about-open {
   overflow-y: hidden;
 }
