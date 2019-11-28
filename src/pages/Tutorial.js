@@ -8,13 +8,20 @@ class StartScreen extends Component {
       steps: [
         {
           title: 'Welcome to GyroSynth!',
-          description: <div><p>GyroSynth is a synth controller for your phone.</p><p>You can play single notes and chords by hitting the empty air in front of you with your phone.</p><p>Make sure the volume on yout phone is cranked UP!</p></div>,
+          description: <div><p>GyroSynth is a synth controller for your phone.</p><p>You can play single notes and chords by hitting the empty air in front of you with your phone.</p></div>,
           next: 'Show me the basics!'
+        },
+        {
+          title: 'Turn up the volume!',
+          description: <div><p>Make sure the volume on yout phone is cranked UP!</p></div>,
+          next: 'done!',
+          image: 'volume'
         },
         {
           title: 'Which hand do you prefer?',
           description: <div><p>You can play chords with the left hand and single notes with the right hand.</p><p>You can switch between the two at any time</p></div>,
-          options: true
+          options: true,
+          image: 'choose-hand'
         },
         {
           title: 'Attack',
@@ -25,22 +32,26 @@ class StartScreen extends Component {
         {
           title: 'Change pitch',
           description: <div><p>Rotate around yourself to change pitch.</p></div>,
-          next: 'Understood!'
+          next: 'Understood!',
+          image: 'pitch-shift'
         },
         {
           title: 'Bend',
           description: <div><p>During the sustain of single note you can tilt the phone to the sides to bend the note.</p></div>,
-          next: 'Roger!'
+          next: 'Roger!',
+          image: 'bend'
         },
         {
           title: 'Volume sweep',
           description: <div><p>During the sustain of a chord you can tilt the phone to the sides to increase or decrease the volume.</p></div>,
-          next: 'Cool!'
+          next: 'Cool!',
+          image: 'volume-sweep'
         },
         {
           title: 'Be careful of your surroundings!',
           description: <div><p>Try not to break anything while you're playing.</p></div>,
-          next: "Ok, training's over!"
+          next: "Ok, training's over!",
+          image: 'careful'
         },
       ]
     }
@@ -61,7 +72,7 @@ class StartScreen extends Component {
       <div className='start-screen-container'>
         <h1>{currentStep.title}</h1>
         {currentStep.description}
-        {currentStep.image && <img alt='' className='arm-svg' src={"assets/" + currentStep.image + ".svg"}/>}
+        {currentStep.image && <img alt='' className={currentStep.image + '-svg'} src={"assets/" + currentStep.image + ".svg"}/>}
         {!lastPage && <div className="skip-button" onClick={() => {
           this.props.close()
           this.props.launchSynth()
