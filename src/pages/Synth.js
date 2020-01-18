@@ -85,13 +85,19 @@ class Synth extends Component {
       screenAdjusted: false		          	// ( If set to true it will return screen adjusted values. )
     }
     const updateState = props => this.setState(props)
-    gyroNorm.init(gyroNormOptions).then(() => {
-      gyroNorm.start(event => {
-        const accX = event.dm.gx
-        const { alpha, beta, gamma } = event.do
-        this.onMotion({ alpha, beta, gamma, accX, updateState })
-      })
-    });
+
+    window.addEventListener("message", (data) => {
+      const parsedData = JSON.parse(data.data)
+      let { alpha, beta, gamma } = parsedData.rotation
+      let { x: accX } = parsedData.acceleration
+      const factor = 50
+      alpha = alpha * factor
+      beta = beta * factor
+      gamma = gamma * factor
+
+      this.onMotion({ alpha, beta, gamma, accX, updateState })
+    })
+
     // var i = 1;
     // const mimicsMotion = () => {
     //   setTimeout(() => {
