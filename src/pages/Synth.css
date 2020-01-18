@@ -18,7 +18,9 @@
 }
 
 .hand-indicator div {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: black;
+  color: #ff6f61;
+  font-weight: bold;
   border-radius: 4px;
   padding: 8px;
   display: inline-block;
