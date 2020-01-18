@@ -16,6 +16,14 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
+## Setting up now
+
+Download the now CLI `npm i -g now`
+
+Get invite for the now project team from admin
+
+Run `npm login your@email.com`
+
 ### `npm run deploy-production`
 
 Builds and deploys the app to https://gyrosynth.ianabildskou.now.sh
