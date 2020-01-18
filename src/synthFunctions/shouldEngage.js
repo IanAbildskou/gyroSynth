@@ -2,12 +2,20 @@ export default ({
   normalizedAccX,
   history,
   fireThresholdValue,
-  lifted
+  lifted,
+  enableDrumMode,
+  normalizedBeta,
+  attackTiltValue
 }) => {
   if (lifted) {
-    const enoughForceForFire = normalizedAccX > fireThresholdValue
-    if (enoughForceForFire) {
-      return !!history.length && (normalizedAccX < history[history.length -1].normalizedAccX) // is peak
+    if (enableDrumMode) {
+      const enoughForceForFire = normalizedAccX > fireThresholdValue
+      if (enoughForceForFire) {
+        return !!history.length && (normalizedAccX < history[history.length -1].normalizedAccX) // is peak
+      }
+    } else {
+      const underFireThreshold = normalizedBeta < attackTiltValue
+      return underFireThreshold
     }
   }
 }

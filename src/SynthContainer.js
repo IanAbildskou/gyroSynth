@@ -12,16 +12,18 @@ class SynthContainer extends Component {
     super(props)
     const enableReverb = window.localStorage.getItem('enableReverb')
     const enableDebug = window.localStorage.getItem('enableDebug')
+    const enableDrumMode = window.localStorage.getItem('enableDrumMode')
     const configurableVariables = JSON.parse(window.localStorage.getItem('configurableVariables'))
     this.state = Object.assign({}, {
       enableReverb: enableReverb || false,
       enableDebug: enableDebug || false,
+      enableDrumMode: enableDrumMode || true,
       menuOpen: false
     }, config, configurableVariables ? { configurableVariables } : {})
   }
 
   render() {
-    const { enableReverb, enableDebug, configurableVariables, pitchArray, gravity, colorArray, menuOpen } = this.state
+    const { enableReverb, enableDebug, enableDrumMode, configurableVariables, pitchArray, gravity, colorArray, menuOpen } = this.state
     const { tactileFeedbackPitchDuration } = this.state.configurableVariables.advanced
     const { volume } = this.state.configurableVariables.simple
     const synthObject = constructSynth({
@@ -44,6 +46,7 @@ class SynthContainer extends Component {
       configurableVariables: config.configurableVariables,
       enableReverb: false,
       enableDebug: false,
+      enableDrumMode: true
     })
     const toggleSetting = setting => () => {
       synthObject.reset()
@@ -69,6 +72,7 @@ class SynthContainer extends Component {
           changeProp={changeProp}
           enableReverb={enableReverb}
           enableDebug={enableDebug}
+          enableDrumMode={enableDrumMode}
           toggleSetting={toggleSetting}
           config={configurableVariables}
           reset={reset}
@@ -78,6 +82,7 @@ class SynthContainer extends Component {
           colorArray={colorArray}
           pitchArray={pitchArray}
           debuggerMode={enableDebug}
+          enableDrumMode={enableDrumMode}
           synthObject={synthObject}
           gravity={gravity}
           leftHanded={this.props.leftHanded}

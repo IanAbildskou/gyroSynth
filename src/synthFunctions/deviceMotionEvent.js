@@ -26,7 +26,8 @@ export default props => {
     minor,
     pitchMark,
     pitchAlphaAnchor,
-    updateState
+    updateState,
+    enableDrumMode
   } = props
   const history = window.gyroSynthHistory || []
   const topHistoryLength = debuggerMode ? maxHistoryLengthForStatsValue : maxHistoryLengthValue
@@ -40,16 +41,17 @@ export default props => {
     newPitch = checkPitch(props)
     pitch = getPitch(props)
     shouldFire = shouldEngage({
+      normalizedBeta,
       normalizedAccX,
       history: historySlice,
       ...props
     })
     if (shouldFire) {
-      fire({ ...props, pitch })
+      fire({ ...props, pitch, historySlice })
     } else {
       pressed && !leftHanded && bend(props)
       pressed && leftHanded && tremolo(props)
-      lift = normalizedAccX < (-liftedThresholdValue)
+      lift = enableDrumMode && (normalizedAccX < (-liftedThresholdValue))
     }
   } else {
     release = !shouldFire && checkLift(props)
@@ -70,7 +72,8 @@ export default props => {
   }
   const historyObject = {
     accX,
-    normalizedAccX
+    normalizedAccX,
+    normalizedBeta
   }
   window.gyroSynthHistory = historySlice.concat([historyObject])
   const shouldToggleLift = shouldFire || (!lifted && (lift || release))

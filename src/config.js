@@ -86,6 +86,21 @@ export default {
         unit: '°',
         description: 'At what angle of tilt should the attack release'
       },
+      attackTilt: {
+        label: 'Attack tilt angle',
+        value: 20,
+        maxValue: 90,
+        minValue: 1,
+        unit: '°',
+        description: 'At what angle of tilt should the attack trigger'
+      },
+      rotationVelocityModifier: {
+        label: 'Rotation velocity modifier',
+        value: 50,
+        maxValue: 200,
+        minValue: 10,
+        description: 'The lower the value the less you have to rotate the phone to trigger maximum velocity when not in drum mode'
+      },
       // distanceFromGravityToToggleHand: {
       //   label: 'Distance from gravity to switch hands',
       //   value: 1,

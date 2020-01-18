@@ -10,10 +10,19 @@ export default ({
   accX,
   pitch,
   polySynth,
-  monoSynth
+  monoSynth,
+  enableDrumMode,
+  historySlice,
+  rotationVelocityModifierValue
 }) => {
-  const absoluteVelocity = (accX - fireThresholdValue) / maxVelocityValue
-  const adjustedVelocity = Math.min(absoluteVelocity, 1)
+  let velocity;
+  if (enableDrumMode) {
+    velocity = (accX - fireThresholdValue) / maxVelocityValue
+  } else {
+    const rotation = historySlice[historySlice.length - 6].normalizedBeta - historySlice[historySlice.length - 1].normalizedBeta
+    velocity = rotation / rotationVelocityModifierValue
+  }
+  const adjustedVelocity = Math.min(velocity, 1)
   vibrate({ duration: tactileFeedbackDurationValue })
   const synth = leftHanded ? polySynth : monoSynth
   if (synth.context.state !== 'running') { // This is most of all for safety. I think also it solved an ios issue where sound would not resume after minimizing

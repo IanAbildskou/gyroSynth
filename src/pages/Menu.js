@@ -49,7 +49,7 @@ class Menu extends Component {
 
   render() {
     const { aboutOpen } = this.state
-    const { config, enableReverb, toggleSetting, enableDebug, launchStartScreen } = this.props
+    const { config, enableReverb, toggleSetting, enableDebug, enableDrumMode, launchStartScreen } = this.props
     const { simple, advanced } = config
     const advancedSettings = Object.entries(advanced)
     const simpleSettings = Object.entries(simple)
@@ -74,12 +74,14 @@ class Menu extends Component {
               window.localStorage.removeItem('configurableVariables')
               window.localStorage.removeItem('enableReverb')
               window.localStorage.removeItem('enableDebug')
+              window.localStorage.removeItem('enableDrumMode')
               this.props.reset()
             }}>
               <SettingsBackupRestore/>
             </IconButton>
           </div>
           <div className='main-button reverb-toggle' onClick={toggleSetting('enableReverb')}>Reverb: { enableReverb ? 'ON' : 'OFF'}</div>
+          <div className='main-button drum-mode-toggle' onClick={toggleSetting('enableDrumMode')}>Drum mode: { enableDrumMode ? 'ON' : 'OFF'}</div>
           <div className='main-button debug-toggle' onClick={toggleSetting('enableDebug')}>Debugger: { enableDebug ? 'ON' : 'OFF'}</div>
           {simpleSettings.map(setting => this.renderSection(setting, 'simple'))}
         </div>
