@@ -176,7 +176,7 @@ export default {
       }
     }
   },
-  supportedBrowsers: ['chrome', 'chromium-webview', 'crios'],
+  supportedBrowsers: ['chrome', 'chromium-webview', 'crios', 'ios-webview'],
   gravity: 9.8,
   pitchArray: ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'],
   colorArray: ['#d21d1d', '#ff6f61', '#2bc823', '#0fddde', '#1d63ce', '#6a18d4', '#d418a1', '#cddc39', '#ff7f0e', '#acff0e', '#ff8282', '#8b7bc8']
