@@ -1,6 +1,5 @@
 import './Synth.css';
-import React, { Component } from 'react'
-import GyroNorm from 'gyronorm';
+import React, { Component } from 'react';
 import SaveStats from '../widgets/SaveStats';
 import PitchIndicator from '../widgets/PitchIndicator';
 import getPitch from '../synthFunctions/getPitch';
@@ -31,7 +30,7 @@ class Synth extends Component {
     }
   }
 
-  onMotion({ alpha, beta, gamma, accX, updateState }) {
+  onMotion = ({ alpha, beta, gamma, accX }) => {
     const { pitchMark, pitchAlphaAnchor, structuredPitchArray, leftHanded, minor, pressed, lifted } = this.state
     const { debuggerMode, synthObject, config, gravity, enableDrumMode } = this.props
     const { polySynth, monoSynth } = synthObject
@@ -68,7 +67,7 @@ class Synth extends Component {
       monoSynth,
       pitchMark,
       pitchAlphaAnchor,
-      updateState,
+      updateState: props => this.setState(props),
       gravity,
       bendRangeValue: bendRange.value,
       volumeValue: volume.value,
@@ -76,25 +75,25 @@ class Synth extends Component {
     });
   }
 
+  radiansToDegrees = (radians) => {
+    return Math.round(radians * (180/Math.PI));
+  }
+
+  motionEvent = (data) => {
+    const parsedData = JSON.parse(data.data)
+    const { alpha, beta, gamma } = parsedData.rotation
+    const { x: accX } = parsedData.accelerationIncludingGravity
+    this.onMotion({
+      alpha: this.radiansToDegrees(alpha),
+      beta: this.radiansToDegrees(beta),
+      gamma: this.radiansToDegrees(gamma),
+      accX: Math.round(accX * 10) / 10
+    })
+  }
+
   componentDidMount() {
-    const { motionFrequency } = this.props.config.advanced
-    var gyroNorm = new GyroNorm();
-    const gyroNormOptions = {
-      frequency: motionFrequency.value,		// ( How often the object sends the values - milliseconds )
-      gravityNormalized: true,		        // ( If the gravity related values to be normalized )
-      orientationBase: GyroNorm.GAME,	   	// ( Can be GyroNorm.GAME or GyroNorm.WORLD. gn.GAME returns orientation values with respect to the head direction of the device. gn.WORLD returns the orientation values with respect to the actual north direction of the world. )
-      decimalCount: 1,				            // ( How many digits after the decimal point will there be in the return values )
-      logger: null,				              	// ( Function to be called to log messages from gyronorm.js )
-      screenAdjusted: false		          	// ( If set to true it will return screen adjusted values. )
-    }
-    const updateState = props => this.setState(props)
-    gyroNorm.init(gyroNormOptions).then(() => {
-      gyroNorm.start(event => {
-        const accX = event.dm.gx
-        const { alpha, beta, gamma } = event.do
-        this.onMotion({ alpha, beta, gamma, accX, updateState })
-      })
-    });
+    document.addEventListener("message", this.motionEvent)
+    window.addEventListener("message", this.motionEvent)
     // var i = 1;
     // const mimicsMotion = () => {
     //   setTimeout(() => {
@@ -106,6 +105,11 @@ class Synth extends Component {
     //   }, 50)
     // }
     // mimicsMotion();
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("message", this.motionEvent);
+    document.removeEventListener("message", this.motionEvent);
   }
 
   render() {
