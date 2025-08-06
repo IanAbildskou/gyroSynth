@@ -12,7 +12,7 @@
     "lodash": "^4.17.15",
     "react": "^16.8.0",
     "react-dom": "^16.8.0",
-    "react-scripts": "2.1.1",
+    "react-scripts": "5.0.1",
     "tone": "^0.12.80"
   },
   "scripts": {
