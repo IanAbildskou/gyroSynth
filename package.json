@@ -9,7 +9,7 @@
     "detect-browser": "^4.8.0",
     "file-saver": "^2.0.0-rc.4",
     "gyronorm": "^2.0.6",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "react": "^16.8.0",
     "react-dom": "^16.8.0",
     "react-scripts": "2.1.1",
